@@ -1,0 +1,9 @@
+uploads/
+.env
+config/real_db.php
+node_modules/
+.DS_Store
+
+
+cloudinary.php
+db.php
