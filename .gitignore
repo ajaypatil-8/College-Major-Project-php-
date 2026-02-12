@@ -1,9 +1,47 @@
-uploads/
-.env
-config/real_db.php
+# ==============================
+# CrowdSpark PHP Project Ignore
+# ==============================
+
+# Vendor (composer packages)
+vendor/
+
+# Node (if ever used)
 node_modules/
+
+# Environment & secrets
+.env
+config/db.php
+config/env.php
+config/real_db.php
+config/cloudinary.php
+
+# Uploads (user images/files)
+uploads/
+public/uploads/
+
+# Logs
+*.log
+logs/
+
+# OS files
 .DS_Store
+Thumbs.db
 
+# Editor files
+.vscode/
+.idea/
 
-cloudinary.php
-db.php
+# XAMPP temp
+xampp/
+tmp/
+
+# Git
+.gitkeep
+
+# Composer cache
+composer.phar
+
+# Misc
+*.zip
+*.rar
+*.tar

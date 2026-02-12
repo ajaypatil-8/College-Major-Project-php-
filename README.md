@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🚀 CrowdSpark-X (Crowdfunding Platform)
 
 A full-stack crowdfunding web platform built using PHP, MySQL, HTML, CSS and JavaScript.
@@ -32,3 +33,7 @@ A full-stack crowdfunding web platform built using PHP, MySQL, HTML, CSS and Jav
 ## 👨‍💻 Author
 Ajay Patil
 BCA Final Year Project
+=======
+# College-Major-Project-php-
+Full-stack crowdfunding platform built with PHP, MySQL, HTML, CSS &amp; JavaScript. CrowdSpark-X allows users to create campaigns, raise funds, and manage projects with admin and creator dashboards, OTP authentication, image uploads, and secure role-based access. Designed as a final-year BCA major project.
+>>>>>>> 428002e4aaf01bf4072bc807fd227f66a59d512b
