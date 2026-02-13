@@ -629,15 +629,15 @@ body{
                 <i class="fa-solid fa-house"></i> Home
             </a>
 
-            <a href="/CroudSpark-X/public/explore-campaigns.php">
+            <a class="<?= $current=='explore-campaigns.php'?'active':'' ?>" href="/CroudSpark-X/public/explore-campaigns.php">
                 <i class="fa-solid fa-layer-group"></i> Projects
             </a>
 
-            <a href="/CroudSpark-X/public/about.php">
+            <a class="<?= $current=='about.php'?'active':'' ?>" href="/CroudSpark-X/public/about.php">
                 <i class="fa-solid fa-circle-info"></i> About
             </a>
 
-            <a href="/CroudSpark-X/public/contact.php">
+            <a class="<?= $current=='contact.php'?'active':'' ?>" href="/CroudSpark-X/public/contact.php">
                 <i class="fa-solid fa-phone"></i> Contact
             </a>
         </div>

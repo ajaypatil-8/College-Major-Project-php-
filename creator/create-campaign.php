@@ -142,19 +142,73 @@ require_once __DIR__."/../includes/header.php";
 ?>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
-:root {
-    --primary: #f59e0b;
-    --primary-dark: #d97706;
-    --primary-light: #fbbf24;
-    --bg-main: #fffaf5;
-    --bg-card: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border: #e5e7eb;
-    --success: #16a34a;
-    --danger: #dc2626;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0f0f0f;
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background - Green/Emerald theme */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.25;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(45deg, #10b981, #34d399);
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(45deg, #059669, #10b981);
+    bottom: -10%;
+    right: -10%;
+    animation-delay: 5s;
+}
+
+.orb-3 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(45deg, #047857, #059669);
+    top: 50%;
+    left: 50%;
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, 50px) scale(1.1); }
+    50% { transform: translate(-30px, 80px) scale(0.9); }
+    75% { transform: translate(40px, -40px) scale(1.05); }
 }
 
 /* ===== ANIMATIONS ===== */
@@ -190,29 +244,13 @@ require_once __DIR__."/../includes/header.php";
     50% { transform: scale(1.05); }
 }
 
-@keyframes checkmark {
-    0% { stroke-dashoffset: 100; }
-    100% { stroke-dashoffset: 0; }
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background: var(--bg-main);
-    font-family: 'Inter', Arial, sans-serif;
-    color: var(--text-main);
-    line-height: 1.6;
-}
-
 /* ===== PROGRESS HEADER ===== */
 .ks-header {
-    background: rgba(255, 255, 255, 0.95);
+    position: relative;
+    z-index: 1;
+    background: rgba(20, 20, 30, 0.85);
     backdrop-filter: blur(20px);
-    border-bottom: 2px solid var(--border);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     padding: 24px 40px;
     display: flex;
     gap: 40px;
@@ -220,12 +258,12 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
     animation: slideInRight 0.6s ease-out;
 }
 
 .ks-header span {
-    color: var(--text-muted);
+    color: #cbd5e1;
     padding: 12px 24px;
     border-radius: 50px;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -240,15 +278,15 @@ body {
     bottom: -24px;
     width: 100%;
     height: 4px;
-    background: linear-gradient(45deg, var(--primary), var(--primary-light));
+    background: linear-gradient(45deg, #10b981, #34d399);
     transform: scaleX(0);
     transition: transform 0.3s ease;
     border-radius: 4px;
 }
 
 .ks-header .active {
-    color: var(--primary);
-    background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,146,60,0.1));
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
 }
 
 .ks-header .active::before {
@@ -257,10 +295,13 @@ body {
 
 .ks-header span:hover {
     transform: translateY(-2px);
+    color: #10b981;
 }
 
 /* ===== CONTAINER ===== */
 .ks-container {
+    position: relative;
+    z-index: 1;
     max-width: 1200px;
     margin: 60px auto;
     display: grid;
@@ -276,10 +317,11 @@ body {
 }
 
 .ks-left h2 {
+    font-family: 'Playfair Display', serif;
     font-size: 2.5rem;
     font-weight: 900;
     margin-bottom: 16px;
-    background: linear-gradient(45deg, var(--primary), var(--primary-light));
+    background: linear-gradient(45deg, #10b981, #34d399);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -287,23 +329,24 @@ body {
 }
 
 .ks-left p {
-    color: var(--text-muted);
+    color: #cbd5e1;
     line-height: 1.8;
     margin-bottom: 20px;
     font-size: 1.05rem;
 }
 
 .tip-box {
-    background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(251,146,60,0.08));
-    border-left: 4px solid var(--primary);
+    background: rgba(20, 20, 30, 0.7);
+    border-left: 4px solid #10b981;
     padding: 20px;
     border-radius: 12px;
     margin-top: 30px;
     animation: fadeInUp 1s ease-out;
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .tip-box h3 {
-    color: var(--primary);
+    color: #10b981;
     font-size: 1.1rem;
     margin-bottom: 10px;
     display: flex;
@@ -313,7 +356,7 @@ body {
 
 .tip-box ul {
     padding-left: 20px;
-    color: var(--text-main);
+    color: #cbd5e1;
 }
 
 .tip-box li {
@@ -323,17 +366,30 @@ body {
 
 /* ===== CARD ===== */
 .ks-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 24px;
     padding: 50px;
-    box-shadow: 0 10px 40px rgba(245, 158, 11, 0.08);
+    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.08);
     animation: fadeInUp 0.9s ease-out;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.ks-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #10b981, #34d399);
 }
 
 .ks-card:hover {
-    box-shadow: 0 20px 60px rgba(245, 158, 11, 0.12);
+    box-shadow: 0 20px 60px rgba(16, 185, 129, 0.12);
     transform: translateY(-4px);
 }
 
@@ -353,14 +409,14 @@ label {
     font-weight: 700;
     margin-bottom: 10px;
     display: block;
-    color: var(--text-main);
+    color: #fff;
     font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 label .required {
-    color: var(--danger);
+    color: #ef4444;
     margin-left: 4px;
 }
 
@@ -368,24 +424,24 @@ input, select, textarea {
     width: 100%;
     padding: 16px 18px;
     border-radius: 12px;
-    border: 2px solid var(--border);
-    background: #fafafa;
-    font-family: 'Inter', Arial, sans-serif;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    background: rgba(10, 10, 20, 0.6);
+    font-family: 'DM Sans', sans-serif;
     font-size: 1rem;
     transition: all 0.3s ease;
-    color: var(--text-main);
+    color: #fff;
 }
 
 input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: var(--primary);
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+    border-color: #10b981;
+    background: rgba(20, 20, 30, 0.7);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
     transform: translateY(-2px);
 }
 
 input:hover, select:hover, textarea:hover {
-    border-color: var(--primary-light);
+    border-color: #34d399;
 }
 
 textarea {
@@ -393,21 +449,25 @@ textarea {
     resize: vertical;
 }
 
+input::placeholder, textarea::placeholder {
+    color: #94a3b8;
+}
+
 /* Character counter */
 .char-counter {
     text-align: right;
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: #94a3b8;
     margin-top: 6px;
 }
 
 /* ===== FILE UPLOAD ===== */
 .upload-box {
-    border: 3px dashed var(--border);
+    border: 3px dashed rgba(16, 185, 129, 0.3);
     padding: 50px 40px;
     border-radius: 16px;
     text-align: center;
-    background: linear-gradient(135deg, rgba(245,158,11,0.02), rgba(251,146,60,0.02));
+    background: rgba(16, 185, 129, 0.02);
     margin-bottom: 24px;
     transition: all 0.3s ease;
     position: relative;
@@ -423,8 +483,8 @@ textarea {
 }
 
 .upload-box:hover {
-    border-color: var(--primary);
-    background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(251,146,60,0.05));
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
     transform: scale(1.02);
 }
 
@@ -432,12 +492,12 @@ textarea {
     display: block;
     margin-bottom: 12px;
     font-size: 1.1rem;
-    color: var(--text-main);
+    color: #fff;
 }
 
 .upload-box small {
     display: block;
-    color: var(--text-muted);
+    color: #cbd5e1;
     margin-bottom: 20px;
     font-size: 0.9rem;
 }
@@ -445,40 +505,17 @@ textarea {
 .upload-box input[type="file"] {
     cursor: pointer;
     padding: 12px;
-    background: white;
-    border: 2px solid var(--border);
+    background: rgba(20, 20, 30, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
 .upload-box input[type="file"]:hover {
-    border-color: var(--primary);
-}
-
-/* File preview */
-.file-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 16px;
-}
-
-.file-preview-item {
-    width: 100px;
-    height: 100px;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    border: 2px solid var(--border);
-}
-
-.file-preview-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    border-color: #10b981;
 }
 
 /* ===== BUTTONS ===== */
 .next-btn {
-    background: linear-gradient(45deg, var(--primary), var(--primary-light));
+    background: linear-gradient(45deg, #10b981, #34d399);
     color: white;
     border: none;
     padding: 18px 32px;
@@ -489,7 +526,7 @@ textarea {
     cursor: pointer;
     margin-top: 30px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
@@ -513,7 +550,7 @@ textarea {
 
 .next-btn:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 20px 50px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 20px 50px rgba(16, 185, 129, 0.4);
 }
 
 .next-btn:active {
@@ -529,7 +566,7 @@ textarea {
 /* ===== ERROR & SUCCESS ===== */
 .error {
     color: white;
-    background: linear-gradient(135deg, var(--danger), #ef4444);
+    background: linear-gradient(135deg, #dc2626, #ef4444);
     margin-bottom: 24px;
     font-weight: 600;
     padding: 16px 20px;
@@ -548,13 +585,13 @@ textarea {
 
 .success {
     color: white;
-    background: linear-gradient(135deg, var(--success), #22c55e);
+    background: linear-gradient(135deg, #10b981, #34d399);
     margin-bottom: 24px;
     font-weight: 600;
     padding: 16px 20px;
     border-radius: 12px;
     animation: fadeInUp 0.4s ease-out;
-    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.25);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -567,13 +604,13 @@ textarea {
 
 /* ===== VALIDATION STYLES ===== */
 input.invalid, textarea.invalid, select.invalid {
-    border-color: var(--danger);
-    background: rgba(220, 38, 38, 0.05);
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
 }
 
 input.valid, textarea.valid, select.valid {
-    border-color: var(--success);
-    background: rgba(22, 163, 74, 0.05);
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
 }
 
 .validation-message {
@@ -583,7 +620,7 @@ input.valid, textarea.valid, select.valid {
 }
 
 .validation-message.error {
-    color: var(--danger);
+    color: #ef4444;
     display: block;
     background: none;
     padding: 0;
@@ -596,7 +633,7 @@ input.valid, textarea.valid, select.valid {
 }
 
 .validation-message.success {
-    color: var(--success);
+    color: #10b981;
     display: block;
     background: none;
     padding: 0;
@@ -606,6 +643,35 @@ input.valid, textarea.valid, select.valid {
 
 .validation-message.success::before {
     content: '✓ ';
+}
+
+/* ===== STEP INDICATOR ===== */
+.step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #10b981, #34d399);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.3rem;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.step-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -645,36 +711,14 @@ input.valid, textarea.valid, select.valid {
         padding: 30px 20px;
     }
 }
-
-/* ===== STEP INDICATOR ===== */
-.step-indicator {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 30px;
-}
-
-.step-number {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, var(--primary), var(--primary-light));
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 1.3rem;
-    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
-    animation: pulse 2s infinite;
-}
-
-.step-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text-main);
-}
 </style>
+
+<!-- Background Animation -->
+<div class="bg-animation">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
 
 <div class="ks-header">
     <span class="<?= $step==1?'active':'' ?>">📝 Basics</span>
@@ -766,7 +810,7 @@ input.valid, textarea.valid, select.valid {
             <input type="hidden" name="campaign_id" value="<?= $campaign_id ?>">
 
             <div class="upload-box">
-                <b>Campaign Thumbnail <span class="required" style="color: var(--danger);">*</span></b>
+                <b>Campaign Thumbnail <span class="required" style="color: #ef4444;">*</span></b>
                 <small>Main image that appears on your campaign (JPG, PNG - Max 5MB)</small>
                 <input type="file" name="thumbnail" id="thumbnail" accept="image/*" required>
             </div>
@@ -859,7 +903,7 @@ input.valid, textarea.valid, select.valid {
             </div>
 
             <div class="upload-box">
-                <b>Upload ID Proof <span class="required" style="color: var(--danger);">*</span></b>
+                <b>Upload ID Proof <span class="required" style="color: #ef4444;">*</span></b>
                 <small>Clear photo or scan of your ID document (JPG, PNG, PDF - Max 5MB)</small>
                 <input type="file" name="document" id="document" accept="image/*,application/pdf" required>
             </div>

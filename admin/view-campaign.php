@@ -18,7 +18,7 @@ $stmt->execute([$id]);
 $campaign = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if(!$campaign){
-    echo "<h2 style='text-align:center;margin-top:120px'>❌ Campaign not found</h2>";
+    echo "<h2 style='text-align:center;margin-top:120px;color:#fff;'>❌ Campaign not found</h2>";
     exit;
 }
 
@@ -70,87 +70,76 @@ if(isset($_POST['reject'])){
 <?php require_once __DIR__."/../includes/header.php"; ?>
 
 <style>
-/* ===== CONTAINER ===== */
-.review-container{
-    max-width: 1400px;
-    margin: 100px auto 60px;
-    padding: 20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ===== HEADER ===== */
-.review-header{
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    border-radius: 24px;
-    padding: 40px;
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0f0f0f;
     color: #fff;
-    margin-bottom: 40px;
+    overflow-x: hidden;
     position: relative;
+}
+
+/* Animated Background */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
     overflow: hidden;
-    animation: fadeIn 0.6s ease;
+    opacity: 0.25;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.review-header::before{
-    content: "";
+.orb {
     position: absolute;
-    top: -50%;
-    right: -20%;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(45deg, #ef4444, #f87171);
+    top: -10%;
+    left: -10%;
+}
+
+.orb-2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.2), transparent 70%);
-    border-radius: 50%;
+    background: linear-gradient(45deg, #ec4899, #f472b6);
+    bottom: -10%;
+    right: -10%;
+    animation-delay: 5s;
 }
 
-.review-header h1{
-    font-size: 36px;
-    font-weight: 900;
-    margin: 0 0 12px;
-    position: relative;
-    z-index: 1;
+.orb-3 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(45deg, #dc2626, #ef4444);
+    top: 50%;
+    left: 50%;
+    animation-delay: 10s;
 }
 
-.review-breadcrumb{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    opacity: 0.8;
-    position: relative;
-    z-index: 1;
-}
-
-.review-breadcrumb a{
-    color: #f59e0b;
-    text-decoration: none;
-}
-
-/* ===== GRID LAYOUT ===== */
-.review-grid{
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
-}
-
-/* ===== CARD ===== */
-.info-card{
-    background: #fff;
-    padding: 32px;
-    border-radius: 24px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
-    margin-bottom: 30px;
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease;
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, 50px) scale(1.1); }
+    50% { transform: translate(-30px, 80px) scale(0.9); }
+    75% { transform: translate(40px, -40px) scale(1.05); }
 }
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
     }
     to {
         opacity: 1;
@@ -158,415 +147,493 @@ if(isset($_POST['reject'])){
     }
 }
 
-.info-card:hover{
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.08);
-    transform: translateY(-4px);
+/* Container - FIXED WIDTH */
+.review-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1600px; /* Increased from 1400px */
+    margin: 0 auto;
+    padding: 120px 20px 80px; /* Reduced horizontal padding */
 }
 
-.card-header{
+/* Header */
+.review-header {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 30px 40px;
+    color: #fff;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.review-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin: 0 0 8px;
+    background: linear-gradient(135deg, #fff, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.review-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+.review-breadcrumb a {
+    color: #ef4444;
+    text-decoration: none;
+}
+
+/* Grid Layout - FIXED RESPONSIVE */
+.review-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px; /* Fixed sidebar width */
+    gap: 24px;
+}
+
+/* Card */
+.info-card {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    padding: 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease;
+    width: 100%; /* Ensure full width */
+    overflow: hidden; /* Prevent overflow */
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-.card-title{
-    font-size: 24px;
+.card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
     font-weight: 900;
-    color: #0f172a;
+    color: #fff;
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.card-icon{
-    width: 40px;
-    height: 40px;
+.card-icon {
+    width: 36px;
+    height: 36px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
+    flex-shrink: 0;
 }
 
-.status-badge{
-    padding: 8px 16px;
+.status-badge {
+    padding: 6px 14px;
     border-radius: 999px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: capitalize;
 }
 
-.status-pending{
-    background: rgba(245, 158, 11, 0.1);
-    color: #d97706;
+.status-pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
 }
 
-.status-approved{
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
+.status-approved {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
 }
 
-.status-rejected{
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
+.status-rejected {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
 }
 
-/* ===== INFO SECTIONS ===== */
-.campaign-title{
-    font-size: 32px;
+/* Campaign Info */
+.campaign-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
     font-weight: 900;
-    color: #0f172a;
+    color: #fff;
     margin-bottom: 16px;
-    line-height: 1.2;
+    line-height: 1.3;
+    word-wrap: break-word;
 }
 
-.campaign-meta{
+.campaign-meta {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-top: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
 }
 
-.meta-item{
-    background: #f8fafc;
-    padding: 18px;
-    border-radius: 14px;
-    border-left: 4px solid #f59e0b;
+.meta-item {
+    background: rgba(30, 30, 40, 0.6);
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 4px solid #ef4444;
 }
 
-.meta-label{
-    font-size: 12px;
+.meta-label {
+    font-size: 11px;
     font-weight: 700;
-    color: #64748b;
+    color: #cbd5e1;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 6px;
 }
 
-.meta-value{
-    font-size: 18px;
+.meta-value {
+    font-size: 16px;
     font-weight: 800;
-    color: #0f172a;
+    color: #fff;
+    word-wrap: break-word;
 }
 
-.category-badge{
+.category-badge {
     display: inline-block;
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
     border-radius: 999px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     margin-top: 12px;
 }
 
-/* ===== STORY BOX ===== */
-.story-box{
-    background: #f8fafc;
-    padding: 28px;
-    border-radius: 16px;
+/* Story Box */
+.story-box {
+    background: rgba(30, 30, 40, 0.6);
+    padding: 24px;
+    border-radius: 14px;
     line-height: 1.8;
-    color: #334155;
-    font-size: 15px;
-    border-left: 4px solid #f59e0b;
+    color: #cbd5e1;
+    font-size: 14px;
+    border-left: 4px solid #ef4444;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
-/* ===== THUMBNAIL ===== */
-.thumbnail-showcase{
+.story-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.story-box::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.story-box::-webkit-scrollbar-thumb {
+    background: rgba(239, 68, 68, 0.3);
+    border-radius: 10px;
+}
+
+/* Thumbnail */
+.thumbnail-showcase {
     position: relative;
-    border-radius: 20px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
 }
 
-.thumbnail-showcase img{
+.thumbnail-showcase img {
     width: 100%;
-    height: 400px;
+    height: 350px;
     object-fit: cover;
     display: block;
 }
 
-.thumbnail-overlay{
+.thumbnail-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    padding: 24px;
+    padding: 20px;
     color: #fff;
 }
 
-.thumbnail-overlay h4{
-    font-size: 18px;
-    font-weight: 800;
-    margin-bottom: 8px;
+.thumbnail-overlay h4 {
+    font-size: 16px;
+    margin-bottom: 6px;
 }
 
-.thumbnail-overlay p{
-    font-size: 14px;
-    opacity: 0.9;
+.thumbnail-overlay p {
+    font-size: 13px;
 }
 
-/* ===== MEDIA GRID ===== */
-.media-gallery{
+/* Media Grid */
+.media-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
 }
 
-.media-item{
+.media-item {
     position: relative;
-    border-radius: 16px;
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
-.media-item:hover{
+.media-item:hover {
     transform: scale(1.05);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
-.media-item img{
+.media-item img {
     width: 100%;
-    height: 180px;
+    height: 150px;
     object-fit: cover;
     display: block;
 }
 
-.media-item video{
+.media-item video {
     width: 100%;
-    height: 180px;
-    object-fit: cover;
+    height: 150px;
 }
 
-.media-badge{
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar-card{
-    background: #fff;
-    padding: 28px;
-    border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
-    margin-bottom: 24px;
-}
-
-.sidebar-title{
-    font-size: 18px;
-    font-weight: 800;
-    color: #0f172a;
+/* Sidebar */
+.sidebar-card {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    padding: 24px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     margin-bottom: 20px;
+}
+
+.sidebar-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.info-row{
+.info-row {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    gap: 10px;
 }
 
-.info-row:last-child{
+.info-row:last-child {
     border-bottom: none;
 }
 
-.info-row label{
-    color: #64748b;
+.info-row label {
+    color: #cbd5e1;
     font-weight: 600;
+    flex-shrink: 0;
 }
 
-.info-row span{
-    color: #0f172a;
+.info-row span {
+    color: #fff;
     font-weight: 700;
     text-align: right;
+    word-wrap: break-word;
 }
 
-/* ===== CREATOR CARD ===== */
-.creator-profile{
+/* Creator Card */
+.creator-profile {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 20px;
-    background: linear-gradient(135deg, #f8fafc, #fff);
-    border-radius: 16px;
-    margin-bottom: 20px;
+    gap: 14px;
+    padding: 18px;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 14px;
+    margin-bottom: 16px;
 }
 
-.creator-avatar{
-    width: 70px;
-    height: 70px;
+.creator-avatar {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 900;
-    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+    flex-shrink: 0;
 }
 
-.creator-info h4{
-    font-size: 18px;
-    font-weight: 800;
-    margin-bottom: 6px;
-    color: #0f172a;
-}
-
-.creator-info p{
-    font-size: 13px;
-    color: #64748b;
-    margin: 3px 0;
-}
-
-/* ===== ID PROOF ===== */
-.id-proof-image{
+.creator-avatar img {
     width: 100%;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.creator-info h4 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.creator-info p {
+    font-size: 12px;
+    color: #cbd5e1;
+    margin: 2px 0;
+}
+
+/* ID Proof */
+.id-proof-image {
+    width: 100%;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.id-proof-image:hover{
+.id-proof-image:hover {
     transform: scale(1.02);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* ===== ACTION BUTTONS ===== */
-.action-panel{
-    background: linear-gradient(135deg, #f8fafc, #fff);
-    padding: 28px;
-    border-radius: 20px;
-    border: 2px solid #f1f5f9;
+/* Action Panel */
+.action-panel {
+    background: rgba(30, 30, 40, 0.8);
+    backdrop-filter: blur(20px);
+    padding: 24px;
+    border-radius: 18px;
+    border: 2px solid rgba(239, 68, 68, 0.3);
 }
 
-.action-title{
-    font-size: 18px;
+.action-title {
+    font-size: 16px;
     font-weight: 800;
-    margin-bottom: 20px;
-    color: #0f172a;
+    margin-bottom: 16px;
+    color: #fff;
     text-align: center;
 }
 
-.action-form{
-    margin-bottom: 16px;
-}
-
-.btn-action{
+.btn-action {
     width: 100%;
-    padding: 16px;
+    padding: 14px;
     border: none;
-    border-radius: 14px;
+    border-radius: 12px;
     font-weight: 800;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
-.btn-approve{
+.btn-approve {
     background: linear-gradient(135deg, #10b981, #059669);
     color: #fff;
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
 }
 
-.btn-approve:hover{
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+.btn-approve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(16, 185, 129, 0.4);
 }
 
-.btn-reject{
+.btn-reject {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
 }
 
-.btn-reject:hover{
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
+.btn-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(239, 68, 68, 0.4);
 }
 
-.reject-reason{
+.reject-reason {
     width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: 2px solid #e2e8f0;
-    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(30, 30, 40, 0.6);
+    color: #fff;
+    margin-bottom: 10px;
     resize: vertical;
-    min-height: 100px;
+    min-height: 90px;
     font-family: inherit;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
+    font-size: 13px;
 }
 
-.reject-reason:focus{
+.reject-reason:focus {
     outline: none;
-    border-color: #f59e0b;
+    border-color: #ef4444;
 }
 
-/* ===== PROGRESS BAR ===== */
-.progress-section{
-    margin-top: 24px;
+/* Progress Bar */
+.progress-section {
+    margin-top: 20px;
 }
 
-.progress-label{
+.progress-label {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 14px;
+    margin-bottom: 10px;
+    font-size: 13px;
     font-weight: 600;
 }
 
-.progress-bar{
-    height: 12px;
-    background: #f1f5f9;
+.progress-bar {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 999px;
     overflow: hidden;
-    position: relative;
 }
 
-.progress-fill{
+.progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #f59e0b, #fb923c);
+    background: linear-gradient(90deg, #ef4444, #f87171);
     border-radius: 999px;
     transition: width 1s ease;
     position: relative;
     overflow: hidden;
 }
 
-.progress-fill::after{
+.progress-fill::after {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 0;
     right: 0;
+    bottom: 0;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
     animation: shimmer 2s infinite;
 }
@@ -576,65 +643,36 @@ if(isset($_POST['reject'])){
     100% { transform: translateX(100%); }
 }
 
-/* ===== DONATIONS TABLE ===== */
-.donations-table{
-    margin-top: 20px;
+/* Donations Table */
+.donations-table {
+    margin-top: 16px;
+    overflow-x: auto;
 }
 
-.donations-table table{
+.donations-table table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.donations-table th{
-    background: #f8fafc;
-    padding: 12px;
+.donations-table th {
+    background: rgba(239, 68, 68, 0.2);
+    padding: 10px;
     text-align: left;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    color: #64748b;
+    color: #fff;
     text-transform: uppercase;
-    border-bottom: 2px solid #e2e8f0;
 }
 
-.donations-table td{
-    padding: 12px;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 14px;
-    color: #334155;
+.donations-table td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    color: #cbd5e1;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-    .review-grid{
-        grid-template-columns: 1fr;
-    }
-    
-    .campaign-meta{
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .review-header h1{
-        font-size: 28px;
-    }
-    
-    .campaign-title{
-        font-size: 24px;
-    }
-    
-    .thumbnail-showcase img{
-        height: 250px;
-    }
-    
-    .media-gallery{
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* ===== LIGHTBOX ===== */
-.lightbox{
+/* Lightbox */
+.lightbox {
     display: none;
     position: fixed;
     top: 0;
@@ -648,18 +686,17 @@ if(isset($_POST['reject'])){
     padding: 20px;
 }
 
-.lightbox.active{
+.lightbox.active {
     display: flex;
 }
 
-.lightbox img{
+.lightbox img {
     max-width: 90%;
     max-height: 90%;
     border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
-.lightbox-close{
+.lightbox-close {
     position: absolute;
     top: 30px;
     right: 30px;
@@ -668,7 +705,55 @@ if(isset($_POST['reject'])){
     cursor: pointer;
     z-index: 10001;
 }
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .review-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .review-container {
+        padding: 120px 15px 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .review-header {
+        padding: 20px 24px;
+    }
+    
+    .review-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .campaign-title {
+        font-size: 1.5rem;
+    }
+    
+    .campaign-meta {
+        grid-template-columns: 1fr;
+    }
+    
+    .thumbnail-showcase img {
+        height: 250px;
+    }
+    
+    .media-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .info-card {
+        padding: 20px;
+    }
+}
 </style>
+
+<!-- Background Animation -->
+<div class="bg-animation">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
 
 <div class="review-container">
 
@@ -786,12 +871,10 @@ if(isset($_POST['reject'])){
                                 <img src="<?= $m['media_url'] ?>" 
                                      alt="Campaign Media"
                                      onclick="openLightbox(this.src)">
-                                <div class="media-badge">Image</div>
                             <?php elseif($m['media_type'] == 'video'): ?>
                                 <video controls>
                                     <source src="<?= $m['media_url'] ?>" type="video/mp4">
                                 </video>
-                                <div class="media-badge">Video</div>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -890,7 +973,7 @@ if(isset($_POST['reject'])){
                      alt="ID Proof" 
                      class="id-proof-image"
                      onclick="openLightbox(this.src)">
-                <p style="text-align: center; color: #64748b; font-size: 12px; margin-top: 12px;">
+                <p style="text-align: center; color: #cbd5e1; font-size: 11px; margin-top: 10px;">
                     <i class="fa-solid fa-info-circle"></i> Click to view full size
                 </p>
             </div>
@@ -903,7 +986,7 @@ if(isset($_POST['reject'])){
                 </h3>
                 <div class="info-row">
                     <label>Total Raised</label>
-                    <span style="color: #059669;">₹<?= number_format($totalRaised) ?></span>
+                    <span style="color: #10b981;">₹<?= number_format($totalRaised) ?></span>
                 </div>
                 <div class="info-row">
                     <label>Goal Amount</label>
@@ -934,7 +1017,7 @@ if(isset($_POST['reject'])){
                 <h3 class="action-title">⚡ Admin Action Required</h3>
                 
                 <!-- Approve -->
-                <form method="POST" class="action-form" onsubmit="return confirm('Are you sure you want to APPROVE this campaign?')">
+                <form method="POST" onsubmit="return confirm('Are you sure you want to APPROVE this campaign?')">
                     <button type="submit" name="approve" class="btn-action btn-approve">
                         <i class="fa-solid fa-check-circle"></i> Approve Campaign
                     </button>
@@ -954,11 +1037,11 @@ if(isset($_POST['reject'])){
                 </form>
             </div>
             <?php else: ?>
-            <div class="action-panel" style="text-align: center; padding: 40px 20px;">
+            <div class="action-panel" style="text-align: center; padding: 32px 20px;">
                 <i class="fa-solid fa-<?= $campaign['status'] == 'approved' ? 'check-circle' : 'times-circle' ?>" 
-                   style="font-size: 64px; color: <?= $campaign['status'] == 'approved' ? '#059669' : '#dc2626' ?>; margin-bottom: 16px;"></i>
-                <h3 style="margin-bottom: 8px;">Campaign <?= ucfirst($campaign['status']) ?></h3>
-                <p style="color: #64748b; font-size: 14px;">
+                   style="font-size: 56px; color: <?= $campaign['status'] == 'approved' ? '#10b981' : '#ef4444' ?>; margin-bottom: 14px;"></i>
+                <h3 style="margin-bottom: 6px; font-size: 16px;">Campaign <?= ucfirst($campaign['status']) ?></h3>
+                <p style="color: #cbd5e1; font-size: 13px;">
                     <?= $campaign['status'] == 'approved' ? 'This campaign has been approved and is now live.' : 'This campaign was rejected.' ?>
                 </p>
             </div>
@@ -988,7 +1071,6 @@ function closeLightbox() {
     document.body.style.overflow = 'auto';
 }
 
-// Close on Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeLightbox();

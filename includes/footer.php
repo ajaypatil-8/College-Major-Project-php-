@@ -1,26 +1,28 @@
 <style>
 
-/* ===== PROFESSIONAL FOOTER ===== */
+/* ===== GLASSMORPHISM FOOTER ===== */
 .footer{
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: rgba(10, 10, 20, 0.95);
+    backdrop-filter: blur(20px);
     color: #fff;
     padding: 80px 20px 0;
     margin-top: 100px;
     position: relative;
     overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Animated background gradient */
+/* Animated top border gradient */
 .footer::before{
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #f59e0b, #fb923c, #fbbf24, #f59e0b);
+    height: 3px;
+    background: linear-gradient(90deg, #f59e0b, #8b5cf6, #06b6d4, #f59e0b);
     background-size: 200% auto;
-    animation: gradientMove 3s linear infinite;
+    animation: gradientMove 4s linear infinite;
 }
 
 @keyframes gradientMove {
@@ -28,17 +30,18 @@
     100% { background-position: 200% center; }
 }
 
-/* Decorative circles */
+/* Decorative orbs */
 .footer::after{
     content: "";
     position: absolute;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.1), transparent 70%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.08), transparent 70%);
     border-radius: 50%;
     top: -200px;
     right: -200px;
     pointer-events: none;
+    filter: blur(60px);
 }
 
 .footer-container{
@@ -79,6 +82,11 @@
     animation: pulse 2s ease infinite;
 }
 
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
 .footer-tagline{
     color: #cbd5e1;
     font-size: 15px;
@@ -95,12 +103,12 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: #cbd5e1;
     text-decoration: none;
     font-size: 18px;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -109,6 +117,7 @@
 
 .social-link:hover{
     background: linear-gradient(135deg, #f59e0b, #fb923c);
+    color: #fff;
     transform: translateY(-4px) scale(1.1);
     box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
     border-color: transparent;
@@ -201,7 +210,7 @@
     flex: 1;
     padding: 12px 16px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     color: #fff;
@@ -216,7 +225,8 @@
 .newsletter-input:focus{
     outline: none;
     border-color: #f59e0b;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
 }
 
 .newsletter-btn{
@@ -235,6 +245,46 @@
 .newsletter-btn:hover{
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+}
+
+/* ===== TRUST BADGES ===== */
+.footer-trust{
+    padding: 40px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 40px;
+}
+
+.trust-badges{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.trust-badge{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #cbd5e1;
+    font-size: 14px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.trust-badge:hover{
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(245, 158, 11, 0.3);
+    transform: translateY(-2px);
+}
+
+.trust-badge i{
+    font-size: 20px;
+    color: #f59e0b;
 }
 
 /* ===== BOTTOM SECTION ===== */
@@ -303,6 +353,7 @@
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 900;
+    backdrop-filter: blur(10px);
 }
 
 .back-to-top.visible{
@@ -346,40 +397,16 @@
         flex-direction: column;
     }
     
+    .trust-badges{
+        gap: 20px;
+    }
+    
     .back-to-top{
         bottom: 20px;
         right: 20px;
         width: 45px;
         height: 45px;
     }
-}
-
-/* ===== TRUST BADGES ===== */
-.footer-trust{
-    padding: 40px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 40px;
-}
-
-.trust-badges{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    flex-wrap: wrap;
-}
-
-.trust-badge{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #94a3b8;
-    font-size: 14px;
-}
-
-.trust-badge i{
-    font-size: 24px;
-    color: #f59e0b;
 }
 
 </style>
@@ -442,8 +469,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/how-it-works.php">
-                            <i class="fa-solid fa-chevron-right"></i> How It Works
+                        <a href="/CroudSpark-X/public/contact.php">
+                            <i class="fa-solid fa-chevron-right"></i> Contact
                         </a>
                     </li>
                     <li>
@@ -459,7 +486,7 @@
                 <h4 class="footer-title">Support</h4>
                 <ul class="footer-links">
                     <li>
-                        <a href="/CroudSpark-X/public/faq.php">
+                        <a href="#">
                             <i class="fa-solid fa-chevron-right"></i> FAQ
                         </a>
                     </li>
@@ -469,17 +496,17 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/help-center.php">
+                        <a href="#">
                             <i class="fa-solid fa-chevron-right"></i> Help Center
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/trust-safety.php">
+                        <a href="#">
                             <i class="fa-solid fa-chevron-right"></i> Trust & Safety
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/report-issue.php">
+                        <a href="#">
                             <i class="fa-solid fa-chevron-right"></i> Report Issue
                         </a>
                     </li>
@@ -491,17 +518,17 @@
                 <h4 class="footer-title">Stay Updated</h4>
                 <ul class="footer-links">
                     <li>
-                        <a href="/CroudSpark-X/public/privacy-policy.php">
+                        <a href="#">
                             <i class="fa-solid fa-chevron-right"></i> Privacy Policy
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/terms-of-service.php">
+                        <a href="#">
                             <i class="fa-solid fa-chevron-right"></i> Terms of Service
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/cookie-policy.php">
+                        <a href="#">
                             <i class="fa-solid fa-chevron-right"></i> Cookie Policy
                         </a>
                     </li>
@@ -553,9 +580,9 @@
             </div>
             
             <ul class="footer-bottom-links">
-                <li><a href="/CroudSpark-X/public/sitemap.php">Sitemap</a></li>
-                <li><a href="/CroudSpark-X/public/accessibility.php">Accessibility</a></li>
-                <li><a href="/CroudSpark-X/public/press.php">Press Kit</a></li>
+                <li><a href="#">Sitemap</a></li>
+                <li><a href="#">Accessibility</a></li>
+                <li><a href="#">Press Kit</a></li>
             </ul>
         </div>
         
@@ -571,9 +598,9 @@
 // Back to top button visibility
 window.addEventListener('scroll', () => {
     const backToTop = document.getElementById('backToTop');
-    if (window.pageYOffset > 300) {
+    if (backToTop && window.pageYOffset > 300) {
         backToTop.classList.add('visible');
-    } else {
+    } else if (backToTop) {
         backToTop.classList.remove('visible');
     }
 });

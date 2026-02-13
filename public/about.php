@@ -8,280 +8,344 @@ require_once __DIR__ . "/../includes/header.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - CrowdSpark</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Import Inter font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-        /* Hero Section */
-        .about-hero {
-            background: linear-gradient(135deg, #f59e0b 0%, #fb923c 100%);
-            padding: 120px 20px 80px;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            margin-top: -80px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .about-hero::before {
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background - Purple/Blue theme for About */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.25;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(45deg, #8b5cf6, #a78bfa);
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: 5s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, 50px) scale(1.1); }
+            50% { transform: translate(-30px, 80px) scale(0.9); }
+            75% { transform: translate(40px, -40px) scale(1.05); }
+        }
+
+        /* Container */
+        .about-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 40px 80px;
+        }
+
+        /* Hero Header */
+        .about-hero {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .about-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .about-hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* About Intro */
+        .about-intro {
+            background: rgba(20, 20, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 32px;
+            padding: 50px;
+            margin-bottom: 80px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-intro::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-            pointer-events: none;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
         }
 
-        .about-hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-            animation: fadeInDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            letter-spacing: -1px;
-        }
-
-        .about-hero p {
-            font-size: 1.3rem;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s backwards;
-            max-width: 700px;
-            margin: 0 auto;
-            font-weight: 500;
-            line-height: 1.6;
-        }
-
-        /* About Intro Section */
-        .about-intro {
-            max-width: 900px;
-            margin: 80px auto;
-            padding: 0 20px;
-            animation: fadeInUp 0.8s ease-out 0.3s backwards;
-        }
-
-        .about-content h2 {
+        .about-intro h2 {
+            font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 24px;
-            text-align: center;
-            letter-spacing: -0.5px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .about-content p {
+        .about-intro p {
+            color: #cbd5e1;
             font-size: 1.1rem;
             line-height: 1.8;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            font-weight: 500;
+            margin-bottom: 20px;
         }
 
         /* Mission & Vision Cards */
-        .about-values {
-            max-width: 1200px;
-            margin: 100px auto;
-            padding: 0 20px;
+        .values-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 40px;
+            margin-bottom: 100px;
         }
 
         .value-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 48px 40px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(20, 20, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 50px 40px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            animation: cardAppear 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+            animation: fadeInLeft 0.8s ease both;
         }
 
-        .value-card:nth-child(1) {
-            animation-delay: 0.4s;
-        }
-
-        .value-card:nth-child(2) {
-            animation-delay: 0.5s;
-        }
+        .value-card:nth-child(1) { animation-delay: 0.3s; }
+        .value-card:nth-child(2) { animation-delay: 0.4s; }
 
         .value-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
+            right: 0;
             height: 4px;
-            background: linear-gradient(135deg, #f59e0b, #fb923c);
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
 
-        .value-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
+        .value-card:hover::before {
+            transform: scaleX(1);
         }
 
         .value-card:hover {
+            background: rgba(30, 30, 40, 0.9);
+            border-color: rgba(139, 92, 246, 0.4);
             transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: rgba(245, 158, 11, 0.2);
         }
 
-        .value-card:hover::after {
-            opacity: 1;
+        .value-card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 24px;
+            transition: all 0.4s ease;
+        }
+
+        .value-card:hover .value-card-icon {
+            transform: rotate(10deg) scale(1.1);
         }
 
         .value-card h3 {
             font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary);
             margin-bottom: 16px;
-            letter-spacing: -0.3px;
-            position: relative;
-            z-index: 1;
+            font-weight: 800;
+            color: #fff;
         }
 
         .value-card p {
+            color: #cbd5e1;
             font-size: 1.05rem;
             line-height: 1.8;
-            color: var(--text-muted);
-            font-weight: 500;
-            position: relative;
-            z-index: 1;
         }
 
         /* Trust Section */
-        .about-trust {
-            max-width: 1000px;
-            margin: 100px auto;
+        .trust-section {
+            background: rgba(20, 20, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
             padding: 60px 40px;
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border);
+            margin-bottom: 100px;
             text-align: center;
-            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+            animation: fadeInUp 0.8s ease 0.5s both;
             position: relative;
             overflow: hidden;
         }
 
-        .about-trust::before {
+        .trust-section::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, #f59e0b, #fb923c, #f59e0b);
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #8b5cf6);
             background-size: 200% 100%;
             animation: gradientShift 3s ease infinite;
         }
 
-        .about-trust h2 {
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 40px;
-            letter-spacing: -0.5px;
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
-        .trust-points {
+        .trust-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #fff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .trust-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 24px;
             margin-top: 40px;
         }
 
-        .trust-point {
-            background: var(--bg-soft);
+        .trust-item {
+            background: rgba(30, 30, 40, 0.8);
             padding: 24px 28px;
-            border-radius: var(--radius-md);
+            border-radius: 16px;
             font-size: 1.05rem;
             font-weight: 600;
-            color: var(--text-main);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #fff;
+            transition: all 0.3s ease;
             border: 2px solid transparent;
             display: flex;
             align-items: center;
             gap: 12px;
-            animation: slideInUp 0.5s ease-out backwards;
+            animation: slideInUp 0.5s ease both;
         }
 
-        .trust-point:nth-child(1) { animation-delay: 0.7s; }
-        .trust-point:nth-child(2) { animation-delay: 0.8s; }
-        .trust-point:nth-child(3) { animation-delay: 0.9s; }
-        .trust-point:nth-child(4) { animation-delay: 1s; }
+        .trust-item:nth-child(1) { animation-delay: 0.6s; }
+        .trust-item:nth-child(2) { animation-delay: 0.7s; }
+        .trust-item:nth-child(3) { animation-delay: 0.8s; }
+        .trust-item:nth-child(4) { animation-delay: 0.9s; }
 
-        .trust-point:hover {
-            background: white;
-            border-color: var(--primary);
+        .trust-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: #8b5cf6;
             transform: translateX(8px);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
         }
 
         /* Team Section */
-        .about-team {
-            max-width: 900px;
-            margin: 100px auto;
-            padding: 0 20px;
+        .team-section {
             text-align: center;
-            animation: fadeInUp 0.8s ease-out 0.7s backwards;
+            margin-bottom: 100px;
+            animation: fadeInUp 0.8s ease 0.6s both;
         }
 
-        .about-team h2 {
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
+        .team-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .about-team > p {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: var(--text-muted);
-            margin-bottom: 48px;
-            font-weight: 500;
+        .team-section > p {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 50px;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .team-list {
+        .team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 32px;
-            margin-top: 48px;
         }
 
         .team-member {
-            background: var(--bg-card);
+            background: rgba(20, 20, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 40px 32px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 24px;
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
-            animation: cardAppear 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+            animation: fadeInUp 0.6s ease both;
         }
 
-        .team-member:nth-child(1) { animation-delay: 0.8s; }
-        .team-member:nth-child(2) { animation-delay: 0.9s; }
+        .team-member:nth-child(1) { animation-delay: 0.7s; }
+        .team-member:nth-child(2) { animation-delay: 0.8s; }
 
         .team-member::before {
             content: '';
@@ -290,15 +354,14 @@ require_once __DIR__ . "/../includes/header.php";
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
             opacity: 0;
             transition: opacity 0.4s ease;
         }
 
         .team-member:hover {
             transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: rgba(245, 158, 11, 0.3);
+            border-color: rgba(139, 92, 246, 0.3);
         }
 
         .team-member:hover::before {
@@ -309,9 +372,8 @@ require_once __DIR__ . "/../includes/header.php";
             display: block;
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: #fff;
             margin-bottom: 8px;
-            letter-spacing: -0.3px;
             position: relative;
             z-index: 1;
         }
@@ -319,29 +381,26 @@ require_once __DIR__ . "/../includes/header.php";
         .team-member span {
             display: block;
             font-size: 1rem;
-            color: var(--primary);
+            color: #8b5cf6;
             font-weight: 600;
-            letter-spacing: 0.3px;
             position: relative;
             z-index: 1;
         }
 
         /* CTA Section */
-        .about-cta {
-            max-width: 900px;
-            margin: 100px auto 80px;
+        .cta-section {
+            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            border-radius: 32px;
             padding: 70px 40px;
-            background: linear-gradient(135deg, #f59e0b 0%, #fb923c 100%);
-            border-radius: var(--radius-lg);
             text-align: center;
             color: white;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(245, 158, 11, 0.3);
-            animation: fadeInUp 0.8s ease-out 0.8s backwards;
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+            animation: fadeInUp 0.8s ease 0.9s both;
         }
 
-        .about-cta::before {
+        .cta-section::before {
             content: '';
             position: absolute;
             top: 0;
@@ -354,16 +413,16 @@ require_once __DIR__ . "/../includes/header.php";
             pointer-events: none;
         }
 
-        .about-cta h2 {
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
-            font-weight: 800;
+            font-weight: 900;
             margin-bottom: 16px;
             position: relative;
             z-index: 1;
-            letter-spacing: -0.5px;
         }
 
-        .about-cta p {
+        .cta-section p {
             font-size: 1.15rem;
             opacity: 0.95;
             margin-bottom: 40px;
@@ -372,8 +431,6 @@ require_once __DIR__ . "/../includes/header.php";
             margin-right: auto;
             position: relative;
             z-index: 1;
-            font-weight: 500;
-            line-height: 1.7;
         }
 
         .cta-actions {
@@ -383,11 +440,9 @@ require_once __DIR__ . "/../includes/header.php";
             flex-wrap: wrap;
             position: relative;
             z-index: 1;
-            color: orange;
         }
 
-        .btn-primary,
-        .btn-secondary {
+        .btn {
             padding: 16px 40px;
             border-radius: 999px;
             font-weight: 700;
@@ -396,16 +451,13 @@ require_once __DIR__ . "/../includes/header.php";
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             font-size: 1rem;
-            letter-spacing: 0.3px;
             position: relative;
             overflow: hidden;
-            border: 2px solid transparent;
         }
 
-        .btn-primary::before,
-        .btn-secondary::before {
+        .btn::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -418,15 +470,14 @@ require_once __DIR__ . "/../includes/header.php";
             transition: width 0.6s, height 0.6s;
         }
 
-        .btn-primary:active::before,
-        .btn-secondary:active::before {
+        .btn:active::before {
             width: 300px;
             height: 300px;
         }
 
         .btn-primary {
             background: white;
-            color: var(--primary);
+            color: #8b5cf6;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
@@ -443,23 +494,11 @@ require_once __DIR__ . "/../includes/header.php";
 
         .btn-secondary:hover {
             background: white;
-            color: var(--primary);
+            color: #8b5cf6;
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -468,6 +507,17 @@ require_once __DIR__ . "/../includes/header.php";
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
 
@@ -482,102 +532,29 @@ require_once __DIR__ . "/../includes/header.php";
             }
         }
 
-        @keyframes cardAppear {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @keyframes gradientShift {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
         /* Responsive */
-        @media (max-width: 768px) {
-            .about-hero {
+        @media (max-width: 968px) {
+            .about-container {
                 padding: 100px 20px 60px;
             }
 
             .about-hero h1 {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
 
-            .about-hero p {
-                font-size: 1.1rem;
+            .about-intro,
+            .trust-section,
+            .cta-section {
+                padding: 40px 30px;
             }
 
-            .about-intro {
-                margin: 60px auto;
-            }
-
-            .about-content h2 {
-                font-size: 2rem;
-            }
-
-            .about-values {
+            .values-grid,
+            .team-grid {
                 grid-template-columns: 1fr;
-                margin: 60px auto;
-                gap: 24px;
             }
 
-            .value-card {
-                padding: 36px 28px;
-            }
-
-            .about-trust {
-                padding: 40px 24px;
-                margin: 60px 20px;
-            }
-
-            .about-trust h2 {
-                font-size: 1.9rem;
-            }
-
-            .trust-points {
+            .trust-grid {
                 grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .about-team {
-                margin: 60px auto;
-            }
-
-            .about-team h2 {
-                font-size: 1.9rem;
-            }
-
-            .team-list {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .about-cta {
-                margin: 60px 20px;
-                padding: 50px 28px;
-            }
-
-            .about-cta h2 {
-                font-size: 2rem;
-            }
-
-            .cta-actions {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
             }
         }
 
@@ -586,25 +563,34 @@ require_once __DIR__ . "/../includes/header.php";
                 font-size: 2rem;
             }
 
-            .about-values {
-                grid-template-columns: 1fr;
+            .about-intro h2,
+            .trust-section h2,
+            .team-section h2,
+            .cta-section h2 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <section class="about-hero">
-        <h1>About CrowdSpark</h1>
-        <p>
-            Building trust, transparency, and impact through responsible crowdfunding.
-        </p>
-    </section>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
-    <!-- About Intro Section -->
-    <section class="about-intro">
-        <div class="about-content">
+    <div class="about-container">
+        
+        <!-- Hero Section -->
+        <div class="about-hero">
+            <h1>About CrowdSpark</h1>
+            <p>Building trust, transparency, and impact through responsible crowdfunding.</p>
+        </div>
+
+        <!-- About Intro -->
+        <div class="about-intro">
             <h2>Who We Are</h2>
             <p>
                 CrowdSpark is a transparent and community-driven crowdfunding platform
@@ -619,89 +605,98 @@ require_once __DIR__ . "/../includes/header.php";
                 and accountability.
             </p>
         </div>
-    </section>
 
-    <!-- Mission & Vision Cards -->
-    <section class="about-values">
-        <div class="value-card">
-            <h3>Our Mission</h3>
+        <!-- Mission & Vision -->
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-card-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Our Mission</h3>
+                <p>
+                    To make crowdfunding safe, transparent, and accessible for everyone
+                    by enabling meaningful causes to receive the support they deserve.
+                </p>
+            </div>
+
+            <div class="value-card">
+                <div class="value-card-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Our Vision</h3>
+                <p>
+                    To become a trusted global crowdfunding platform where compassion,
+                    integrity, and impact drive every contribution.
+                </p>
+            </div>
+        </div>
+
+        <!-- Trust Section -->
+        <div class="trust-section">
+            <h2>Why Trust CrowdSpark?</h2>
+
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <i class="fas fa-check-circle"></i>
+                    Campaign review and approval process
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-chart-line"></i>
+                    Transparent fundraising progress
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-shield-alt"></i>
+                    Secure donation workflow
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-users"></i>
+                    Community-driven impact
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="team-section">
+            <h2>Project Team</h2>
             <p>
-                To make crowdfunding safe, transparent, and accessible for everyone
-                by enabling meaningful causes to receive the support they deserve.
+                CrowdSpark is designed and developed as a full-stack web project
+                with a focus on clean architecture, security, and real-world usability.
             </p>
+
+            <div class="team-grid">
+                <div class="team-member">
+                    <strong>Ajay Patil</strong>
+                    <span>Developer</span>
+                </div>
+
+                <div class="team-member">
+                    <strong>Gautam Londhe</strong>
+                    <span>Project Contributor</span>
+                </div>
+            </div>
         </div>
 
-        <div class="value-card">
-            <h3>Our Vision</h3>
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Join Us in Making a Difference</h2>
             <p>
-                To become a trusted global crowdfunding platform where compassion,
-                integrity, and impact drive every contribution.
+                Whether you want to support a cause or start a fundraiser,
+                CrowdSpark is here to help you create meaningful impact.
             </p>
-        </div>
-    </section>
 
-    <!-- Trust Section -->
-    <section class="about-trust">
-        <h2>Why Trust CrowdSpark?</h2>
-
-        <div class="trust-points">
-            <div class="trust-point">
-                ✔ Campaign review and approval process
-            </div>
-            <div class="trust-point">
-                ✔ Transparent fundraising progress
-            </div>
-            <div class="trust-point">
-                ✔ Secure donation workflow
-            </div>
-            <div class="trust-point">
-                ✔ Community-driven impact
+            <div class="cta-actions">
+                <a href="/CroudSpark-X/public/explore-campaigns.php" class="btn btn-primary">
+                    <i class="fas fa-compass"></i> Explore Campaigns
+                </a>
+                <a href="/CroudSpark-X/public/start-fundraise.php" class="btn btn-secondary">
+                    <i class="fas fa-plus-circle"></i> Start a Fundraiser
+                </a>
             </div>
         </div>
-    </section>
 
-    <!-- Team Section -->
-    <section class="about-team">
-        <h2>Project Team</h2>
-        <p>
-            CrowdSpark is designed and developed as a full-stack web project
-            with a focus on clean architecture, security, and real-world usability.
-        </p>
+    </div>
 
-        <div class="team-list">
-            <div class="team-member">
-                <strong>Ajay Patil</strong>
-                <span>Developer</span>
-            </div>
-
-            <div class="team-member">
-                <strong>Gautam Londhe</strong>
-                <span>Project Contributor</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="about-cta">
-        <h2>Join Us in Making a Difference</h2>
-        <p>
-            Whether you want to support a cause or start a fundraiser,
-            CrowdSpark is here to help you create meaningful impact.
-        </p>
-
-        <div class="cta-actions">
-            <a href="/CroudSpark-X/public/explore-campaigns.php" class="btn-primary">
-                Explore Campaigns
-            </a>
-            <a href="/CroudSpark-X/public/start-fundraise.php" class="btn-secondary">
-                Start a Fundraiser
-            </a>
-        </div>
-    </section>
+    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
 
 </body>
 </html>
-
-<?php
-require_once __DIR__ . "/../includes/footer.php";
-?>

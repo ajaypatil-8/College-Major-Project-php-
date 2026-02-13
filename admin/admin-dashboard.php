@@ -27,24 +27,6 @@ $totalMoney = $pdo->query("SELECT IFNULL(SUM(amount),0) FROM donations WHERE sta
 $totalDonations = $pdo->query("SELECT COUNT(*) FROM donations WHERE status='success'")->fetchColumn();
 $avgDonation = $totalDonations > 0 ? $totalMoney / $totalDonations : 0;
 
-/* MONTHLY REVENUE TREND (Last 6 months) */
-$monthlyRevenue = $pdo->query("
-    SELECT DATE_FORMAT(created_at, '%b') as month, IFNULL(SUM(amount),0) as total
-    FROM donations 
-    WHERE status='success' AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-    GROUP BY MONTH(created_at)
-    ORDER BY created_at
-")->fetchAll(PDO::FETCH_ASSOC);
-
-/* CATEGORY DISTRIBUTION */
-$categoryStats = $pdo->query("
-    SELECT category, COUNT(*) as count
-    FROM campaigns
-    WHERE status='approved'
-    GROUP BY category
-    ORDER BY count DESC
-")->fetchAll(PDO::FETCH_ASSOC);
-
 /* TOP CAMPAIGNS BY FUNDING */
 $topCampaigns = $pdo->query("
     SELECT c.id, c.title, c.goal, IFNULL(SUM(d.amount),0) as raised
@@ -90,58 +72,116 @@ $pendingCampaigns = $pdo->query("
 <?php require_once __DIR__."/../includes/header.php"; ?>
 
 <style>
-/* ===== CONTAINER ===== */
-.admin-container{
-    max-width: 1400px;
-    margin: 100px auto 60px;
-    padding: 20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ===== PAGE HEADER ===== */
-.page-header{
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0f0f0f;
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background - Red/Pink theme for Admin */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.25;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(45deg, #ef4444, #f87171);
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(45deg, #ec4899, #f472b6);
+    bottom: -10%;
+    right: -10%;
+    animation-delay: 5s;
+}
+
+.orb-3 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(45deg, #dc2626, #ef4444);
+    top: 50%;
+    left: 50%;
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, 50px) scale(1.1); }
+    50% { transform: translate(-30px, 80px) scale(0.9); }
+    75% { transform: translate(40px, -40px) scale(1.05); }
+}
+
+/* Container */
+.admin-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 120px 40px 80px;
+}
+
+/* Page Header */
+.page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
     flex-wrap: wrap;
     gap: 20px;
-    animation: fadeInDown 0.6s ease;
+    animation: fadeInUp 0.8s ease;
 }
 
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.page-title{
-    font-size: 42px;
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 900;
-    background: linear-gradient(135deg, #0f172a, #334155);
+    background: linear-gradient(135deg, #fff, #ef4444);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin: 0;
+    margin: 0 0 10px;
 }
 
-.page-subtitle{
-    color: #64748b;
-    font-size: 16px;
-    margin-top: 8px;
+.page-subtitle {
+    color: #cbd5e1;
+    font-size: 1.1rem;
 }
 
-.header-actions{
+.header-actions {
     display: flex;
     gap: 12px;
 }
 
-.btn-action{
-    padding: 12px 24px;
-    border-radius: 12px;
+.btn-action {
+    padding: 14px 28px;
+    border-radius: 999px;
     text-decoration: none;
     font-weight: 700;
     font-size: 14px;
@@ -151,95 +191,85 @@ $pendingCampaigns = $pdo->query("
     gap: 8px;
 }
 
-.btn-primary{
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+.btn-primary {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-.btn-primary:hover{
+.btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
 }
 
-.btn-secondary{
-    background: #fff;
-    color: #0f172a;
-    border: 2px solid #e2e8f0;
+.btn-secondary {
+    background: rgba(30, 30, 40, 0.8);
+    color: #fff;
+    border: 2px solid rgba(239, 68, 68, 0.3);
 }
 
-.btn-secondary:hover{
-    border-color: #f59e0b;
-    color: #f59e0b;
+.btn-secondary:hover {
+    border-color: #ef4444;
+    transform: translateY(-2px);
 }
 
-/* ===== STATS GRID ===== */
-.stats-grid{
+/* Stats Grid */
+.stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 24px;
-    margin-bottom: 50px;
+    margin-bottom: 60px;
 }
 
-.stat-card{
-    background: #fff;
-    padding: 28px;
-    border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.stat-card {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 32px;
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
-    animation: fadeInUp 0.6s ease forwards;
-    opacity: 0;
+    animation: fadeInUp 0.6s ease both;
 }
 
-.stat-card:nth-child(1){ animation-delay: 0.1s; }
-.stat-card:nth-child(2){ animation-delay: 0.2s; }
-.stat-card:nth-child(3){ animation-delay: 0.3s; }
-.stat-card:nth-child(4){ animation-delay: 0.4s; }
-.stat-card:nth-child(5){ animation-delay: 0.5s; }
-.stat-card:nth-child(6){ animation-delay: 0.6s; }
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(5) { animation-delay: 0.5s; }
+.stat-card:nth-child(6) { animation-delay: 0.6s; }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    from {
-        transform: translateY(20px);
-    }
-}
-
-.stat-card::before{
-    content: "";
+.stat-card::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #f59e0b, #fb923c);
+    background: linear-gradient(90deg, #ef4444, #dc2626);
     transform: scaleX(0);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
 }
 
-.stat-card:hover::before{
+.stat-card:hover::before {
     transform: scaleX(1);
 }
 
-.stat-card:hover{
+.stat-card:hover {
+    background: rgba(30, 30, 40, 0.9);
+    border-color: rgba(239, 68, 68, 0.4);
     transform: translateY(-8px);
-    box-shadow: 0 16px 50px rgba(245, 158, 11, 0.15);
 }
 
-.stat-header{
+.stat-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 16px;
 }
 
-.stat-icon{
+.stat-icon {
     width: 56px;
     height: 56px;
     border-radius: 16px;
@@ -250,33 +280,33 @@ $pendingCampaigns = $pdo->query("
     transition: transform 0.3s ease;
 }
 
-.stat-card:hover .stat-icon{
+.stat-card:hover .stat-icon {
     transform: scale(1.1) rotate(5deg);
 }
 
-.icon-users{ background: linear-gradient(135deg, #3b82f6, #2563eb); }
-.icon-campaigns{ background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-.icon-approved{ background: linear-gradient(135deg, #10b981, #059669); }
-.icon-pending{ background: linear-gradient(135deg, #f59e0b, #d97706); }
-.icon-money{ background: linear-gradient(135deg, #ec4899, #db2777); }
-.icon-donations{ background: linear-gradient(135deg, #14b8a6, #0d9488); }
+.icon-users { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.icon-campaigns { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.icon-approved { background: linear-gradient(135deg, #10b981, #059669); }
+.icon-pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.icon-money { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.icon-donations { background: linear-gradient(135deg, #14b8a6, #0d9488); }
 
-.stat-content h2{
+.stat-content h2 {
     font-size: 36px;
     font-weight: 900;
     margin: 0;
-    color: #0f172a;
+    color: #fff;
     line-height: 1;
 }
 
-.stat-content p{
-    color: #64748b;
+.stat-content p {
+    color: #cbd5e1;
     margin: 8px 0 0;
     font-weight: 600;
     font-size: 14px;
 }
 
-.stat-trend{
+.stat-trend {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -287,70 +317,64 @@ $pendingCampaigns = $pdo->query("
     border-radius: 999px;
 }
 
-.trend-up{
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
+.trend-up {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
 }
 
-.trend-down{
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-}
-
-/* ===== CHARTS SECTION ===== */
-.charts-grid{
+/* Cards Grid */
+.cards-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-    margin-bottom: 50px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
 }
 
-.chart-card{
-    background: #fff;
+.card {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
     padding: 32px;
-    border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
+    animation: fadeInUp 0.8s ease;
 }
 
-.chart-title{
-    font-size: 20px;
-    font-weight: 800;
+.card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
     margin-bottom: 24px;
-    color: #0f172a;
+    background: linear-gradient(135deg, #fff, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.chart-canvas{
-    height: 300px;
-}
-
-/* ===== TOP CAMPAIGNS ===== */
-.top-campaigns{
+/* Top Campaigns */
+.top-campaigns {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.campaign-item{
+.campaign-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px;
-    background: #f8fafc;
+    padding: 16px;
+    background: rgba(30, 30, 40, 0.6);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
 
-.campaign-item:hover{
-    background: #fff7ed;
+.campaign-item:hover {
+    background: rgba(239, 68, 68, 0.1);
     transform: translateX(8px);
 }
 
-.campaign-rank{
-    width: 32px;
-    height: 32px;
+.campaign-rank {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
     display: flex;
     align-items: center;
@@ -359,42 +383,45 @@ $pendingCampaigns = $pdo->query("
     font-size: 14px;
 }
 
-.campaign-info{
+.campaign-info {
     flex: 1;
 }
 
-.campaign-info h4{
+.campaign-info h4 {
     font-size: 14px;
     font-weight: 700;
     margin: 0 0 4px;
-    color: #0f172a;
+    color: #fff;
 }
 
-.campaign-info p{
+.campaign-info p {
     font-size: 12px;
-    color: #64748b;
+    color: #cbd5e1;
     margin: 0;
 }
 
-/* ===== SECTION TITLE ===== */
-.section-header{
+/* Section Header */
+.section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 60px 0 24px;
+    margin: 80px 0 30px;
 }
 
-.section-title{
-    font-size: 28px;
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
     font-weight: 900;
-    color: #0f172a;
+    background: linear-gradient(135deg, #fff, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.section-badge{
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+.section-badge {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
     padding: 4px 12px;
     border-radius: 999px;
@@ -402,26 +429,26 @@ $pendingCampaigns = $pdo->query("
     font-weight: 700;
 }
 
-/* ===== TABLE ===== */
-.table-card{
-    background: #fff;
-    border-radius: 20px;
+/* Table */
+.table-card {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     margin-bottom: 30px;
 }
 
-.table-card table{
+.table-card table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.table-card thead{
-    background: linear-gradient(135deg, #0f172a, #1e293b);
+.table-card thead {
+    background: rgba(239, 68, 68, 0.2);
 }
 
-.table-card th{
+.table-card th {
     padding: 18px 20px;
     text-align: left;
     font-size: 13px;
@@ -431,22 +458,22 @@ $pendingCampaigns = $pdo->query("
     letter-spacing: 0.5px;
 }
 
-.table-card td{
+.table-card td {
     padding: 18px 20px;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 14px;
-    color: #334155;
+    color: #cbd5e1;
 }
 
-.table-card tbody tr{
+.table-card tbody tr {
     transition: background 0.2s ease;
 }
 
-.table-card tbody tr:hover{
-    background: #f8fafc;
+.table-card tbody tr:hover {
+    background: rgba(239, 68, 68, 0.05);
 }
 
-.badge{
+.badge {
     padding: 6px 14px;
     border-radius: 999px;
     font-size: 12px;
@@ -454,26 +481,26 @@ $pendingCampaigns = $pdo->query("
     display: inline-block;
 }
 
-.badge-success{
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
+.badge-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
 }
 
-.badge-warning{
-    background: rgba(245, 158, 11, 0.1);
-    color: #d97706;
+.badge-warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
 }
 
-.badge-danger{
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
+.badge-danger {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
 }
 
-.user-avatar{
+.user-avatar {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -482,19 +509,19 @@ $pendingCampaigns = $pdo->query("
     font-size: 14px;
 }
 
-/* ===== PENDING CARDS ===== */
-.pending-grid{
+/* Pending Cards */
+.pending-grid {
     display: grid;
     gap: 24px;
     margin-bottom: 40px;
 }
 
-.pending-card{
-    background: #fff;
-    border-radius: 20px;
+.pending-card {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
     padding: 28px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     display: grid;
     grid-template-columns: 200px 1fr auto;
     gap: 24px;
@@ -504,63 +531,62 @@ $pendingCampaigns = $pdo->query("
     overflow: hidden;
 }
 
-.pending-card::before{
+.pending-card::before {
     content: "";
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(135deg, #f59e0b, #fb923c);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
-.pending-card:hover{
+.pending-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 50px rgba(245, 158, 11, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
 }
 
-.pending-image{
+.pending-image {
     width: 100%;
     height: 140px;
     border-radius: 14px;
     object-fit: cover;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-.pending-content h3{
+.pending-content h3 {
     font-size: 20px;
     font-weight: 800;
     margin: 0 0 8px;
-    color: #0f172a;
+    color: #fff;
 }
 
-.pending-content p{
-    color: #64748b;
+.pending-content p {
+    color: #cbd5e1;
     margin: 6px 0;
     font-size: 14px;
     line-height: 1.6;
 }
 
-.pending-meta{
+.pending-meta {
     display: flex;
     gap: 20px;
     margin-top: 12px;
     flex-wrap: wrap;
 }
 
-.meta-item{
+.meta-item {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #64748b;
+    color: #cbd5e1;
 }
 
-.meta-item i{
-    color: #f59e0b;
+.meta-item i {
+    color: #ef4444;
 }
 
-.pending-actions{
+.pending-actions {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -568,7 +594,7 @@ $pendingCampaigns = $pdo->query("
 
 .btn-review,
 .btn-approve,
-.btn-reject{
+.btn-reject {
     padding: 12px 20px;
     border-radius: 12px;
     text-decoration: none;
@@ -583,87 +609,121 @@ $pendingCampaigns = $pdo->query("
     white-space: nowrap;
 }
 
-.btn-review{
-    background: #0f172a;
+.btn-review {
+    background: rgba(30, 30, 40, 0.8);
     color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.btn-review:hover{
-    background: #1e293b;
-    transform: scale(1.05);
+.btn-review:hover {
+    background: rgba(40, 40, 50, 0.9);
 }
 
-.btn-approve{
+.btn-approve {
     background: linear-gradient(135deg, #10b981, #059669);
     color: #fff;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-.btn-approve:hover{
+.btn-approve:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
 }
 
-.btn-reject{
+.btn-reject {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #fff;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-.btn-reject:hover{
+.btn-reject:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
 }
 
-/* ===== EMPTY STATE ===== */
-.empty-state{
+/* Empty State */
+.empty-state {
     text-align: center;
     padding: 60px 20px;
     color: #94a3b8;
 }
 
-.empty-state i{
+.empty-state i {
     font-size: 64px;
     margin-bottom: 16px;
     opacity: 0.5;
 }
 
-.empty-state h3{
+.empty-state h3 {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #64748b;
+    color: #cbd5e1;
 }
 
-/* ===== RESPONSIVE ===== */
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (max-width: 1200px) {
-    .charts-grid{
+    .cards-grid {
         grid-template-columns: 1fr;
     }
     
-    .pending-card{
+    .pending-card {
         grid-template-columns: 1fr;
     }
     
-    .pending-actions{
+    .pending-actions {
         flex-direction: row;
     }
 }
 
 @media (max-width: 768px) {
-    .page-title{
-        font-size: 32px;
+    .admin-container {
+        padding: 100px 20px 60px;
     }
     
-    .stats-grid{
+    .page-title {
+        font-size: 2.5rem;
+    }
+    
+    .stats-grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
     
-    .pending-actions{
+    .pending-actions {
         flex-direction: column;
     }
 }
 </style>
+
+<!-- Background Animation -->
+<div class="bg-animation">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
 
 <div class="admin-container">
 
@@ -773,14 +833,12 @@ $pendingCampaigns = $pdo->query("
 
     </div>
 
-    <!-- CHARTS -->
-    <div class="charts-grid">
+    <!-- CARDS GRID -->
+    <div class="cards-grid">
         
-       
-
         <!-- Top Campaigns -->
-        <div class="chart-card">
-            <h3 class="chart-title">🏆 Top Funded Campaigns</h3>
+        <div class="card">
+            <h3>🏆 Top Funded Campaigns</h3>
             <div class="top-campaigns">
                 <?php foreach($topCampaigns as $index => $tc): ?>
                 <div class="campaign-item">
@@ -958,80 +1016,5 @@ $pendingCampaigns = $pdo->query("
     </div>
 
 </div>
-
-<!-- Chart.js Library -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-<script>
-// Revenue Chart
-const revenueCtx = document.getElementById('revenueChart');
-if(revenueCtx) {
-    new Chart(revenueCtx, {
-        type: 'line',
-        data: {
-            labels: <?= json_encode(array_column($monthlyRevenue, 'month')) ?>,
-            datasets: [{
-                label: 'Revenue (₹)',
-                data: <?= json_encode(array_column($monthlyRevenue, 'total')) ?>,
-                borderColor: 'rgb(245, 158, 11)',
-                backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 6,
-                pointBackgroundColor: 'rgb(245, 158, 11)',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointHoverRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                    padding: 12,
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
-                    },
-                    bodyFont: {
-                        size: 13
-                    },
-                    borderColor: 'rgb(245, 158, 11)',
-                    borderWidth: 1,
-                    callbacks: {
-                        label: function(context) {
-                            return 'Revenue: ₹' + context.parsed.y.toLocaleString();
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            return '₹' + value.toLocaleString();
-                        }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-</script>
 
 <?php require_once __DIR__."/../includes/footer.php"; ?>

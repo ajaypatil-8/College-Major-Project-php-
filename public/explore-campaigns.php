@@ -9,164 +9,217 @@ require_once __DIR__ . "/../config/db.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore Campaigns - CrowdSpark</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Import Inter font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, #f59e0b 0%, #fb923c 100%);
-            padding: 100px 20px 80px;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            margin-top: -80px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .hero-section::before {
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background - Cyan/Teal theme for Projects */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.25;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(45deg, #06b6d4, #22d3ee);
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, #14b8a6, #5eead4);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: 5s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(45deg, #0ea5e9, #06b6d4);
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, 50px) scale(1.1); }
+            50% { transform: translate(-30px, 80px) scale(0.9); }
+            75% { transform: translate(40px, -40px) scale(1.05); }
+        }
+
+        /* Container */
+        .explore-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 40px 80px;
+        }
+
+        /* Hero Section */
+        .explore-hero {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .explore-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .explore-hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: rgba(20, 20, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-section::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-            pointer-events: none;
+            height: 4px;
+            background: linear-gradient(90deg, #06b6d4, #14b8a6);
         }
 
-        .hero-section h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-            animation: fadeInDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            letter-spacing: -1px;
-        }
-
-        .hero-section p {
-            font-size: 1.25rem;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s backwards;
-            max-width: 600px;
-            margin: 0 auto;
-            font-weight: 500;
-        }
-
-        /* Filter Section */
-        .filter-section {
-            max-width: 1200px;
-            margin: -40px auto 60px;
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .filter-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 28px 32px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border);
+        .filter-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 24px;
-            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s backwards;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
         }
 
         .filter-group label {
             display: block;
-            color: var(--text-main);
+            color: #fff;
             font-weight: 600;
             margin-bottom: 10px;
             font-size: 14px;
-            letter-spacing: 0.3px;
         }
 
         .filter-group select,
         .filter-group input {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
             font-size: 15px;
             transition: all 0.3s ease;
-            background: var(--bg-card);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            background: rgba(10, 10, 20, 0.6);
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
             font-weight: 500;
         }
 
         .filter-group select:focus,
         .filter-group input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+            background: rgba(20, 20, 30, 0.7);
         }
 
         .filter-group input::placeholder {
-            color: var(--text-light);
+            color: #94a3b8;
         }
 
-        /* Campaigns Container */
-        .campaigns-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px 80px;
-        }
-
+        /* Campaigns Header */
         .campaigns-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 40px;
-            animation: fadeIn 0.6s ease-out 0.4s backwards;
+            animation: fadeIn 0.6s ease 0.4s both;
         }
 
         .campaigns-header h2 {
             font-size: 2rem;
             font-weight: 800;
-            color: var(--text-main);
-            letter-spacing: -0.5px;
+            color: #fff;
         }
 
         .campaigns-count {
-            color: var(--primary);
+            color: #06b6d4;
             font-weight: 700;
             font-size: 1rem;
             padding: 8px 16px;
-            background: rgba(245, 158, 11, 0.1);
+            background: rgba(6, 182, 212, 0.2);
             border-radius: 999px;
-            letter-spacing: 0.3px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
         }
 
+        /* Campaigns Grid */
         .campaigns-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 32px;
-            animation: fadeIn 0.8s ease-out 0.5s backwards;
+            animation: fadeIn 0.8s ease 0.5s both;
         }
 
         /* Campaign Card */
         .campaign-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
+            background: rgba(20, 20, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            animation: cardAppear 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+            animation: cardAppear 0.6s ease both;
             position: relative;
         }
 
@@ -177,7 +230,7 @@ require_once __DIR__ . "/../config/db.php";
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, transparent 100%);
             opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
@@ -185,8 +238,7 @@ require_once __DIR__ . "/../config/db.php";
 
         .campaign-card:hover {
             transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: rgba(245, 158, 11, 0.2);
+            border-color: rgba(6, 182, 212, 0.4);
         }
 
         .campaign-card:hover::after {
@@ -198,14 +250,14 @@ require_once __DIR__ . "/../config/db.php";
             height: 240px;
             overflow: hidden;
             position: relative;
-            background: var(--bg-soft);
+            background: rgba(0, 0, 0, 0.3);
         }
 
         .card-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.6s ease;
         }
 
         .campaign-card:hover .card-image img {
@@ -216,7 +268,7 @@ require_once __DIR__ . "/../config/db.php";
             position: absolute;
             top: 16px;
             left: 16px;
-            background: linear-gradient(135deg, #f59e0b, #fb923c);
+            background: linear-gradient(135deg, #06b6d4, #14b8a6);
             color: white;
             padding: 8px 16px;
             border-radius: 999px;
@@ -225,7 +277,7 @@ require_once __DIR__ . "/../config/db.php";
             text-transform: uppercase;
             letter-spacing: 0.8px;
             z-index: 2;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.35);
         }
 
         .card-body {
@@ -234,7 +286,7 @@ require_once __DIR__ . "/../config/db.php";
 
         .card-title {
             font-size: 1.35rem;
-            color: var(--text-main);
+            color: #fff;
             margin-bottom: 12px;
             font-weight: 800;
             line-height: 1.3;
@@ -242,16 +294,15 @@ require_once __DIR__ . "/../config/db.php";
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            letter-spacing: -0.3px;
             transition: color 0.3s ease;
         }
 
         .campaign-card:hover .card-title {
-            color: var(--primary);
+            color: #06b6d4;
         }
 
         .card-description {
-            color: var(--text-muted);
+            color: #cbd5e1;
             line-height: 1.7;
             margin-bottom: 24px;
             display: -webkit-box;
@@ -259,7 +310,6 @@ require_once __DIR__ . "/../config/db.php";
             -webkit-box-orient: vertical;
             overflow: hidden;
             font-size: 0.95rem;
-            font-weight: 500;
         }
 
         .card-meta {
@@ -268,25 +318,20 @@ require_once __DIR__ . "/../config/db.php";
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 0.875rem;
         }
 
         .card-location {
-            color: var(--text-muted);
+            color: #cbd5e1;
             display: flex;
             align-items: center;
             gap: 6px;
             font-weight: 600;
         }
 
-        .card-location::before {
-            content: '📍';
-            font-size: 1rem;
-        }
-
         .card-date {
-            color: var(--text-light);
+            color: #94a3b8;
             font-size: 0.85rem;
             font-weight: 600;
         }
@@ -299,14 +344,13 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .stat-raised {
-            color: var(--primary);
+            color: #06b6d4;
             font-weight: 800;
             font-size: 1.25rem;
-            letter-spacing: -0.3px;
         }
 
         .stat-goal {
-            color: var(--text-muted);
+            color: #cbd5e1;
             font-weight: 600;
             font-size: 0.9rem;
         }
@@ -314,18 +358,17 @@ require_once __DIR__ . "/../config/db.php";
         .progress-bar-container {
             width: 100%;
             height: 10px;
-            background: var(--border-light);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 999px;
             overflow: hidden;
             margin-bottom: 24px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
         }
 
         .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, #f59e0b 0%, #fb923c 100%);
+            background: linear-gradient(90deg, #06b6d4, #14b8a6);
             border-radius: 999px;
-            transition: width 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: width 1.2s ease;
             position: relative;
             overflow: hidden;
         }
@@ -341,6 +384,10 @@ require_once __DIR__ . "/../config/db.php";
             animation: shimmer 2.5s infinite;
         }
 
+        @keyframes shimmer {
+            to { left: 100%; }
+        }
+
         .card-footer {
             display: flex;
             justify-content: space-between;
@@ -349,13 +396,13 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .view-btn {
-            background: linear-gradient(135deg, #f59e0b, #fb923c);
+            background: linear-gradient(135deg, #06b6d4, #14b8a6);
             color: white;
             padding: 11px 22px;
             border-radius: 999px;
             text-decoration: none;
             font-weight: 700;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             display: inline-flex;
@@ -365,8 +412,7 @@ require_once __DIR__ . "/../config/db.php";
             position: relative;
             overflow: hidden;
             font-size: 13px;
-            letter-spacing: 0.3px;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -391,16 +437,12 @@ require_once __DIR__ . "/../config/db.php";
 
         .view-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
-        }
-
-        .view-btn:active {
-            transform: translateY(0);
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
         }
 
         .percentage {
             font-weight: 700;
-            color: var(--primary);
+            color: #06b6d4;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
@@ -412,44 +454,30 @@ require_once __DIR__ . "/../config/db.php";
         .empty-state {
             text-align: center;
             padding: 100px 20px;
-            animation: fadeIn 0.8s ease-out;
+            animation: fadeIn 0.8s ease;
         }
 
         .empty-state-icon {
             font-size: 5rem;
             margin-bottom: 24px;
             opacity: 0.2;
-            filter: grayscale(1);
         }
 
         .empty-state h3 {
             font-size: 1.75rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: #fff;
             margin-bottom: 12px;
-            letter-spacing: -0.5px;
         }
 
         .empty-state p {
-            color: var(--text-muted);
+            color: #cbd5e1;
             font-size: 1.05rem;
-            font-weight: 500;
             max-width: 400px;
             margin: 0 auto;
         }
 
         /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -461,24 +489,9 @@ require_once __DIR__ . "/../config/db.php";
             }
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(60px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @keyframes cardAppear {
@@ -492,35 +505,18 @@ require_once __DIR__ . "/../config/db.php";
             }
         }
 
-        @keyframes shimmer {
-            to {
-                left: 100%;
-            }
-        }
-
         /* Responsive */
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: 80px 20px 60px;
+        @media (max-width: 968px) {
+            .explore-container {
+                padding: 100px 20px 60px;
             }
 
-            .hero-section h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-section p {
-                font-size: 1.1rem;
-            }
-
-            .filter-card {
+            .filter-grid {
                 grid-template-columns: 1fr;
-                padding: 24px;
-                gap: 20px;
             }
 
             .campaigns-grid {
                 grid-template-columns: 1fr;
-                gap: 24px;
             }
 
             .campaigns-header {
@@ -528,96 +524,74 @@ require_once __DIR__ . "/../config/db.php";
                 gap: 16px;
                 align-items: flex-start;
             }
-
-            .campaigns-header h2 {
-                font-size: 1.75rem;
-            }
-
-            .card-body {
-                padding: 24px;
-            }
         }
 
         @media (max-width: 480px) {
-            .hero-section h1 {
-                font-size: 2rem;
+            .explore-hero h1 {
+                font-size: 2.5rem;
             }
 
-            .campaigns-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 24px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
+            .filter-section {
+                padding: 24px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <h1>Explore Campaigns</h1>
-        <p>Discover verified fundraisers and support causes that matter</p>
-    </section>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
-    <!-- Filter Section -->
-    <section class="filter-section">
-        <div class="filter-card">
-            <div class="filter-group">
-                <label for="categoryFilter">Category</label>
-                <select id="categoryFilter" onchange="filterCampaigns()">
-                    <option value="">All Categories</option>
-                    <option value="Medical">Medical</option>
-                    <option value="Education">Education</option>
-                    <option value="Startup">Startup</option>
-                    <option value="Community">Community</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="searchFilter">Search</label>
-                <input type="text" id="searchFilter" placeholder="Search campaigns..." onkeyup="filterCampaigns()">
-            </div>
-            <div class="filter-group">
-                <label for="sortFilter">Sort By</label>
-                <select id="sortFilter" onchange="filterCampaigns()">
-                    <option value="newest">Newest First</option>
-                    <option value="popular">Most Popular</option>
-                    <option value="ending">Ending Soon</option>
-                </select>
+    <div class="explore-container">
+        
+        <!-- Hero Section -->
+        <div class="explore-hero">
+            <h1>Explore Campaigns</h1>
+            <p>Discover verified fundraisers and support causes that matter</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="categoryFilter">Category</label>
+                    <select id="categoryFilter" onchange="filterCampaigns()">
+                        <option value="">All Categories</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Education">Education</option>
+                        <option value="Startup">Startup</option>
+                        <option value="Community">Community</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="searchFilter">Search</label>
+                    <input type="text" id="searchFilter" placeholder="Search campaigns..." onkeyup="filterCampaigns()">
+                </div>
+                <div class="filter-group">
+                    <label for="sortFilter">Sort By</label>
+                    <select id="sortFilter" onchange="filterCampaigns()">
+                        <option value="newest">Newest First</option>
+                        <option value="popular">Most Popular</option>
+                        <option value="ending">Ending Soon</option>
+                    </select>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Campaigns Container -->
-    <section class="campaigns-container">
+        <!-- Campaigns Header -->
         <div class="campaigns-header">
             <h2>Active Campaigns</h2>
             <span class="campaigns-count" id="campaignsCount">Loading...</span>
         </div>
 
+        <!-- Campaigns Grid -->
         <div class="campaigns-grid" id="campaignsGrid">
             <?php
             try {
-                // Get campaigns with donation totals and media
                 $stmt = $pdo->prepare("
                     SELECT c.*, 
                            COALESCE(SUM(d.amount), 0) as raised_amount,
@@ -645,22 +619,16 @@ require_once __DIR__ . "/../config/db.php";
                             $percent = min(($raisedAmount / $goalAmount) * 100, 100);
                         }
 
-                        // Format location
                         $location = !empty($row['location']) ? htmlspecialchars($row['location']) : 'Not specified';
-                        
-                        // Format date
                         $endDate = !empty($row['end_date']) ? date('M d, Y', strtotime($row['end_date'])) : '';
 
-                        // Get thumbnail from campaign_media
                         $imagePath = 'default-campaign.jpg';
                         if (!empty($row['media_url'])) {
                             $imagePath = htmlspecialchars($row['media_url']);
                         }
                         
-                        // Animation delay for stagger effect
                         $delay = ($count % 6) * 0.1;
                         
-                        // Get description
                         $description = '';
                         if (!empty($row['short_desc'])) {
                             $description = htmlspecialchars(substr($row['short_desc'], 0, 120));
@@ -680,7 +648,7 @@ require_once __DIR__ . "/../config/db.php";
                                 <p class='card-description'>{$description}</p>
                                 
                                 <div class='card-meta'>
-                                    <span class='card-location'>{$location}</span>
+                                    <span class='card-location'><i class='fas fa-map-marker-alt'></i> {$location}</span>
                                     " . ($endDate ? "<span class='card-date'>Ends: {$endDate}</span>" : "") . "
                                 </div>
                                 
@@ -695,7 +663,9 @@ require_once __DIR__ . "/../config/db.php";
                                 
                                 <div class='card-footer'>
                                     <span class='percentage'>" . number_format($percent, 1) . "%</span>
-                                    <a href='/CroudSpark-X/public/campaign-details.php?id={$row['id']}' class='view-btn'>View Campaign</a>
+                                    <a href='/CroudSpark-X/public/campaign-details.php?id={$row['id']}' class='view-btn'>
+                                        View Campaign <i class='fas fa-arrow-right'></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -734,10 +704,10 @@ require_once __DIR__ . "/../config/db.php";
             }
             ?>
         </div>
-    </section>
+
+    </div>
 
     <script>
-        // Filter and Search Functionality
         function filterCampaigns() {
             const category = document.getElementById('categoryFilter').value.toLowerCase();
             const search = document.getElementById('searchFilter').value.toLowerCase();
@@ -746,7 +716,6 @@ require_once __DIR__ . "/../config/db.php";
             
             let visibleCount = 0;
 
-            // Filter cards
             cards.forEach(card => {
                 const cardCategory = card.dataset.category.toLowerCase();
                 const cardTitle = card.dataset.title.toLowerCase();
@@ -762,7 +731,6 @@ require_once __DIR__ . "/../config/db.php";
                 }
             });
 
-            // Sort visible cards
             const visibleCards = cards.filter(card => card.style.display !== 'none');
             
             if (sort === 'popular') {
@@ -775,16 +743,12 @@ require_once __DIR__ . "/../config/db.php";
                 });
             }
 
-            // Re-append sorted cards
             const grid = document.getElementById('campaignsGrid');
             visibleCards.forEach(card => grid.appendChild(card));
 
-            // Update count
             document.getElementById('campaignsCount').textContent = `${visibleCount} campaign${visibleCount !== 1 ? 's' : ''} found`;
             
-            // Show empty state if no results
-            const emptyState = document.querySelector('.empty-state');
-            if (visibleCount === 0 && !emptyState) {
+            if (visibleCount === 0 && !document.querySelector('.empty-state')) {
                 grid.innerHTML = `
                     <div class='empty-state'>
                         <div class='empty-state-icon'>🔍</div>
@@ -795,20 +759,6 @@ require_once __DIR__ . "/../config/db.php";
             }
         }
 
-        // Smooth scroll to top
-        window.addEventListener('scroll', () => {
-            const cards = document.querySelectorAll('.campaign-card');
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-                
-                if (isVisible && !card.classList.contains('visible')) {
-                    card.classList.add('visible');
-                }
-            });
-        });
-
-        // Add click animation
         document.querySelectorAll('.campaign-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 if (!e.target.classList.contains('view-btn')) {
@@ -819,7 +769,7 @@ require_once __DIR__ . "/../config/db.php";
         });
     </script>
 
+    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
+
 </body>
 </html>
-
-<?php require_once __DIR__ . "/../includes/footer.php"; ?>
