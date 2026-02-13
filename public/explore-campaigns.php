@@ -13,6 +13,62 @@ require_once __DIR__ . "/../config/db.php";
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-hover: rgba(255, 255, 255, 0.95);
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            
+            --border-color: rgba(15, 23, 42, 0.1);
+            --border-hover: rgba(6, 182, 212, 0.3);
+            
+            --orb-opacity: 0.15;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: rgba(20, 20, 30, 0.85);
+            --bg-card-hover: rgba(30, 30, 40, 0.9);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            
+            --border-color: rgba(255, 255, 255, 0.15);
+            --border-hover: rgba(6, 182, 212, 0.4);
+            
+            --orb-opacity: 0.25;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Orb colors for Explore page - Cyan/Teal */
+        [data-theme="dark"] {
+            --orb-1: linear-gradient(45deg, #06b6d4, #22d3ee);
+            --orb-2: linear-gradient(45deg, #14b8a6, #5eead4);
+            --orb-3: linear-gradient(45deg, #0ea5e9, #06b6d4);
+        }
+
+        [data-theme="light"] {
+            --orb-1: linear-gradient(45deg, #06b6d4, #22d3ee);
+            --orb-2: linear-gradient(45deg, #14b8a6, #5eead4);
+            --orb-3: linear-gradient(45deg, #0ea5e9, #06b6d4);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -21,10 +77,11 @@ require_once __DIR__ . "/../config/db.php";
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: #0f0f0f;
-            color: #fff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow-x: hidden;
             position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Animated Background - Cyan/Teal theme for Projects */
@@ -36,7 +93,8 @@ require_once __DIR__ . "/../config/db.php";
             height: 100%;
             z-index: 0;
             overflow: hidden;
-            opacity: 0.25;
+            opacity: var(--orb-opacity);
+            transition: opacity 0.3s ease;
         }
 
         .orb {
@@ -49,7 +107,7 @@ require_once __DIR__ . "/../config/db.php";
         .orb-1 {
             width: 500px;
             height: 500px;
-            background: linear-gradient(45deg, #06b6d4, #22d3ee);
+            background: var(--orb-1);
             top: -10%;
             left: -10%;
             animation-delay: 0s;
@@ -58,7 +116,7 @@ require_once __DIR__ . "/../config/db.php";
         .orb-2 {
             width: 400px;
             height: 400px;
-            background: linear-gradient(45deg, #14b8a6, #5eead4);
+            background: var(--orb-2);
             bottom: -10%;
             right: -10%;
             animation-delay: 5s;
@@ -67,7 +125,7 @@ require_once __DIR__ . "/../config/db.php";
         .orb-3 {
             width: 350px;
             height: 350px;
-            background: linear-gradient(45deg, #0ea5e9, #06b6d4);
+            background: var(--orb-3);
             top: 50%;
             left: 50%;
             animation-delay: 10s;
@@ -86,7 +144,7 @@ require_once __DIR__ . "/../config/db.php";
             z-index: 1;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 120px 40px 80px;
+            padding: 20px 40px 80px;
         }
 
         /* Hero Section */
@@ -103,25 +161,31 @@ require_once __DIR__ . "/../config/db.php";
             background: linear-gradient(135deg, #fff, #06b6d4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            padding: 20px;
             line-height: 1.1;
+        }
+
+        [data-theme="light"] .explore-hero h1 {
+            background: linear-gradient(135deg, #0f172a, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .explore-hero p {
             font-size: 1.25rem;
-            color: #cbd5e1;
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
 
         /* Filter Section */
         .filter-section {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 32px;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
             animation: fadeInUp 0.8s ease 0.2s both;
             position: relative;
             overflow: hidden;
@@ -145,7 +209,7 @@ require_once __DIR__ . "/../config/db.php";
 
         .filter-group label {
             display: block;
-            color: #fff;
+            color: var(--text-primary);
             font-weight: 600;
             margin-bottom: 10px;
             font-size: 14px;
@@ -155,12 +219,12 @@ require_once __DIR__ . "/../config/db.php";
         .filter-group input {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            border: 2px solid var(--border-color);
             border-radius: 12px;
             font-size: 15px;
             transition: all 0.3s ease;
-            background: rgba(10, 10, 20, 0.6);
-            color: #fff;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             font-family: 'DM Sans', sans-serif;
             font-weight: 500;
         }
@@ -170,11 +234,11 @@ require_once __DIR__ . "/../config/db.php";
             outline: none;
             border-color: #06b6d4;
             box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
-            background: rgba(20, 20, 30, 0.7);
+            background: var(--bg-card);
         }
 
         .filter-group input::placeholder {
-            color: #94a3b8;
+            color: var(--text-tertiary);
         }
 
         /* Campaigns Header */
@@ -189,7 +253,7 @@ require_once __DIR__ . "/../config/db.php";
         .campaigns-header h2 {
             font-size: 2rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .campaigns-count {
@@ -212,9 +276,9 @@ require_once __DIR__ . "/../config/db.php";
 
         /* Campaign Card */
         .campaign-card {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -238,7 +302,7 @@ require_once __DIR__ . "/../config/db.php";
 
         .campaign-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(6, 182, 212, 0.4);
+            border-color: var(--border-hover);
         }
 
         .campaign-card:hover::after {
@@ -250,7 +314,7 @@ require_once __DIR__ . "/../config/db.php";
             height: 240px;
             overflow: hidden;
             position: relative;
-            background: rgba(0, 0, 0, 0.3);
+            background: var(--bg-secondary);
         }
 
         .card-image img {
@@ -286,7 +350,7 @@ require_once __DIR__ . "/../config/db.php";
 
         .card-title {
             font-size: 1.35rem;
-            color: #fff;
+            color: var(--text-primary);
             margin-bottom: 12px;
             font-weight: 800;
             line-height: 1.3;
@@ -302,7 +366,7 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .card-description {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             line-height: 1.7;
             margin-bottom: 24px;
             display: -webkit-box;
@@ -318,12 +382,12 @@ require_once __DIR__ . "/../config/db.php";
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-color);
             font-size: 0.875rem;
         }
 
         .card-location {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -331,7 +395,7 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .card-date {
-            color: #94a3b8;
+            color: var(--text-tertiary);
             font-size: 0.85rem;
             font-weight: 600;
         }
@@ -350,7 +414,7 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .stat-goal {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-weight: 600;
             font-size: 0.9rem;
         }
@@ -358,7 +422,7 @@ require_once __DIR__ . "/../config/db.php";
         .progress-bar-container {
             width: 100%;
             height: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--border-color);
             border-radius: 999px;
             overflow: hidden;
             margin-bottom: 24px;
@@ -466,12 +530,12 @@ require_once __DIR__ . "/../config/db.php";
         .empty-state h3 {
             font-size: 1.75rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--text-primary);
             margin-bottom: 12px;
         }
 
         .empty-state p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1.05rem;
             max-width: 400px;
             margin: 0 auto;
@@ -622,10 +686,10 @@ require_once __DIR__ . "/../config/db.php";
                         $location = !empty($row['location']) ? htmlspecialchars($row['location']) : 'Not specified';
                         $endDate = !empty($row['end_date']) ? date('M d, Y', strtotime($row['end_date'])) : '';
 
-                        $imagePath = 'default-campaign.jpg';
-                        if (!empty($row['media_url'])) {
-                            $imagePath = htmlspecialchars($row['media_url']);
-                        }
+                        $imagePath = !empty($row['media_url']) 
+                        ? htmlspecialchars($row['media_url']) 
+                        : 'https://via.placeholder.com/400x250';
+
                         
                         $delay = ($count % 6) * 0.1;
                         
@@ -641,7 +705,7 @@ require_once __DIR__ . "/../config/db.php";
                         <div class='campaign-card' style='animation-delay: {$delay}s' data-category='{$category}' data-title='{$title}' data-raised='{$raisedAmount}' data-created='{$row['created_at']}'>
                             <div class='card-image'>
                                 <span class='card-category'>{$category}</span>
-                                <img src='/CroudSpark-X/uploads/{$imagePath}' alt='{$title}' loading='lazy' onerror=\"this.src='/CroudSpark-X/uploads/default-campaign.jpg'\">
+                               <img src='{$imagePath}' alt='{$title}' loading='lazy' onerror=\"this.src='/CroudSpark-X/uploads/default-campaign.jpg'\">
                             </div>
                             <div class='card-body'>
                                 <h3 class='card-title'>{$title}</h3>

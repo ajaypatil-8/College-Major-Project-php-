@@ -12,6 +12,46 @@ require_once __DIR__ . "/../includes/header.php";
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-hover: rgba(255, 255, 255, 0.95);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --border-color: rgba(15, 23, 42, 0.1);
+            --border-hover: rgba(139, 92, 246, 0.3);
+            --orb-opacity: 0.20;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: rgba(20, 20, 30, 0.85);
+            --bg-card-hover: rgba(30, 30, 40, 0.9);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --border-hover: rgba(139, 92, 246, 0.4);
+            --orb-opacity: 0.25;
+        }
+
+        /* Purple orbs - VISIBLE on both themes */
+        [data-theme="dark"] {
+            --orb-1: linear-gradient(45deg, #8b5cf6, #a78bfa);
+            --orb-2: linear-gradient(45deg, #3b82f6, #60a5fa);
+            --orb-3: linear-gradient(45deg, #ec4899, #8b5cf6);
+        }
+
+        [data-theme="light"] {
+            --orb-1: linear-gradient(45deg, #c4b5fd, #a78bfa);
+            --orb-2: linear-gradient(45deg, #93c5fd, #60a5fa);
+            --orb-3: linear-gradient(45deg, #f9a8d4, #c084fc);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -20,13 +60,13 @@ require_once __DIR__ . "/../includes/header.php";
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: #0f0f0f;
-            color: #fff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow-x: hidden;
             position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Animated Background - Purple/Blue theme for About */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -35,7 +75,8 @@ require_once __DIR__ . "/../includes/header.php";
             height: 100%;
             z-index: 0;
             overflow: hidden;
-            opacity: 0.25;
+            opacity: var(--orb-opacity);
+            transition: opacity 0.3s ease;
         }
 
         .orb {
@@ -48,7 +89,7 @@ require_once __DIR__ . "/../includes/header.php";
         .orb-1 {
             width: 500px;
             height: 500px;
-            background: linear-gradient(45deg, #8b5cf6, #a78bfa);
+            background: var(--orb-1);
             top: -10%;
             left: -10%;
             animation-delay: 0s;
@@ -57,7 +98,7 @@ require_once __DIR__ . "/../includes/header.php";
         .orb-2 {
             width: 400px;
             height: 400px;
-            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            background: var(--orb-2);
             bottom: -10%;
             right: -10%;
             animation-delay: 5s;
@@ -66,7 +107,7 @@ require_once __DIR__ . "/../includes/header.php";
         .orb-3 {
             width: 350px;
             height: 350px;
-            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            background: var(--orb-3);
             top: 50%;
             left: 50%;
             animation-delay: 10s;
@@ -79,7 +120,6 @@ require_once __DIR__ . "/../includes/header.php";
             75% { transform: translate(40px, -40px) scale(1.05); }
         }
 
-        /* Container */
         .about-container {
             position: relative;
             z-index: 1;
@@ -88,7 +128,6 @@ require_once __DIR__ . "/../includes/header.php";
             padding: 120px 40px 80px;
         }
 
-        /* Hero Header */
         .about-hero {
             text-align: center;
             margin-bottom: 80px;
@@ -106,19 +145,24 @@ require_once __DIR__ . "/../includes/header.php";
             line-height: 1.1;
         }
 
+        [data-theme="light"] .about-hero h1 {
+            background: linear-gradient(135deg, #0f172a, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .about-hero p {
             font-size: 1.25rem;
-            color: #cbd5e1;
+            color: var(--text-secondary);
             max-width: 700px;
             margin: 0 auto;
             line-height: 1.6;
         }
 
-        /* About Intro */
         .about-intro {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             border-radius: 32px;
             padding: 50px;
             margin-bottom: 80px;
@@ -146,14 +190,19 @@ require_once __DIR__ . "/../includes/header.php";
             -webkit-text-fill-color: transparent;
         }
 
+        [data-theme="light"] .about-intro h2 {
+            background: linear-gradient(135deg, #0f172a, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .about-intro p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 20px;
         }
 
-        /* Mission & Vision Cards */
         .values-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -162,9 +211,9 @@ require_once __DIR__ . "/../includes/header.php";
         }
 
         .value-card {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             border-radius: 28px;
             padding: 50px 40px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -193,8 +242,8 @@ require_once __DIR__ . "/../includes/header.php";
         }
 
         .value-card:hover {
-            background: rgba(30, 30, 40, 0.9);
-            border-color: rgba(139, 92, 246, 0.4);
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
             transform: translateY(-8px);
         }
 
@@ -219,20 +268,19 @@ require_once __DIR__ . "/../includes/header.php";
             font-size: 1.8rem;
             margin-bottom: 16px;
             font-weight: 800;
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .value-card p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1.05rem;
             line-height: 1.8;
         }
 
-        /* Trust Section */
         .trust-section {
-            background: rgba(20, 20, 30, 0.7);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
             border-radius: 32px;
             padding: 60px 40px;
             margin-bottom: 100px;
@@ -268,6 +316,12 @@ require_once __DIR__ . "/../includes/header.php";
             -webkit-text-fill-color: transparent;
         }
 
+        [data-theme="light"] .trust-section h2 {
+            background: linear-gradient(135deg, #0f172a, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .trust-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -276,12 +330,12 @@ require_once __DIR__ . "/../includes/header.php";
         }
 
         .trust-item {
-            background: rgba(30, 30, 40, 0.8);
+            background: var(--bg-secondary);
             padding: 24px 28px;
             border-radius: 16px;
             font-size: 1.05rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-primary);
             transition: all 0.3s ease;
             border: 2px solid transparent;
             display: flex;
@@ -301,7 +355,6 @@ require_once __DIR__ . "/../includes/header.php";
             transform: translateX(8px);
         }
 
-        /* Team Section */
         .team-section {
             text-align: center;
             margin-bottom: 100px;
@@ -317,9 +370,15 @@ require_once __DIR__ . "/../includes/header.php";
             -webkit-text-fill-color: transparent;
         }
 
+        [data-theme="light"] .team-section h2 {
+            background: linear-gradient(135deg, #0f172a, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .team-section > p {
             font-size: 1.1rem;
-            color: #cbd5e1;
+            color: var(--text-secondary);
             margin-bottom: 50px;
             max-width: 700px;
             margin-left: auto;
@@ -333,9 +392,9 @@ require_once __DIR__ . "/../includes/header.php";
         }
 
         .team-member {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             padding: 40px 32px;
             border-radius: 24px;
             transition: all 0.4s ease;
@@ -372,7 +431,7 @@ require_once __DIR__ . "/../includes/header.php";
             display: block;
             font-size: 1.5rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--text-primary);
             margin-bottom: 8px;
             position: relative;
             z-index: 1;
@@ -387,7 +446,7 @@ require_once __DIR__ . "/../includes/header.php";
             z-index: 1;
         }
 
-        /* CTA Section */
+        /* CTA - Keep purple gradient */
         .cta-section {
             background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
             border-radius: 32px;
@@ -498,7 +557,6 @@ require_once __DIR__ . "/../includes/header.php";
             transform: translateY(-3px);
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -532,7 +590,6 @@ require_once __DIR__ . "/../includes/header.php";
             }
         }
 
-        /* Responsive */
         @media (max-width: 968px) {
             .about-container {
                 padding: 100px 20px 60px;
@@ -574,7 +631,6 @@ require_once __DIR__ . "/../includes/header.php";
 </head>
 <body>
 
-    <!-- Background Animation -->
     <div class="bg-animation">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
@@ -583,13 +639,11 @@ require_once __DIR__ . "/../includes/header.php";
 
     <div class="about-container">
         
-        <!-- Hero Section -->
         <div class="about-hero">
             <h1>About CrowdSpark</h1>
             <p>Building trust, transparency, and impact through responsible crowdfunding.</p>
         </div>
 
-        <!-- About Intro -->
         <div class="about-intro">
             <h2>Who We Are</h2>
             <p>
@@ -606,7 +660,6 @@ require_once __DIR__ . "/../includes/header.php";
             </p>
         </div>
 
-        <!-- Mission & Vision -->
         <div class="values-grid">
             <div class="value-card">
                 <div class="value-card-icon">
@@ -631,7 +684,6 @@ require_once __DIR__ . "/../includes/header.php";
             </div>
         </div>
 
-        <!-- Trust Section -->
         <div class="trust-section">
             <h2>Why Trust CrowdSpark?</h2>
 
@@ -655,7 +707,6 @@ require_once __DIR__ . "/../includes/header.php";
             </div>
         </div>
 
-        <!-- Team Section -->
         <div class="team-section">
             <h2>Project Team</h2>
             <p>
@@ -676,7 +727,6 @@ require_once __DIR__ . "/../includes/header.php";
             </div>
         </div>
 
-        <!-- CTA Section -->
         <div class="cta-section">
             <h2>Join Us in Making a Difference</h2>
             <p>
@@ -688,7 +738,7 @@ require_once __DIR__ . "/../includes/header.php";
                 <a href="/CroudSpark-X/public/explore-campaigns.php" class="btn btn-primary">
                     <i class="fas fa-compass"></i> Explore Campaigns
                 </a>
-                <a href="/CroudSpark-X/public/start-fundraise.php" class="btn btn-secondary">
+                <a href="/CroudSpark-X/creator/create-campaign.php" class="btn btn-secondary">
                     <i class="fas fa-plus-circle"></i> Start a Fundraiser
                 </a>
             </div>

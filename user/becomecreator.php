@@ -58,11 +58,11 @@ try{
     $mail->Subject = "Creator Verification OTP";
     $mail->Body    = "
     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;'>
-        <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; text-align: center;'>
+        <div style='background: linear-gradient(135deg, #10b981 0%, #34d399 100%); padding: 40px; border-radius: 20px; text-align: center;'>
             <h1 style='color: white; margin: 0 0 20px 0; font-size: 32px;'>🚀 Creator Verification</h1>
             <div style='background: white; padding: 30px; border-radius: 15px; margin: 20px 0;'>
                 <p style='color: #64748b; margin: 0 0 20px 0; font-size: 16px;'>Your verification code is:</p>
-                <h2 style='color: #f59e0b; font-size: 48px; margin: 0; letter-spacing: 8px; font-weight: 900;'>$otp</h2>
+                <h2 style='color: #10b981; font-size: 48px; margin: 0; letter-spacing: 8px; font-weight: 900;'>$otp</h2>
             </div>
             <p style='color: rgba(255,255,255,0.9); margin: 20px 0 0 0; font-size: 14px;'>This code will expire in 10 minutes</p>
         </div>
@@ -71,7 +71,7 @@ try{
 
     $mail->send();
 
-    $msg="OTP sent to your email";
+    $success="OTP sent to your email";
     $step=2;
 
 }catch(Exception $e){
@@ -115,87 +115,80 @@ if(isset($_POST['verify_otp'])){
 ?>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
 }
 
-:root {
-    --primary: #f59e0b;
-    --primary-hover: #d97706;
-    --primary-light: #fef3c7;
-    --purple: #667eea;
-    --purple-dark: #764ba2;
-    --gray-50: #f8fafc;
-    --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;
-    --gray-300: #cbd5e1;
-    --gray-600: #475569;
-    --gray-700: #334155;
-    --gray-900: #0f172a;
-    --error: #ef4444;
-    --error-light: #fee2e2;
-    --success: #10b981;
-    --success-light: #d1fae5;
-}
-
-.creator-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
-    padding: 60px 20px;
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0f0f0f;
+    color: #fff;
+    overflow-x: hidden;
     position: relative;
-    overflow: hidden;
 }
 
-/* Animated Background */
-.creator-page::before {
-    content: '';
+/* Animated Background - Emerald/Green theme */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.25;
+}
+
+.orb {
     position: absolute;
-    width: 500px;
-    height: 500px;
-    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
-    top: -150px;
-    right: -100px;
+    filter: blur(80px);
     animation: float 20s infinite ease-in-out;
 }
 
-.creator-page::after {
-    content: '';
-    position: absolute;
+.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(45deg, #10b981, #34d399);
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.orb-2 {
     width: 400px;
     height: 400px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
-    bottom: -100px;
-    left: -100px;
-    animation: float 15s infinite ease-in-out reverse;
+    background: linear-gradient(45deg, #059669, #10b981);
+    bottom: -10%;
+    right: -10%;
+    animation-delay: 5s;
+}
+
+.orb-3 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(45deg, #047857, #059669);
+    top: 50%;
+    left: 50%;
+    animation-delay: 10s;
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-30px) scale(1.05); }
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, 50px) scale(1.1); }
+    50% { transform: translate(-30px, 80px) scale(0.9); }
+    75% { transform: translate(40px, -40px) scale(1.05); }
 }
 
-.creator-container {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    max-width: 520px;
-    animation: slideUp 0.6s ease-out;
-}
-
-@keyframes slideUp {
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
     }
     to {
         opacity: 1;
@@ -203,65 +196,126 @@ if(isset($_POST['verify_otp'])){
     }
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
+    }
+    50% { 
+        transform: scale(1.05);
+        box-shadow: 0 20px 50px rgba(16, 185, 129, 0.4);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== PAGE CONTAINER ===== */
+.creator-page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 20px 80px;
+}
+
+.creator-container {
+    width: 100%;
+    max-width: 520px;
+    animation: fadeInUp 0.8s ease;
+}
+
 .creator-card {
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(20, 20, 30, 0.85);
     backdrop-filter: blur(20px);
     padding: 50px 45px;
     border-radius: 32px;
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    box-shadow: 0 20px 60px rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.creator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #10b981, #34d399);
 }
 
 .creator-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 50px 120px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    box-shadow: 0 30px 80px rgba(16, 185, 129, 0.15);
 }
 
-/* Icon Section */
+/* ===== ICON SECTION ===== */
 .creator-icon {
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    background: linear-gradient(135deg, #10b981, #34d399);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 24px;
     font-size: 50px;
-    box-shadow: 0 15px 40px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
     animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-    0%, 100% { 
-        transform: scale(1);
-        box-shadow: 0 15px 40px rgba(245, 158, 11, 0.3);
-    }
-    50% { 
-        transform: scale(1.05);
-        box-shadow: 0 20px 50px rgba(245, 158, 11, 0.4);
-    }
-}
-
 .creator-card h2 {
-    font-size: 32px;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
     font-weight: 900;
-    color: var(--gray-900);
     margin-bottom: 12px;
-    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .creator-sub {
-    font-size: 16px;
-    color: var(--gray-600);
+    font-size: 1rem;
+    color: #cbd5e1;
     margin-bottom: 32px;
     font-weight: 500;
 }
 
-/* Progress Steps */
+/* ===== PROGRESS STEPS ===== */
 .progress-steps {
     display: flex;
     justify-content: center;
@@ -273,29 +327,29 @@ if(isset($_POST['verify_otp'])){
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: var(--gray-200);
+    background: rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
 }
 
 .step-dot.active {
-    background: var(--primary);
+    background: #10b981;
     width: 40px;
     border-radius: 6px;
 }
 
 .step-dot.completed {
-    background: var(--success);
+    background: #10b981;
 }
 
-/* Email Display */
+/* ===== EMAIL BOX ===== */
 .email-box {
-    background: linear-gradient(135deg, var(--gray-100), var(--gray-50));
+    background: rgba(16, 185, 129, 0.1);
     padding: 18px 24px;
     border-radius: 16px;
     font-weight: 700;
-    color: var(--gray-900);
+    color: #6ee7b7;
     margin-bottom: 28px;
-    border: 2px solid var(--gray-200);
+    border: 2px solid rgba(16, 185, 129, 0.3);
     font-size: 15px;
     letter-spacing: 0.3px;
     position: relative;
@@ -313,22 +367,17 @@ if(isset($_POST['verify_otp'])){
     padding-left: 50px;
 }
 
-/* Alert Messages */
+/* ===== ALERT MESSAGES ===== */
 .alert {
     padding: 16px 20px;
     border-radius: 16px;
     font-size: 14px;
     font-weight: 600;
+    text-align: center;
     margin-bottom: 24px;
     animation: shake 0.5s ease;
     position: relative;
     overflow: hidden;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
 }
 
 .alert::before {
@@ -338,27 +387,23 @@ if(isset($_POST['verify_otp'])){
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     animation: shimmer 2s infinite;
 }
 
-@keyframes shimmer {
-    to { left: 100%; }
-}
-
 .alert-error {
-    background: linear-gradient(135deg, var(--error-light), #fecaca);
-    color: #991b1b;
-    border-left: 4px solid var(--error);
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border-left: 4px solid #ef4444;
 }
 
 .alert-success {
-    background: linear-gradient(135deg, var(--success-light), #a7f3d0);
-    color: #065f46;
-    border-left: 4px solid var(--success);
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+    border-left: 4px solid #10b981;
 }
 
-/* OTP Input */
+/* ===== OTP INPUT ===== */
 .otp-input-container {
     margin-bottom: 24px;
 }
@@ -367,44 +412,45 @@ if(isset($_POST['verify_otp'])){
     width: 100%;
     padding: 18px 20px;
     border-radius: 16px;
-    border: 2px solid var(--gray-200);
+    border: 2px solid rgba(255, 255, 255, 0.15);
     font-size: 24px;
     font-weight: 800;
     text-align: center;
     letter-spacing: 12px;
-    background: var(--gray-50);
+    background: rgba(10, 10, 20, 0.6);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--gray-900);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .otp-input::placeholder {
     font-size: 16px;
     letter-spacing: normal;
-    color: var(--gray-400);
+    color: #94a3b8;
+    font-weight: 400;
 }
 
 .otp-input:focus {
     outline: none;
-    border-color: var(--primary);
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1),
-                0 10px 30px rgba(0, 0, 0, 0.05);
+    border-color: #10b981;
+    background: rgba(20, 20, 30, 0.7);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
     transform: translateY(-2px);
 }
 
-/* Buttons */
+/* ===== BUTTONS ===== */
 .btn {
     width: 100%;
     padding: 18px;
     border: none;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    border-radius: 50px;
+    background: linear-gradient(135deg, #10b981, #34d399);
     color: #fff;
     font-weight: 800;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
@@ -428,7 +474,7 @@ if(isset($_POST['verify_otp'])){
 
 .btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
 }
 
 .btn:active {
@@ -441,7 +487,17 @@ if(isset($_POST['verify_otp'])){
     transform: none;
 }
 
-/* Loading State */
+.btn-secondary {
+    background: rgba(30, 30, 40, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-secondary:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+}
+
+/* ===== LOADING STATE ===== */
 .btn.loading {
     pointer-events: none;
     opacity: 0.8;
@@ -462,54 +518,37 @@ if(isset($_POST['verify_otp'])){
     animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Info Box */
+/* ===== INFO BOX ===== */
 .info-box {
-    background: var(--gray-50);
-    border: 2px dashed var(--gray-300);
+    background: rgba(30, 30, 40, 0.6);
+    border: 2px dashed rgba(16, 185, 129, 0.3);
     border-radius: 16px;
     padding: 16px;
     margin-top: 24px;
     font-size: 13px;
-    color: var(--gray-600);
+    color: #cbd5e1;
     line-height: 1.6;
 }
 
 .info-box strong {
-    color: var(--gray-900);
+    color: #fff;
     display: block;
     margin-bottom: 6px;
     font-size: 14px;
 }
 
-/* Success Confetti Animation */
-.confetti {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    background: var(--primary);
-    position: absolute;
-    animation: confetti-fall 3s linear;
-}
-
-@keyframes confetti-fall {
-    to {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
+    .creator-page {
+        padding: 100px 20px 60px;
+    }
+    
     .creator-card {
         padding: 40px 30px;
     }
     
     .creator-card h2 {
-        font-size: 28px;
+        font-size: 2rem;
     }
     
     .creator-icon {
@@ -524,16 +563,35 @@ if(isset($_POST['verify_otp'])){
     }
 }
 
-/* Fade In Animation */
+/* ===== FADE IN ===== */
 .fade-in {
     animation: fadeIn 0.5s ease-out;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* ===== SUCCESS CONFETTI ===== */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    position: absolute;
+    animation: confetti-fall 3s linear;
+}
+
+@keyframes confetti-fall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
 }
 </style>
+
+<!-- Background Animation -->
+<div class="bg-animation">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
 
 <div class="creator-page">
     <div class="creator-container">
@@ -597,6 +655,7 @@ if(isset($_POST['verify_otp'])){
                         pattern="[0-9]{6}"
                         autocomplete="off"
                         id="otpInput"
+                        autofocus
                     >
                 </div>
                 <button name="verify_otp" class="btn" type="submit">
@@ -606,12 +665,12 @@ if(isset($_POST['verify_otp'])){
             
             <div class="info-box">
                 <strong>💡 Didn't receive the code?</strong>
-                Check your spam folder or click the button above to resend.
+                Check your spam folder or click the button below to resend.
             </div>
             
             <!-- Resend OTP -->
             <form method="POST" style="margin-top: 16px;">
-                <button name="send_otp" class="btn" style="background: var(--gray-600); box-shadow: 0 10px 30px rgba(0,0,0,0.15);" type="submit">
+                <button name="send_otp" class="btn btn-secondary" type="submit">
                     <i class="fa fa-redo"></i> Resend Code
                 </button>
             </form>
@@ -621,8 +680,8 @@ if(isset($_POST['verify_otp'])){
             <?php if($step == 3): ?>
             <div class="fade-in" style="text-align: center;">
                 <div style="font-size: 80px; margin-bottom: 20px;">🎉</div>
-                <h3 style="color: var(--success); font-size: 24px; margin-bottom: 12px;">Congratulations!</h3>
-                <p style="color: var(--gray-600); font-size: 16px;">You are now a verified creator. Redirecting to create your first campaign...</p>
+                <h3 style="color: #10b981; font-size: 24px; margin-bottom: 12px;">Congratulations!</h3>
+                <p style="color: #94a3b8; font-size: 16px;">You are now a verified creator. Redirecting to create your first campaign...</p>
             </div>
             <?php endif; ?>
 
@@ -667,7 +726,7 @@ document.querySelectorAll('form').forEach(form => {
 // Create confetti on success
 <?php if($step == 3): ?>
 function createConfetti() {
-    const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
+    const colors = ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
     for (let i = 0; i < 50; i++) {
         setTimeout(() => {
             const confetti = document.createElement('div');

@@ -14,9 +14,22 @@ $user_id = $_SESSION['user_id'];
 $filter = $_GET['filter'] ?? 'all';
 
 // Fetch all campaigns for stats
-$allCampaigns = $pdo->prepare("SELECT * FROM campaigns WHERE user_id=? ORDER BY id DESC");
-$allCampaigns->execute([$user_id]);
-$allCampaigns = $allCampaigns->fetchAll(PDO::FETCH_ASSOC);
+        $allCampaigns = $pdo->prepare("
+        SELECT c.*,
+        (
+            SELECT media_url 
+            FROM campaign_media 
+            WHERE campaign_id = c.id 
+            AND media_type='thumbnail'
+            LIMIT 1
+        ) as thumbnail
+        FROM campaigns c
+        WHERE c.user_id=?
+        ORDER BY c.id DESC
+        ");
+        $allCampaigns->execute([$user_id]);
+        $allCampaigns = $allCampaigns->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Count by status
 $totalCampaigns = count($allCampaigns);
@@ -747,9 +760,16 @@ body {
                 
                 <!-- Thumbnail -->
                 <div class="campaign-thumbnail">
-                    <img src="<?= $campaign['thumbnail'] ?? '/CroudSpark-X/assets/noimg.jpg' ?>" 
-                         alt="<?= htmlspecialchars($campaign['title']) ?>"
-                         onerror="this.src='/CroudSpark-X/assets/noimg.jpg'">
+                    <?php
+                    $thumb = !empty($campaign['thumbnail']) 
+                    ? $campaign['thumbnail'] 
+                    : "/CroudSpark-X/assets/noimg.jpg";
+                    ?>
+
+                    <img src="<?= htmlspecialchars($thumb) ?>"
+                    alt="<?= htmlspecialchars($campaign['title']) ?>"
+                    onerror="this.src='/CroudSpark-X/assets/noimg.jpg'">
+
                     <div class="campaign-status-badge status-<?= $campaign['status'] ?>">
                         <?= ucfirst($campaign['status']) ?>
                     </div>

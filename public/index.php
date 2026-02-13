@@ -13,6 +13,62 @@ require_once __DIR__ . "/../config/db.php";
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-hover: rgba(255, 255, 255, 0.95);
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            
+            --border-color: rgba(15, 23, 42, 0.1);
+            --border-hover: rgba(245, 158, 11, 0.3);
+            
+            --orb-opacity: 0.15;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: rgba(20, 20, 30, 0.85);
+            --bg-card-hover: rgba(30, 30, 40, 0.9);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            
+            --border-color: rgba(255, 255, 255, 0.15);
+            --border-hover: rgba(245, 158, 11, 0.4);
+            
+            --orb-opacity: 0.25;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Orb colors for Home page */
+        [data-theme="dark"] {
+            --orb-1: linear-gradient(45deg, #f59e0b, #fb923c);
+            --orb-2: linear-gradient(45deg, #ea580c, #f59e0b);
+            --orb-3: linear-gradient(45deg, #fbbf24, #fb923c);
+        }
+
+        [data-theme="light"] {
+            --orb-1: linear-gradient(45deg, #f59e0b, #fb923c);
+            --orb-2: linear-gradient(45deg, #ea580c, #f59e0b);
+            --orb-3: linear-gradient(45deg, #fbbf24, #fb923c);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -21,10 +77,11 @@ require_once __DIR__ . "/../config/db.php";
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: #0f0f0f;
-            color: #fff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow-x: hidden;
             position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Animated Background - Orange theme for Home */
@@ -36,7 +93,8 @@ require_once __DIR__ . "/../config/db.php";
             height: 100%;
             z-index: 0;
             overflow: hidden;
-            opacity: 0.25;
+            opacity: var(--orb-opacity);
+            transition: opacity 0.3s ease;
         }
 
         .orb {
@@ -49,7 +107,7 @@ require_once __DIR__ . "/../config/db.php";
         .orb-1 {
             width: 500px;
             height: 500px;
-            background: linear-gradient(45deg, #f59e0b, #fb923c);
+            background: var(--orb-1);
             top: -10%;
             left: -10%;
             animation-delay: 0s;
@@ -58,7 +116,7 @@ require_once __DIR__ . "/../config/db.php";
         .orb-2 {
             width: 400px;
             height: 400px;
-            background: linear-gradient(45deg, #ea580c, #f59e0b);
+            background: var(--orb-2);
             bottom: -10%;
             right: -10%;
             animation-delay: 5s;
@@ -67,7 +125,7 @@ require_once __DIR__ . "/../config/db.php";
         .orb-3 {
             width: 350px;
             height: 350px;
-            background: linear-gradient(45deg, #fbbf24, #fb923c);
+            background: var(--orb-3);
             top: 50%;
             left: 50%;
             animation-delay: 10s;
@@ -84,7 +142,7 @@ require_once __DIR__ . "/../config/db.php";
         .hero {
             position: relative;
             z-index: 1;
-            padding: 160px 40px 120px;
+            padding: 110px 40px 30px;
             text-align: center;
             max-width: 1400px;
             margin: 0 auto;
@@ -102,10 +160,16 @@ require_once __DIR__ . "/../config/db.php";
             animation: fadeInDown 0.8s ease;
         }
 
+        [data-theme="light"] .hero h1 {
+            background: linear-gradient(135deg, #0f172a, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .hero .subtitle {
             max-width: 700px;
             margin: 0 auto 50px;
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1.25rem;
             line-height: 1.7;
             font-weight: 500;
@@ -164,14 +228,14 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .btn-secondary {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            color: #fff;
+            color: var(--text-primary);
             border: 2px solid rgba(245, 158, 11, 0.3);
         }
 
         .btn-secondary:hover {
-            background: rgba(30, 30, 40, 0.9);
+            background: var(--bg-card-hover);
             border-color: #f59e0b;
             transform: translateY(-3px);
         }
@@ -187,27 +251,28 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .stat {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             padding: 24px 40px;
             border-radius: 20px;
             font-weight: 700;
             font-size: 1rem;
             transition: all 0.3s ease;
+            color: var(--text-primary);
         }
 
         .stat:hover {
             transform: translateY(-5px);
-            border-color: rgba(245, 158, 11, 0.4);
-            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.2);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
         }
 
         /* How It Works */
         .how-it-works {
             position: relative;
             z-index: 1;
-            padding: 120px 40px;
+            padding: 80px 40px;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -228,8 +293,14 @@ require_once __DIR__ . "/../config/db.php";
             -webkit-text-fill-color: transparent;
         }
 
+        [data-theme="light"] .section-header h2 {
+            background: linear-gradient(135deg, #0f172a, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .section-header p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
@@ -242,9 +313,9 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .step-card {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             padding: 50px 35px;
             border-radius: 24px;
             transition: all 0.4s ease;
@@ -275,7 +346,8 @@ require_once __DIR__ . "/../config/db.php";
 
         .step-card:hover {
             transform: translateY(-10px);
-            border-color: rgba(245, 158, 11, 0.4);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
         }
 
         .step-number {
@@ -302,139 +374,200 @@ require_once __DIR__ . "/../config/db.php";
             font-size: 1.5rem;
             font-weight: 800;
             margin-bottom: 12px;
-            color: #fff;
+            color: var(--text-primary);
             text-align: center;
         }
 
         .step-card p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1rem;
             line-height: 1.7;
             text-align: center;
         }
 
-        /* Campaign Preview */
-        .campaign-preview {
+        /* Campaign Card */
+        .campaign-preview{
             position: relative;
             z-index: 1;
-            padding: 120px 40px;
+            padding: 60px 40px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        .campaigns-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 40px;
-            margin-top: 60px;
+        .campaigns-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+            gap:35px;
+            margin-top:60px;
         }
 
-        .campaign-card {
-            background: rgba(20, 20, 30, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px;
+        .campaign-card{
+            position:relative;
+            border-radius:24px;
+            overflow:hidden;
+            cursor:pointer;
+            transition:all .45s cubic-bezier(.4,0,.2,1);
+            background: var(--bg-card);
+            backdrop-filter:blur(18px);
+            -webkit-backdrop-filter:blur(18px);
+            border:1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .campaign-card::before{
+            content:"";
+            position:absolute;
+            top:0;
+            left:-120%;
+            width:60%;
+            height:100%;
+            background:linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.25),
+            transparent
+            );
+            transform:skewX(-25deg);
+            transition:.7s;
+        }
+
+        .campaign-card:hover::before{
+            left:130%;
+        }
+
+        .campaign-card:hover{
+            transform:translateY(-12px) scale(1.02);
+            border:1px solid rgba(241,150,4,0.5);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 240px;
             overflow: hidden;
-            transition: all 0.4s ease;
-            animation: cardAppear 0.6s ease both;
-        }
-
-        .campaign-card:hover {
-            transform: translateY(-12px);
-            border-color: rgba(245, 158, 11, 0.4);
-        }
-
-        .campaign-img {
             position: relative;
-            overflow: hidden;
-            height: 220px;
         }
 
-        .campaign-card img {
+        .card-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
         }
 
-        .campaign-card:hover img {
-            transform: scale(1.1);
+        .card-category {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: linear-gradient(135deg, #f19604, #86520a);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .campaign-body {
-            padding: 28px;
+        .card-body {
+            padding: 24px;
         }
 
-        .campaign-body h3 {
+        .card-title {
             font-size: 1.3rem;
             font-weight: 800;
             margin-bottom: 10px;
-            color: #fff;
-            line-height: 1.3;
+            color: var(--text-primary);
         }
 
-        .campaign-body p {
-            color: #cbd5e1;
+        .card-description {
+            color: var(--text-secondary);
             font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
-        .progress-bar {
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            overflow: hidden;
-            margin: 18px 0;
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #f59e0b, #fb923c);
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
+        .stat-raised {
+            color: #f19604;
+            font-weight: 800;
         }
 
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
+        .progress-bar-container {
             width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 20px;
+            margin-bottom: 18px;
+        }
+
+        .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
+            background: linear-gradient(90deg,#06b6d4,#14b8a6);
+            border-radius: 20px;
         }
 
-        @keyframes shimmer {
-            to { left: 100%; }
-        }
-
-        .campaign-btn {
-            display: block;
-            text-align: center;
-            background: linear-gradient(135deg, #f59e0b, #fb923c);
+        .view-btn {
+            background: linear-gradient(135deg, #f19604, #86520a);
+            padding: 10px 18px;
+            border-radius: 50px;
             color: #fff;
-            padding: 14px;
-            border-radius: 14px;
             text-decoration: none;
             font-weight: 700;
-            margin-top: 16px;
-            transition: all 0.3s ease;
-            font-size: 15px;
+            font-size: 13px;
         }
 
-        .campaign-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+        .card-stats{
+            display:flex;
+            justify-content:space-between;
+            margin:12px 0;
+            font-size:14px;
+        }
+
+        .card-meta{
+            display:flex;
+            justify-content:space-between;
+            font-size:13px;
+            color: var(--text-tertiary);
+            margin-bottom:10px;
+        }
+
+        .card-location{
+            display:flex;
+            gap:6px;
+            align-items:center;
+        }
+
+        .card-date{
+            opacity:.8;
+        }
+
+        .card-footer{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-top:12px;
+        }
+
+        .percentage{
+            font-weight:700;
+            color:#f19604;
+            font-size:14px;
+        }
+
+        .stat-goal{
+            color: var(--text-secondary);
+            font-size:13px;
         }
 
         /* Trust Section */
         .trust-section {
             position: relative;
             z-index: 1;
-            padding: 120px 40px;
+            padding: 70px 40px;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -447,9 +580,9 @@ require_once __DIR__ . "/../config/db.php";
         }
 
         .trust-card {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             padding: 45px 35px;
             border-radius: 24px;
             transition: all 0.4s ease;
@@ -482,7 +615,8 @@ require_once __DIR__ . "/../config/db.php";
 
         .trust-card:hover {
             transform: translateY(-10px);
-            border-color: rgba(245, 158, 11, 0.4);
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
         }
 
         .trust-icon {
@@ -505,11 +639,11 @@ require_once __DIR__ . "/../config/db.php";
             font-size: 1.3rem;
             font-weight: 800;
             margin-bottom: 8px;
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .trust-card p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1rem;
         }
 
@@ -648,40 +782,91 @@ require_once __DIR__ . "/../config/db.php";
         </div>
 
         <div class="campaigns-grid">
-            <?php
-            $stmt = $pdo->prepare("SELECT * FROM campaigns WHERE status='approved' ORDER BY id DESC LIMIT 6");
-            $stmt->execute();
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if($data){
-                foreach($data as $row){
-            ?>
-            <div class="campaign-card">
-                <div class="campaign-img">
-                    <img src="<?= $row['media_url'] ?? '/CroudSpark-X/assets/noimg.jpg' ?>" 
-                         alt="<?= htmlspecialchars($row['title']) ?>">
-                </div>
+        <?php
+        $stmt = $pdo->prepare("
+        SELECT c.*,
+        COALESCE(SUM(d.amount),0) as raised_amount,
+        (
+        SELECT media_url FROM campaign_media 
+        WHERE campaign_id = c.id 
+        AND media_type='thumbnail'
+        LIMIT 1
+        ) as thumbnail
+        FROM campaigns c
+        LEFT JOIN donations d ON c.id=d.campaign_id
+        WHERE c.status='approved'
+        GROUP BY c.id
+        ORDER BY RAND()
+        LIMIT 6
+        ");
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                <div class="campaign-body">
-                    <h3><?= htmlspecialchars($row['title']) ?></h3>
-                    <p><?= substr($row['short_desc'] ?? 'Help make a difference', 0, 90) ?>...</p>
+        if($data){
+        foreach($data as $row):
 
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width:40%"></div>
-                    </div>
+        $raised = $row['raised_amount'];
+        $goal   = $row['goal'];
+        $percent = ($goal>0) ? min(($raised/$goal)*100,100) : 0;
 
-                    <a class="campaign-btn" href="/CroudSpark-X/public/campaign-details.php?id=<?= $row['id'] ?>">
-                        View Campaign <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-            <?php 
-                }
-            } else {
-                echo '<p style="text-align:center;color:#cbd5e1;">No campaigns available yet. Check back soon!</p>';
-            }
-            ?>
+        $thumb = $row['thumbnail'] ?: "https://via.placeholder.com/400x250";
+        ?>
+
+<div class="campaign-card">
+
+    <div class="card-image">
+        <span class="card-category"><?= htmlspecialchars($row['category']) ?></span>
+        <img src="<?= $thumb ?>" alt="<?= htmlspecialchars($row['title']) ?>">
+    </div>
+
+    <div class="card-body">
+        <h3 class="card-title"><?= htmlspecialchars($row['title']) ?></h3>
+
+        <p class="card-description">
+            <?= substr(htmlspecialchars($row['short_desc'] ?? 'Support this campaign'),0,100) ?>...
+        </p>
+
+        <div class="card-meta">
+            <span class="card-location">
+                <i class="fas fa-map-marker-alt"></i> 
+                <?= htmlspecialchars($row['location'] ?? 'India') ?>
+            </span>
+
+            <span class="card-date">
+                <?= date('d M Y',strtotime($row['created_at'])) ?>
+            </span>
         </div>
+
+        <div class="card-stats">
+            <span class="stat-raised">₹<?= number_format($raised) ?></span>
+            <span class="stat-goal">Goal: ₹<?= number_format($goal) ?></span>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width:<?= $percent ?>%"></div>
+        </div>
+
+        <div class="card-footer">
+            <span class="percentage"><?= number_format($percent,1) ?>%</span>
+
+            <a href="/CroudSpark-X/public/campaign-details.php?id=<?= $row['id'] ?>" class="view-btn">
+                View Campaign <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<?php 
+endforeach;
+}else{
+echo "<p style='color:#aaa;text-align:center'>No campaigns yet</p>";
+}
+?>
+
+</div>
+
     </section>
 
     <!-- TRUST -->

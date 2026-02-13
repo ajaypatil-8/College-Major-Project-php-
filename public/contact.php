@@ -13,24 +13,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     $message = trim($_POST['message']);
     
     // Basic validation
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $subject = trim($_POST['subject']);
+    $message = trim($_POST['message']);
+    
     if (empty($name) || empty($email) || empty($subject) || empty($message)) {
         $error_message = "Please fill in all fields";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error_message = "Please enter a valid email address";
     } else {
-        // Insert into database
-        $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message, created_at) VALUES (?, ?, ?, ?, NOW())");
-        $stmt->bind_param("ssss", $name, $email, $subject, $message);
         
-        if ($stmt->execute()) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, subject, message, created_at) VALUES (?, ?, ?, ?, NOW())");
+            $stmt->execute([$name, $email, $subject, $message]);
+
             $success_message = "Message sent successfully! We'll get back to you soon.";
-            // Clear form
-            $_POST = array();
-        } else {
-            $error_message = "Something went wrong. Please try again.";
+            $_POST = array(); // clear form
+        } catch (PDOException $e) {
+            $error_message = "Database error. Try again.";
         }
-        $stmt->close();
+
     }
+  }
 }
 ?>
 
@@ -44,6 +50,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
+
+                    :root {
+                --bg-primary: #ffffff;
+                --bg-secondary: #f8fafc;
+                --bg-card: rgba(255, 255, 255, 0.9);
+                --bg-card-hover: rgba(255, 255, 255, 0.95);
+                --text-primary: #0f172a;
+                --text-secondary: #475569;
+                --text-tertiary: #64748b;
+                --border-color: rgba(15, 23, 42, 0.1);
+                --orb-opacity: 0.20;
+            }
+
+            [data-theme="dark"] {
+                --bg-primary: #0f0f0f;
+                --bg-secondary: #1a1a1a;
+                --bg-card: rgba(20, 20, 30, 0.85);
+                --bg-card-hover: rgba(30, 30, 40, 0.9);
+                --text-primary: #ffffff;
+                --text-secondary: #cbd5e1;
+                --text-tertiary: #94a3b8;
+                --border-color: rgba(255, 255, 255, 0.15);
+                --orb-opacity: 0.25;
+            }
+
+            /* Keep these orbs VISIBLE on both themes */
+            [data-theme="dark"] {
+                --orb-1: linear-gradient(45deg, #f59e0b, #fb923c);
+                --orb-2: linear-gradient(45deg, #3b82f6, #8b5cf6);
+                --orb-3: linear-gradient(45deg, #ec4899, #f59e0b);
+            }
+
+            [data-theme="light"] {
+                --orb-1: linear-gradient(45deg, #fbbf24, #fb923c);
+                --orb-2: linear-gradient(45deg, #60a5fa, #a78bfa);
+                --orb-3: linear-gradient(45deg, #f472b6, #fb923c);
+            }
         * {
             margin: 0;
             padding: 0;

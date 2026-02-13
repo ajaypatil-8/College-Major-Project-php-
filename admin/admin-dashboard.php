@@ -737,8 +737,8 @@ body {
             <a href="/CroudSpark-X/admin/manage-users.php" class="btn-action btn-secondary">
                 <i class="fa-solid fa-users"></i> Manage Users
             </a>
-            <a href="/CroudSpark-X/admin/reports.php" class="btn-action btn-primary">
-                <i class="fa-solid fa-chart-line"></i> View Reports
+            <a href="/CroudSpark-X/admin/admin-reply.php" class="btn-action btn-primary">
+                <i class="fa-solid fa-chart-line"></i> View Users Messages 
             </a>
         </div>
     </div>

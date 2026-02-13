@@ -147,13 +147,15 @@ body {
     }
 }
 
-/* Container - FIXED WIDTH */
+/* Container - PROPERLY CONSTRAINED */
 .review-container {
     position: relative;
     z-index: 1;
-    max-width: 1600px; /* Increased from 1400px */
+    max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
-    padding: 120px 20px 80px; /* Reduced horizontal padding */
+    padding: 120px 40px 80px;
+    box-sizing: border-box;
 }
 
 /* Header */
@@ -166,6 +168,8 @@ body {
     margin-bottom: 40px;
     animation: fadeInUp 0.6s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .review-header h1 {
@@ -184,6 +188,7 @@ body {
     gap: 8px;
     font-size: 14px;
     color: #cbd5e1;
+    flex-wrap: wrap;
 }
 
 .review-breadcrumb a {
@@ -191,11 +196,12 @@ body {
     text-decoration: none;
 }
 
-/* Grid Layout - FIXED RESPONSIVE */
+/* Grid Layout - PROPERLY RESPONSIVE */
 .review-grid {
     display: grid;
-    grid-template-columns: 1fr 400px; /* Fixed sidebar width */
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
     gap: 24px;
+    width: 100%;
 }
 
 /* Card */
@@ -208,8 +214,9 @@ body {
     margin-bottom: 24px;
     transition: all 0.3s ease;
     animation: fadeInUp 0.6s ease;
-    width: 100%; /* Ensure full width */
-    overflow: hidden; /* Prevent overflow */
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .info-card:hover {
@@ -283,11 +290,12 @@ body {
     margin-bottom: 16px;
     line-height: 1.3;
     word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .campaign-meta {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 16px;
     margin-top: 20px;
 }
@@ -297,6 +305,7 @@ body {
     padding: 16px;
     border-radius: 12px;
     border-left: 4px solid #ef4444;
+    min-width: 0;
 }
 
 .meta-label {
@@ -313,6 +322,7 @@ body {
     font-weight: 800;
     color: #fff;
     word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .category-badge {
@@ -337,6 +347,8 @@ body {
     border-left: 4px solid #ef4444;
     max-height: 500px;
     overflow-y: auto;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .story-box::-webkit-scrollbar {
@@ -390,7 +402,7 @@ body {
 /* Media Grid */
 .media-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 14px;
     margin-top: 16px;
 }
@@ -410,14 +422,14 @@ body {
 
 .media-item img {
     width: 100%;
-    height: 150px;
+    height: 140px;
     object-fit: cover;
     display: block;
 }
 
 .media-item video {
     width: 100%;
-    height: 150px;
+    height: 140px;
 }
 
 /* Sidebar */
@@ -428,6 +440,9 @@ body {
     border-radius: 18px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .sidebar-title {
@@ -447,6 +462,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 13px;
     gap: 10px;
+    min-width: 0;
 }
 
 .info-row:last-child {
@@ -464,6 +480,8 @@ body {
     font-weight: 700;
     text-align: right;
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
 }
 
 /* Creator Card */
@@ -498,17 +516,26 @@ body {
     border-radius: 50%;
 }
 
+.creator-info {
+    min-width: 0;
+    flex: 1;
+}
+
 .creator-info h4 {
     font-size: 16px;
     font-weight: 800;
     margin-bottom: 4px;
     color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .creator-info p {
     font-size: 12px;
     color: #cbd5e1;
     margin: 2px 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* ID Proof */
@@ -591,6 +618,7 @@ body {
     min-height: 90px;
     font-family: inherit;
     font-size: 13px;
+    box-sizing: border-box;
 }
 
 .reject-reason:focus {
@@ -713,11 +741,15 @@ body {
     }
     
     .review-container {
-        padding: 120px 15px 60px;
+        padding: 120px 30px 60px;
     }
 }
 
 @media (max-width: 768px) {
+    .review-container {
+        padding: 120px 20px 60px;
+    }
+    
     .review-header {
         padding: 20px 24px;
     }
@@ -744,6 +776,16 @@ body {
     
     .info-card {
         padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .review-container {
+        padding: 120px 15px 60px;
+    }
+    
+    .media-gallery {
+        grid-template-columns: 1fr;
     }
 }
 </style>
