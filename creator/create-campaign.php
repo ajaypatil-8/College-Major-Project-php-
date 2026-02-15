@@ -570,7 +570,10 @@ input::placeholder, textarea::placeholder {
 }
 
 .upload-box input[type="file"] {
-    display: none;
+    cursor: pointer;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
 }
 
 .custom-file-btn {
@@ -1240,7 +1243,7 @@ input.valid, textarea.valid, select.valid {
     }
     
     .preview-controls {
-        opacity: 1;
+        opacity: 1 !important;
     }
 }
 </style>
@@ -1347,9 +1350,6 @@ input.valid, textarea.valid, select.valid {
             <div class="upload-box">
                 <b>Campaign Thumbnail <span class="required" style="color: #ef4444;">*</span></b>
                 <small>Main image that appears on your campaign (JPG, PNG - Max 5MB)</small>
-                <label for="thumbnail" class="custom-file-btn">
-                    <i class="fa fa-upload"></i> Choose Thumbnail
-                </label>
                 <input type="file" name="thumbnail" id="thumbnail" accept="image/*" required>
                 <div class="file-count" id="thumbnailCount"></div>
                 <div id="thumbnailPreview" class="preview-container"></div>
@@ -1358,9 +1358,6 @@ input.valid, textarea.valid, select.valid {
             <div class="upload-box">
                 <b>Additional Images</b>
                 <small>Upload up to 10 images (JPG, PNG - Max 5MB each)</small>
-                <label for="images" class="custom-file-btn">
-                    <i class="fa fa-images"></i> Choose Images
-                </label>
                 <input type="file" name="images[]" id="images" accept="image/*" multiple>
                 <div class="file-count" id="imagesCount"></div>
                 <div id="imagesPreview" class="preview-container"></div>
@@ -1369,9 +1366,6 @@ input.valid, textarea.valid, select.valid {
             <div class="upload-box">
                 <b>Videos</b>
                 <small>Upload up to 4 videos (MP4, MOV - Max 50MB each)</small>
-                <label for="videos" class="custom-file-btn">
-                    <i class="fa fa-video"></i> Choose Videos
-                </label>
                 <input type="file" name="videos[]" id="videos" accept="video/*" multiple>
                 <div class="file-count" id="videosCount"></div>
                 <div id="videosPreview" class="preview-container"></div>
@@ -1455,12 +1449,7 @@ input.valid, textarea.valid, select.valid {
             <div class="upload-box">
                 <b>Upload ID Proof <span class="required" style="color: #ef4444;">*</span></b>
                 <small>Clear photo or scan of your ID document (JPG, PNG, PDF - Max 5MB)</small>
-                <label for="document" class="custom-file-btn">
-                    <i class="fa fa-id-card"></i> Choose Document
-                </label>
                 <input type="file" name="document" id="document" accept="image/*,application/pdf" required>
-                <div class="file-count" id="documentCount"></div>
-                <div id="documentPreview" class="preview-container"></div>
             </div>
 
             <button class="next-btn" name="submit_campaign" type="submit">🚀 Submit Campaign</button>
@@ -1499,450 +1488,46 @@ window.CrowdSparkTheme = {
 };
 
 // Media Uploader Class
-class MediaUploader {
-    constructor(inputId, previewId, countId, maxFiles = 10) {
-        this.input = document.getElementById(inputId);
-        this.previewContainer = document.getElementById(previewId);
-        this.countElement = document.getElementById(countId);
-        this.maxFiles = maxFiles;
-        this.files = [];
-        this.currentEditIndex = null;
-        this.offsetX = 0;
-        this.offsetY = 0;
-        this.isDragging = false;
-        
-        if (this.input && this.previewContainer) {
-            this.init();
-        }
-    }
-    
-    init() {
-        this.input.addEventListener('change', (e) => this.handleFileSelect(e));
-        if (!document.getElementById('cropModal')) {
-            this.createCropModal();
-        }
-    }
-    
-    handleFileSelect(event) {
-        const newFiles = Array.from(event.target.files);
-        
-        if (this.files.length + newFiles.length > this.maxFiles) {
-            alert(`Maximum ${this.maxFiles} files allowed`);
-            return;
-        }
-        
-        newFiles.forEach(file => {
-            const isVideo = file.type.startsWith('video/');
-            const maxSize = isVideo ? 50 * 1024 * 1024 : 5 * 1024 * 1024;
-            const maxSizeLabel = isVideo ? '50MB' : '5MB';
-            
-            if (file.size > maxSize) {
-                alert(`${file.name} is too large. Maximum size is ${maxSizeLabel}`);
-                return;
-            }
-            
-            this.files.push({
-                file: file,
-                preview: URL.createObjectURL(file),
-                cropped: null
-            });
-        });
-        
-        this.renderPreviews();
-        event.target.value = '';
-    }
-    
-    renderPreviews() {
-        this.previewContainer.innerHTML = '';
-        
-        this.files.forEach((fileObj, index) => {
-            const previewItem = document.createElement('div');
-            previewItem.className = 'preview-item';
-            
-            const isVideo = fileObj.file.type.startsWith('video/');
-            
-            if (isVideo) {
-                const video = document.createElement('video');
-                video.src = fileObj.preview;
-                video.className = 'preview-video';
-                video.controls = false;
-                video.muted = true;
-                previewItem.appendChild(video);
-            } else {
-                const img = document.createElement('img');
-                img.src = fileObj.cropped || fileObj.preview;
-                img.className = 'preview-image';
-                previewItem.appendChild(img);
-            }
-            
-            const controls = document.createElement('div');
-            controls.className = 'preview-controls';
-            controls.innerHTML = `
-                ${isVideo ? `<button type="button" class="preview-btn play" data-index="${index}">
-                    <i class="fa fa-play"></i> Play
-                </button>` : `<button type="button" class="preview-btn edit" data-index="${index}">
-                    <i class="fa fa-crop"></i> Edit
-                </button>`}
-                <button type="button" class="preview-btn delete" data-index="${index}">
-                    <i class="fa fa-trash"></i> Delete
-                </button>
-            `;
-            const editBtn = controls.querySelector('.preview-btn.edit');
-            if (editBtn) {
-                editBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.openCropModal(index);
-                });
-            }
-            
-            const playBtn = controls.querySelector('.preview-btn.play');
-            if (playBtn) {
-                playBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.openVideoPreview(index);
-                });
-            }
-            
-            const deleteBtn = controls.querySelector('.preview-btn.delete');
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.deleteFile(index);
-                });
-            }
-            
-            previewItem.appendChild(controls);
-            this.previewContainer.appendChild(previewItem);
-        });
-        
-        if (this.countElement) {
-            this.countElement.textContent = `${this.files.length} file(s) selected`;
-        }
-    }
-    
-    deleteFile(index) {
-        URL.revokeObjectURL(this.files[index].preview);
-        if (this.files[index].cropped) {
-            URL.revokeObjectURL(this.files[index].cropped);
-        }
-        this.files.splice(index, 1);
-        this.renderPreviews();
-    }
-    
-    createCropModal() {
-        if (document.getElementById('cropModal')) return;
-        
-        const modal = document.createElement('div');
-        modal.className = 'crop-modal';
-        modal.id = 'cropModal';
-        modal.innerHTML = `
-            <div class="crop-container">
-                <div class="crop-header">
-                    <h3><i class="fa fa-crop-alt"></i> Crop & Adjust Image</h3>
-                    <button type="button" class="crop-close">&times;</button>
-                </div>
-                
-                <div class="crop-instructions">
-                    <i class="fa fa-info-circle"></i> 
-                    <strong>Drag</strong> to reposition • 
-                    <strong>Zoom</strong> to scale • 
-                    <strong>Rotate</strong> to adjust angle
-                </div>
-                
-                <div class="crop-canvas-wrapper">
-                    <canvas id="cropCanvas"></canvas>
-                    <div class="crop-overlay">
-                        <div class="crop-grid">
-                            <div class="grid-line grid-line-v1"></div>
-                            <div class="grid-line grid-line-v2"></div>
-                            <div class="grid-line grid-line-h1"></div>
-                            <div class="grid-line grid-line-h2"></div>
-                        </div>
-                        <div class="crop-frame"></div>
-                    </div>
-                </div>
-                
-                <div class="crop-controls">
-                    <div class="control-group">
-                        <label><i class="fa fa-search-plus"></i> Zoom: <span id="zoomValue">1.0</span>x</label>
-                        <input type="range" id="zoomSlider" min="0.5" max="3" step="0.05" value="1">
-                    </div>
-                    <div class="control-group">
-                        <label><i class="fa fa-rotate"></i> Rotate: <span id="rotateValue">0</span>°</label>
-                        <input type="range" id="rotateSlider" min="0" max="360" step="1" value="0">
-                    </div>
-                    <div class="control-group">
-                        <label><i class="fa fa-sun"></i> Brightness: <span id="brightnessValue">100</span>%</label>
-                        <input type="range" id="brightnessSlider" min="50" max="150" step="1" value="100">
-                    </div>
-                </div>
-                
-                <div class="crop-actions">
-                    <button type="button" class="crop-action-btn cancel"><i class="fa fa-times"></i> Cancel</button>
-                    <button type="button" class="crop-action-btn reset"><i class="fa fa-undo"></i> Reset</button>
-                    <button type="button" class="crop-action-btn save"><i class="fa fa-check"></i> Save Changes</button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        modal.querySelector('.crop-close').addEventListener('click', () => this.closeCropModal());
-        modal.querySelector('.cancel').addEventListener('click', () => this.closeCropModal());
-        modal.querySelector('.reset').addEventListener('click', () => this.resetCrop());
-        modal.querySelector('.save').addEventListener('click', () => this.saveCrop());
-        
-        const zoomSlider = document.getElementById('zoomSlider');
-        const rotateSlider = document.getElementById('rotateSlider');
-        const brightnessSlider = document.getElementById('brightnessSlider');
-        
-        zoomSlider.addEventListener('input', (e) => {
-            document.getElementById('zoomValue').textContent = parseFloat(e.target.value).toFixed(1);
-            this.updateCanvas();
-        });
-        
-        rotateSlider.addEventListener('input', (e) => {
-            document.getElementById('rotateValue').textContent = e.target.value;
-            this.updateCanvas();
-        });
-        
-        brightnessSlider.addEventListener('input', (e) => {
-            document.getElementById('brightnessValue').textContent = e.target.value;
-            this.updateCanvas();
-        });
-        
-        // Create video preview modal
-        const videoModal = document.createElement('div');
-        videoModal.className = 'video-preview-modal';
-        videoModal.id = 'videoPreviewModal';
-        videoModal.innerHTML = `
-            <div class="video-preview-container">
-                <div class="video-preview-header">
-                    <h3><i class="fa fa-play-circle"></i> Video Preview</h3>
-                    <button type="button" class="video-preview-close">&times;</button>
-                </div>
-                <div class="video-preview-wrapper">
-                    <video id="previewVideo" controls></video>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(videoModal);
-        
-        videoModal.querySelector('.video-preview-close').addEventListener('click', () => this.closeVideoPreview());
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) this.closeVideoPreview();
-        });
-    }
-    
-    openCropModal(index) {
-        this.currentEditIndex = index;
-        const modal = document.getElementById('cropModal');
-        const canvas = document.getElementById('cropCanvas');
-        
-        this.offsetX = 0;
-        this.offsetY = 0;
-        this.isDragging = false;
-        
-        const img = new Image();
-        img.onload = () => {
-            this.currentImage = img;
-            canvas.width = 800;
-            canvas.height = 600;
-            this.updateCanvas();
-            this.setupDragging(canvas);
-        };
-        img.src = this.files[index].preview;
-        
-        document.getElementById('zoomSlider').value = 1;
-        document.getElementById('rotateSlider').value = 0;
-        document.getElementById('brightnessSlider').value = 100;
-        document.getElementById('zoomValue').textContent = '1.0';
-        document.getElementById('rotateValue').textContent = '0';
-        document.getElementById('brightnessValue').textContent = '100';
-        
-        modal.classList.add('active');
-    }
-    
-    setupDragging(canvas) {
-        let startX, startY;
-        
-        canvas.addEventListener('mousedown', (e) => {
-            this.isDragging = true;
-            startX = e.offsetX - this.offsetX;
-            startY = e.offsetY - this.offsetY;
-        });
-        
-        canvas.addEventListener('mousemove', (e) => {
-            if (!this.isDragging) return;
-            this.offsetX = e.offsetX - startX;
-            this.offsetY = e.offsetY - startY;
-            this.updateCanvas();
-        });
-        
-        canvas.addEventListener('mouseup', () => {
-            this.isDragging = false;
-        });
-        
-        canvas.addEventListener('mouseleave', () => {
-            this.isDragging = false;
-        });
-    }
-    
-    closeCropModal() {
-        document.getElementById('cropModal').classList.remove('active');
-        this.currentEditIndex = null;
-        this.currentImage = null;
-        this.offsetX = 0;
-        this.offsetY = 0;
-    }
-    
-    updateCanvas() {
-        const canvas = document.getElementById('cropCanvas');
-        const ctx = canvas.getContext('2d');
-        const zoom = parseFloat(document.getElementById('zoomSlider').value);
-        const rotate = parseInt(document.getElementById('rotateSlider').value);
-        const brightness = parseInt(document.getElementById('brightnessSlider').value);
-        
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.save();
-        ctx.translate(canvas.width / 2 + this.offsetX, canvas.height / 2 + this.offsetY);
-        ctx.rotate((rotate * Math.PI) / 180);
-        ctx.filter = `brightness(${brightness}%)`;
-        
-        const scaledWidth = this.currentImage.width * zoom;
-        const scaledHeight = this.currentImage.height * zoom;
-        
-        ctx.drawImage(
-            this.currentImage,
-            -scaledWidth / 2,
-            -scaledHeight / 2,
-            scaledWidth,
-            scaledHeight
-        );
-        
-        ctx.restore();
-    }
-    
-    resetCrop() {
-        this.offsetX = 0;
-        this.offsetY = 0;
-        document.getElementById('zoomSlider').value = 1;
-        document.getElementById('rotateSlider').value = 0;
-        document.getElementById('brightnessSlider').value = 100;
-        document.getElementById('zoomValue').textContent = '1.0';
-        document.getElementById('rotateValue').textContent = '0';
-        document.getElementById('brightnessValue').textContent = '100';
-        this.updateCanvas();
-    }
-    
-    saveCrop() {
-        if (this.currentEditIndex === null) return;
-        
-        const canvas = document.getElementById('cropCanvas');
-        canvas.toBlob((blob) => {
-            const croppedUrl = URL.createObjectURL(blob);
-            
-            if (this.files[this.currentEditIndex].cropped) {
-                URL.revokeObjectURL(this.files[this.currentEditIndex].cropped);
-            }
-            
-            this.files[this.currentEditIndex].cropped = croppedUrl;
-            this.files[this.currentEditIndex].croppedBlob = blob;
-            
-            this.renderPreviews();
-            this.closeCropModal();
-        }, 'image/jpeg', 0.9);
-    }
-    
-    openVideoPreview(index) {
-        const modal = document.getElementById('videoPreviewModal');
-        const video = document.getElementById('previewVideo');
-        video.src = this.files[index].preview;
-        modal.classList.add('active');
-        video.play();
-    }
-    
-    closeVideoPreview() {
-        const modal = document.getElementById('videoPreviewModal');
-        const video = document.getElementById('previewVideo');
-        video.pause();
-        video.src = '';
-        modal.classList.remove('active');
-    }
-}
 
 // Initialize uploaders
 document.addEventListener('DOMContentLoaded', function() {
-    window.thumbnailUploader = new MediaUploader('thumbnail', 'thumbnailPreview', 'thumbnailCount', 1);
-    window.imagesUploader = new MediaUploader('images', 'imagesPreview', 'imagesCount', 10);
-    window.videosUploader = new MediaUploader('videos', 'videosPreview', 'videosCount', 4);
-    window.documentUploader = new MediaUploader('document', 'documentPreview', 'documentCount', 1);
     
-    // Handle Step 2 form submission
+    // Thumbnail Preview
+    const thumbnailInput = document.getElementById('thumbnail');
+    if(thumbnailInput) {
+        thumbnailInput.addEventListener('change', function(e) {
+            showPreview(this, 'thumbnailPreview', 'thumbnailCount', 1, false);
+        });
+    }
+    
+    // Images Preview
+    const imagesInput = document.getElementById('images');
+    if(imagesInput) {
+        imagesInput.addEventListener('change', function(e) {
+            showPreview(this, 'imagesPreview', 'imagesCount', 10, false);
+        });
+    }
+    
+    // Videos Preview
+    const videosInput = document.getElementById('videos');
+    if(videosInput) {
+        videosInput.addEventListener('change', function(e) {
+            showPreview(this, 'videosPreview', 'videosCount', 4, true);
+        });
+    }
+    
+    // Step 2 Form Validation
     const step2Form = document.getElementById('step2Form');
     if(step2Form) {
         step2Form.addEventListener('submit', function(e) {
-            e.preventDefault();
+            const thumbnailInput = document.getElementById('thumbnail');
             
-            // Check if thumbnail exists
-            if(window.thumbnailUploader.files.length === 0) {
-                alert('Please upload a campaign thumbnail');
+            if(!thumbnailInput.files || thumbnailInput.files.length === 0) {
+                e.preventDefault();
+                alert('⚠️ Please upload a campaign thumbnail image!');
+                thumbnailInput.focus();
                 return false;
             }
-            
-            // Create FormData
-            const formData = new FormData(this);
-            formData.set('step2', '1');
-            
-            // Remove old file inputs from FormData
-            formData.delete('thumbnail');
-            formData.delete('images[]');
-            formData.delete('videos[]');
-            
-            // Add thumbnail (cropped or original)
-            if(window.thumbnailUploader.files[0]) {
-                const thumbFile = window.thumbnailUploader.files[0].croppedBlob || window.thumbnailUploader.files[0].file;
-                formData.append('thumbnail', thumbFile, 'thumbnail.jpg');
-            }
-            
-            // Add additional images (cropped or original)
-            window.imagesUploader.files.forEach((fileObj, index) => {
-                const imgFile = fileObj.croppedBlob || fileObj.file;
-                formData.append('images[]', imgFile, `image_${index}.jpg`);
-            });
-            
-            // Add videos
-            window.videosUploader.files.forEach((fileObj, index) => {
-                formData.append('videos[]', fileObj.file, fileObj.file.name);
-            });
-            
-            // Show loading state
-            const submitBtn = this.querySelector('.next-btn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Uploading...';
-            
-            // Submit via AJAX
-            fetch(window.location.href, {
-                method: 'POST',
-                body: formData
-            })
-            .then(async response => {
-                if (response.redirected || (response.url && response.url.includes('step=3'))) {
-                    window.location.href = response.url || ('create-campaign.php?step=3&id=' + formData.get('campaign_id'));
-                    return;
-                }
-                
-                const html = await response.text();
-                document.body.innerHTML = html;
-            })
-            .catch(error => {
-                alert('Upload failed. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            });
         });
     }
     
@@ -1991,6 +1576,141 @@ document.addEventListener('DOMContentLoaded', function() {
         ifscInput.addEventListener('blur', validateIFSC);
     }
 });
+
+// Show Preview Function
+function showPreview(input, previewContainerId, countId, maxFiles, isVideo) {
+    const files = input.files;
+    const previewContainer = document.getElementById(previewContainerId);
+    const countElement = document.getElementById(countId);
+    
+    if(!files || files.length === 0) {
+        previewContainer.innerHTML = '';
+        if(countElement) countElement.textContent = '';
+        return;
+    }
+    
+    // Check max files
+    if(files.length > maxFiles) {
+        alert(`Maximum ${maxFiles} file(s) allowed!`);
+        input.value = '';
+        previewContainer.innerHTML = '';
+        if(countElement) countElement.textContent = '';
+        return;
+    }
+    
+    // Clear previous previews
+    previewContainer.innerHTML = '';
+    
+    // Update count
+    if(countElement) {
+        countElement.textContent = `${files.length} file(s) selected`;
+    }
+    
+    // Create previews
+    Array.from(files).forEach((file, index) => {
+        const maxSize = isVideo ? 50 * 1024 * 1024 : 5 * 1024 * 1024;
+        const maxSizeLabel = isVideo ? '50MB' : '5MB';
+        
+        if(file.size > maxSize) {
+            alert(`${file.name} is too large! Maximum size is ${maxSizeLabel}`);
+            return;
+        }
+        
+        const previewItem = document.createElement('div');
+        previewItem.className = 'preview-item';
+        
+        if(isVideo) {
+            const video = document.createElement('video');
+            video.src = URL.createObjectURL(file);
+            video.className = 'preview-video';
+            video.controls = false;
+            video.muted = true;
+            previewItem.appendChild(video);
+            
+            const controls = document.createElement('div');
+            controls.className = 'preview-controls';
+            controls.innerHTML = `
+                <button type="button" class="preview-btn play" onclick="playVideo(this)">
+                    <i class="fa fa-play"></i> Play
+                </button>
+                <button type="button" class="preview-btn delete" onclick="removePreview(this, '${input.id}', ${index})">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+            `;
+            controls.style.opacity = '1'; // Always show on mobile
+            previewItem.appendChild(controls);
+        } else {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.className = 'preview-image';
+            previewItem.appendChild(img);
+            
+            const controls = document.createElement('div');
+            controls.className = 'preview-controls';
+            controls.innerHTML = `
+                <button type="button" class="preview-btn delete" onclick="removePreview(this, '${input.id}', ${index})">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+            `;
+            controls.style.opacity = '1'; // Always show on mobile
+            previewItem.appendChild(controls);
+        }
+        
+        previewContainer.appendChild(previewItem);
+    });
+}
+
+// Play Video Function
+function playVideo(button) {
+    const previewItem = button.closest('.preview-item');
+    const video = previewItem.querySelector('video');
+    
+    if(video) {
+        const modal = document.createElement('div');
+        modal.className = 'video-preview-modal active';
+        modal.innerHTML = `
+            <div class="video-preview-container">
+                <div class="video-preview-header">
+                    <h3><i class="fa fa-play-circle"></i> Video Preview</h3>
+                    <button type="button" class="video-preview-close" onclick="closeVideoModal(this)">&times;</button>
+                </div>
+                <div class="video-preview-wrapper">
+                    <video id="modalVideo" controls autoplay>
+                        <source src="${video.src}" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Close Video Modal
+function closeVideoModal(button) {
+    const modal = button.closest('.video-preview-modal');
+    const video = modal.querySelector('video');
+    if(video) video.pause();
+    modal.remove();
+    document.body.style.overflow = 'auto';
+}
+
+// Remove Preview (Note: Can't actually remove from FileList, so we clear the entire input)
+function removePreview(button, inputId, index) {
+    if(confirm('Remove this file? You will need to re-upload all files.')) {
+        const input = document.getElementById(inputId);
+        input.value = '';
+        
+        const previewContainerId = inputId + 'Preview';
+        const countId = inputId + 'Count';
+        
+        const previewContainer = document.getElementById(previewContainerId);
+        const countElement = document.getElementById(countId);
+        
+        if(previewContainer) previewContainer.innerHTML = '';
+        if(countElement) countElement.textContent = '';
+    }
+}
 
 // Validation functions
 function validateTitle() {

@@ -525,6 +525,17 @@ body {
     color: var(--text-secondary);
 }
 
+.no-thumb{
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+background:linear-gradient(135deg,#ec4899,#ef4444);
+color:#fff;
+font-weight:800;
+}
+
+
 /* Responsive */
 @media (max-width: 1024px) {
     .filters-grid {
@@ -662,11 +673,29 @@ body {
                 <tr>
                     <td>
                         <div class="campaign-cell">
-                            <img 
-                                class="campaign-thumb" 
-                                src="<?= $c['thumbnail'] ?: 'https://via.placeholder.com/60' ?>"
-                                alt="Campaign"
-                            >
+                            <?php if(!empty($c['thumbnail'])): ?>
+
+                                <img 
+                                    class="campaign-thumb"
+                                    src="<?= htmlspecialchars($c['thumbnail']) ?>"
+                                    alt="Campaign"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                >
+
+                                <!-- fallback hidden by default -->
+                                <div class="campaign-thumb no-thumb" style="display:none;">
+                                    <?= strtoupper(substr($c['title'],0,1)) ?>
+                                </div>
+
+                            <?php else: ?>
+
+                                <!-- if thumbnail not uploaded -->
+                                <div class="campaign-thumb no-thumb">
+                                    <?= strtoupper(substr($c['title'],0,1)) ?>
+                                </div>
+
+                            <?php endif; ?>
+
                             <div class="campaign-title">
                                 <?= htmlspecialchars($c['title']) ?>
                             </div>

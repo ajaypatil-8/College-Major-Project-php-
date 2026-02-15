@@ -10,10 +10,16 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role']!="admin"){
 $id = $_GET['id'] ?? 0;
 
 /* CAMPAIGN */
-$stmt = $pdo->prepare("SELECT c.*, u.name, u.email, u.phone, u.created_at as user_joined
-    FROM campaigns c 
-    LEFT JOIN users u ON c.user_id=u.id
-    WHERE c.id=?");
+$stmt = $pdo->prepare("SELECT 
+c.*, 
+u.name, 
+u.email, 
+u.phone, 
+u.profile_image,   -- ADD THIS LINE
+u.created_at as user_joined
+FROM campaigns c 
+LEFT JOIN users u ON c.user_id=u.id
+WHERE c.id=?");
 $stmt->execute([$id]);
 $campaign = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -26,6 +32,16 @@ if(!$campaign){
 $media = $pdo->prepare("SELECT * FROM campaign_media WHERE campaign_id=?");
 $media->execute([$id]);
 $media = $media->fetchAll(PDO::FETCH_ASSOC);
+
+/* GET THUMBNAIL FROM MEDIA TABLE */
+$thumbStmt = $pdo->prepare("
+SELECT media_url 
+FROM campaign_media 
+WHERE campaign_id=? AND media_type='thumbnail' 
+LIMIT 1
+");
+$thumbStmt->execute([$id]);
+$thumb = $thumbStmt->fetchColumn();
 
 /* BANK */
 $bank = $pdo->prepare("SELECT * FROM campaign_bank WHERE campaign_id=?");
@@ -65,9 +81,9 @@ if(isset($_POST['reject'])){
     echo "<script>alert('❌ Campaign Rejected'); window.location='admin-dashboard.php';</script>";
     exit;
 }
-?>
 
-<?php require_once __DIR__."/../includes/header.php"; ?>
+require_once __DIR__."/../includes/header.php";
+?>
 
 <style>
 /* ===== THEME VARIABLES ===== */
@@ -85,6 +101,9 @@ if(isset($_POST['reject'])){
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
+    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
+    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
 }
 
 [data-theme="dark"] {
@@ -101,16 +120,6 @@ if(isset($_POST['reject'])){
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
-    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
-    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
-}
-
-[data-theme="light"] {
-    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
-    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
-    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
-}
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -370,18 +379,18 @@ body {
     display: block;
 }
 
-.thumbnail-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    padding: 20px;
+.no-thumb {
+    width: 100%;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ec4899, #ef4444);
     color: #fff;
+    font-size: 80px;
+    font-weight: 900;
+    border-radius: 16px;
 }
-
-.thumbnail-overlay h4 { font-size: 16px; margin-bottom: 6px; }
-.thumbnail-overlay p { font-size: 13px; }
 
 .media-gallery {
     display: grid;
@@ -397,11 +406,18 @@ body {
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
     cursor: pointer;
+    height: 140px;
 }
 
 .media-item:hover { transform: scale(1.05); }
-.media-item img { width: 100%; height: 140px; object-fit: cover; display: block; }
-.media-item video { width: 100%; height: 140px; }
+
+.media-item img,
+.media-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 
 .sidebar-card {
     background: var(--bg-card);
@@ -449,21 +465,29 @@ body {
     margin-bottom: 16px;
 }
 
-.creator-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 900;
-    flex-shrink: 0;
+.creator-avatar{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ec4899,#ef4444);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-weight:900;
+    overflow:hidden;   /* VERY IMPORTANT */
 }
 
-.creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.creator-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:50%;
+    display:block;
+}
+
+
 .creator-info { min-width: 0; flex: 1; }
 .creator-info h4 { font-size: 16px; font-weight: 800; margin-bottom: 4px; color: var(--text-primary); word-wrap: break-word; overflow-wrap: break-word; }
 .creator-info p { font-size: 12px; color: var(--text-secondary); margin: 2px 0; word-wrap: break-word; overflow-wrap: break-word; }
@@ -620,7 +644,8 @@ body {
     .review-header h1 { font-size: 1.8rem; }
     .campaign-title { font-size: 1.5rem; }
     .campaign-meta { grid-template-columns: 1fr; }
-    .thumbnail-showcase img { height: 250px; }
+    .thumbnail-showcase img,
+    .no-thumb { height: 250px; }
     .media-gallery { grid-template-columns: repeat(2, 1fr); }
     .info-card { padding: 20px; }
 }
@@ -649,6 +674,7 @@ body {
 
     <div class="review-grid">
         <div>
+            <!-- Campaign Details Card -->
             <div class="info-card">
                 <div class="card-header">
                     <h2 class="card-title">
@@ -660,7 +686,7 @@ body {
                     </span>
                 </div>
                 <h3 class="campaign-title"><?= htmlspecialchars($campaign['title']) ?></h3>
-                <span class="category-badge"><i class="fa-solid fa-tag"></i> <?= $campaign['category'] ?></span>
+                <span class="category-badge"><i class="fa-solid fa-tag"></i> <?= htmlspecialchars($campaign['category']) ?></span>
                 <div class="campaign-meta">
                     <div class="meta-item">
                         <div class="meta-label">Goal Amount</div>
@@ -694,6 +720,7 @@ body {
                 </div>
             </div>
 
+            <!-- Campaign Story Card -->
             <div class="info-card">
                 <div class="card-header">
                     <h2 class="card-title">
@@ -706,6 +733,7 @@ body {
                 </div>
             </div>
 
+            <!-- Campaign Thumbnail Card -->
             <div class="info-card">
                 <div class="card-header">
                     <h2 class="card-title">
@@ -714,34 +742,42 @@ body {
                     </h2>
                 </div>
                 <div class="thumbnail-showcase">
-                    <img src="<?= $campaign['thumbnail'] ?? '/CroudSpark-X/assets/noimg.jpg' ?>" 
-                         alt="Campaign Thumbnail"
-                         onclick="openLightbox(this.src)">
-                    <div class="thumbnail-overlay">
-                        <h4><?= htmlspecialchars($campaign['title']) ?></h4>
-                        <p>Click to view full size</p>
-                    </div>
+                    <?php if(!empty($thumb)): ?>
+                        <img src="<?= htmlspecialchars($thumb) ?>" 
+                            alt="Campaign Thumbnail"
+                            onclick="openLightbox(this.src)">
+                    <?php else: ?>
+                        <div class="no-thumb">📸</div>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <?php if($media): ?>
+            <!-- Media Gallery Card -->
+            <?php 
+            // Filter out thumbnail from media gallery
+            $galleryMedia = array_filter($media, function($m) {
+                return $m['media_type'] !== 'thumbnail';
+            });
+            
+            if($galleryMedia): 
+            ?>
             <div class="info-card">
                 <div class="card-header">
                     <h2 class="card-title">
                         <div class="card-icon"><i class="fa-solid fa-photo-film"></i></div>
-                        Media Gallery (<?= count($media) ?> items)
+                        Media Gallery (<?= count($galleryMedia) ?> items)
                     </h2>
                 </div>
                 <div class="media-gallery">
-                    <?php foreach($media as $m): ?>
+                    <?php foreach($galleryMedia as $m): ?>
                         <div class="media-item">
                             <?php if($m['media_type'] == 'image'): ?>
-                                <img src="<?= $m['media_url'] ?>" 
+                                <img src="<?= htmlspecialchars($m['media_url']) ?>" 
                                      alt="Campaign Media"
                                      onclick="openLightbox(this.src)">
                             <?php elseif($m['media_type'] == 'video'): ?>
                                 <video controls>
-                                    <source src="<?= $m['media_url'] ?>" type="video/mp4">
+                                    <source src="<?= htmlspecialchars($m['media_url']) ?>" type="video/mp4">
                                 </video>
                             <?php endif; ?>
                         </div>
@@ -750,6 +786,7 @@ body {
             </div>
             <?php endif; ?>
 
+            <!-- Recent Donations Card -->
             <?php if($donations): ?>
             <div class="info-card">
                 <div class="card-header">
@@ -782,15 +819,30 @@ body {
             <?php endif; ?>
         </div>
 
+        <!-- Sidebar -->
         <div>
+            <!-- Creator Information Card -->
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
                     <i class="fa-solid fa-user"></i> Creator Information
                 </h3>
                 <div class="creator-profile">
                     <div class="creator-avatar">
-                        <?= strtoupper(substr($campaign['name'], 0, 1)) ?>
-                    </div>
+
+                        <?php if(!empty($campaign['profile_image'])): ?>
+
+                            <img src="<?= htmlspecialchars($campaign['profile_image']) ?>"
+                                alt="Creator"
+                                onerror="this.style.display='none'; this.parentElement.innerHTML='<?= strtoupper(substr($campaign['name'],0,1)) ?>';">
+
+                        <?php else: ?>
+
+                            <?= strtoupper(substr($campaign['name'],0,1)) ?>
+
+                        <?php endif; ?>
+
+                        </div>
+
                     <div class="creator-info">
                         <h4><?= htmlspecialchars($campaign['name']) ?></h4>
                         <p><i class="fa-solid fa-envelope"></i> <?= htmlspecialchars($campaign['email']) ?></p>
@@ -800,6 +852,7 @@ body {
                 </div>
             </div>
 
+            <!-- Bank Details Card -->
             <?php if($bank): ?>
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
@@ -824,12 +877,13 @@ body {
             </div>
             <?php endif; ?>
 
+            <!-- Identity Document Card -->
             <?php if($doc): ?>
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
                     <i class="fa-solid fa-id-card"></i> Identity Document
                 </h3>
-                <img src="<?= $doc['doc_url'] ?>" 
+                <img src="<?= htmlspecialchars($doc['doc_url']) ?>" 
                      alt="ID Proof" 
                      class="id-proof-image"
                      onclick="openLightbox(this.src)">
@@ -839,6 +893,7 @@ body {
             </div>
             <?php endif; ?>
 
+            <!-- Campaign Stats Card -->
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
                     <i class="fa-solid fa-chart-simple"></i> Campaign Stats
@@ -870,6 +925,7 @@ body {
                 </div>
             </div>
 
+            <!-- Admin Action Panel -->
             <?php if($campaign['status'] == 'pending'): ?>
             <div class="action-panel">
                 <h3 class="action-title">⚡ Admin Action Required</h3>
@@ -904,6 +960,7 @@ body {
     </div>
 </div>
 
+<!-- Lightbox for Full Image View -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
     <span class="lightbox-close">&times;</span>
     <img src="" alt="Full View" id="lightboxImage">

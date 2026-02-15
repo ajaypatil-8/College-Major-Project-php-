@@ -20,14 +20,11 @@ $campaign_id = (int)$_GET['id'];
 $stmt = $pdo->prepare("
     SELECT 
         c.*,
-        COALESCE(
-            (SELECT cm.media_url 
-             FROM campaign_media cm 
-             WHERE cm.campaign_id = c.id 
-               AND cm.media_type = 'thumbnail' 
-             LIMIT 1),
-            '/assets/placeholder-large.jpg'
-        ) AS thumbnail_url,
+        (SELECT cm.media_url 
+         FROM campaign_media cm 
+         WHERE cm.campaign_id = c.id 
+           AND cm.media_type = 'thumbnail' 
+         LIMIT 1) AS thumbnail_url,
         COALESCE(
             (SELECT SUM(d.amount)
              FROM donations d
@@ -48,6 +45,7 @@ if (!$campaign) {
 $raised  = $campaign['raised'];
 $goal    = $campaign['goal'] ?? 0;
 $percent = $goal > 0 ? min(100, ($raised / $goal) * 100) : 0;
+$hasThumbnail = !empty($campaign['thumbnail_url']);
 
 // ─── Recent donors for this campaign ────────────────────────────────
 $donors_stmt = $pdo->prepare("
@@ -69,7 +67,7 @@ require_once __DIR__ . "/../includes/header.php";
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Campaign Details - CrowdSpark</title>
+<title><?= htmlspecialchars($campaign['title']) ?> - Campaign Details</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
@@ -277,9 +275,22 @@ body {
 
 .hero-image {
     width: 100%;
-    height: 400px;
+    height: 720px;
     object-fit: cover;
     transition: transform 0.5s ease;
+}
+
+.hero-fallback {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #fff;
+    font-size: 120px;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
 }
 
 .campaign-hero:hover .hero-image {
@@ -542,8 +553,13 @@ body {
         padding: 1.5rem;
     }
     
-    .hero-image { 
+    .hero-image,
+    .hero-fallback { 
         height: 280px; 
+    }
+    
+    .hero-fallback {
+        font-size: 80px;
     }
     
     .detail-content {
@@ -580,6 +596,10 @@ body {
     .stat-number {
         font-size: 2rem;
     }
+    
+    .hero-fallback {
+        font-size: 60px;
+    }
 }
 </style>
 </head>
@@ -600,31 +620,43 @@ body {
     </a>
 
     <div class="campaign-hero">
-        <img src="<?= htmlspecialchars($campaign['thumbnail_url']) ?>"
-             alt="<?= htmlspecialchars($campaign['title'] ?? 'Campaign image') ?>"
-             class="hero-image"
-             onerror="this.onerror=null; this.src='/assets/placeholder-large.jpg';">
+        <?php if ($hasThumbnail): ?>
+            <img src="<?= htmlspecialchars($campaign['thumbnail_url']) ?>"
+                 alt="<?= htmlspecialchars($campaign['title']) ?>"
+                 class="hero-image"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <!-- Fallback shown if image fails to load -->
+            <div class="hero-fallback" style="display:none;">
+                <?= strtoupper(substr($campaign['title'], 0, 1)) ?>
+            </div>
+        <?php else: ?>
+            <!-- Show fallback directly if no thumbnail -->
+            <div class="hero-fallback">
+                <?= strtoupper(substr($campaign['title'], 0, 1)) ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div class="detail-content">
 
-        <h1 class="title"><?= htmlspecialchars($campaign['title'] ?? 'Untitled Campaign') ?></h1>
+        <h1 class="title"><?= htmlspecialchars($campaign['title']) ?></h1>
 
         <div class="meta">
             <div class="meta-item">
                 <i class="fa-solid fa-calendar"></i>
-                <span>Created: <?= date('d M Y', strtotime($campaign['created_at'] ?? 'now')) ?></span>
+                <span>Created: <?= date('d M Y', strtotime($campaign['created_at'])) ?></span>
             </div>
             <div class="meta-item">
                 <i class="fa-solid fa-tag"></i>
-                <span>Category: <?= htmlspecialchars($campaign['category'] ?? 'General') ?></span>
+                <span>Category: <?= htmlspecialchars($campaign['category']) ?></span>
             </div>
             <div class="meta-item">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>Status: 
-                    <span class="status-badge-detail status-<?= htmlspecialchars($campaign['status'] ?? 'unknown') ?>">
-                        <?= ucfirst($campaign['status'] ?? 'Unknown') ?>
-                    </span>
+                <i class="fa-solid fa-map-marker-alt"></i>
+                <span><?= htmlspecialchars($campaign['location'] ?? 'Not specified') ?></span>
+            </div>
+            <div class="meta-item">
+                <span class="status-badge-detail status-<?= htmlspecialchars($campaign['status']) ?>">
+                    <?= ucfirst($campaign['status']) ?>
                 </span>
             </div>
         </div>
@@ -635,10 +667,11 @@ body {
                 <div class="stat-label">Raised of ₹<?= number_format($goal) ?> goal</div>
             </div>
             <div class="stat-block">
+                <div class="stat-number"><?= round($percent) ?>%</div>
+                <div class="stat-label">Funded</div>
                 <div class="progress-large">
                     <div class="progress-fill-large" style="width: <?= $percent ?>%"></div>
                 </div>
-                <div class="stat-label"><?= round($percent) ?>% Funded</div>
             </div>
             <div class="stat-block">
                 <div class="stat-number"><?= count($donors) ?></div>
@@ -646,9 +679,23 @@ body {
             </div>
         </div>
 
+        <?php if (!empty($campaign['short_desc'])): ?>
         <div class="description">
-            <?= nl2br(htmlspecialchars($campaign['description'] ?? $campaign['story'] ?? 'No description provided.')) ?>
+            <strong style="color: var(--accent-primary); font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">
+                <i class="fa-solid fa-quote-left"></i> Short Description
+            </strong>
+            <?= nl2br(htmlspecialchars($campaign['short_desc'])) ?>
         </div>
+        <?php endif; ?>
+
+        <?php if (!empty($campaign['story'])): ?>
+        <div class="description">
+            <strong style="color: var(--accent-primary); font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">
+                <i class="fa-solid fa-book"></i> Full Story
+            </strong>
+            <?= nl2br(htmlspecialchars($campaign['story'])) ?>
+        </div>
+        <?php endif; ?>
 
         <?php if (!empty($campaign['reject_reason']) && $campaign['status'] === 'rejected'): ?>
         <div class="reject-notice">
@@ -664,17 +711,17 @@ body {
             <div class="donor-row">
                 <div class="donor-info">
                     <div class="donor-avatar">
-                        <?= strtoupper(substr($d['name'] ?? 'A', 0, 1)) ?>
+                        <?= strtoupper(substr($d['name'], 0, 1)) ?>
                     </div>
                     <div class="donor-details">
-                        <div class="donor-name"><?= htmlspecialchars($d['name'] ?? 'Anonymous') ?></div>
+                        <div class="donor-name"><?= htmlspecialchars($d['name']) ?></div>
                         <div class="donor-date">
                             <i class="fa-solid fa-clock"></i>
-                            <?= date('d M Y, h:i A', strtotime($d['created_at'] ?? 'now')) ?>
+                            <?= date('d M Y, h:i A', strtotime($d['created_at'])) ?>
                         </div>
                     </div>
                 </div>
-                <div class="donor-amount">₹<?= number_format($d['amount'] ?? 0) ?></div>
+                <div class="donor-amount">₹<?= number_format($d['amount']) ?></div>
             </div>
             <?php endforeach; ?>
         </div>

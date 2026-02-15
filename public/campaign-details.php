@@ -241,6 +241,11 @@ body {
     overflow: hidden;
 }
 
+/* Reduced height when no media */
+.media-carousel.no-media-fallback {
+    height: 300px;
+}
+
 .media-slides {
     display: flex;
     width: 100%;
@@ -262,6 +267,30 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* NO MEDIA FALLBACK STYLES */
+.no-media-fallback .media-slide {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(34, 211, 238, 0.1));
+}
+
+.no-media-content {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.no-media-content i {
+    font-size: 80px;
+    color: rgba(6, 182, 212, 0.3);
+    margin-bottom: 16px;
+    display: block;
+}
+
+.no-media-content p {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    font-family: 'Playfair Display', serif;
 }
 
 /* Carousel Navigation */
@@ -350,6 +379,7 @@ body {
     background: linear-gradient(135deg, var(--text-primary), #06b6d4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
     line-height: 1.2;
 }
 
@@ -628,6 +658,18 @@ body {
         height: 350px;
     }
     
+    .media-carousel.no-media-fallback {
+        height: 220px;
+    }
+    
+    .no-media-content i {
+        font-size: 60px;
+    }
+    
+    .no-media-content p {
+        font-size: 16px;
+    }
+    
     .campaign-meta {
         grid-template-columns: 1fr;
         gap: 16px;
@@ -637,6 +679,24 @@ body {
         width: 40px;
         height: 40px;
         font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .media-carousel {
+        height: 280px;
+    }
+    
+    .media-carousel.no-media-fallback {
+        height: 180px;
+    }
+    
+    .no-media-content i {
+        font-size: 50px;
+    }
+    
+    .no-media-content p {
+        font-size: 14px;
     }
 }
 </style>
@@ -658,9 +718,9 @@ body {
             <!-- LEFT COLUMN - CAMPAIGN DETAILS -->
             <div class="campaign-content">
                 
-                <!-- SWIPEABLE MEDIA CAROUSEL -->
-                <?php if(!empty($allMedia)): ?>
+                <!-- MEDIA CAROUSEL OR FALLBACK -->
                 <div class="media-carousel-wrapper">
+                    <?php if(!empty($allMedia)): ?>
                     <div class="media-carousel">
                         
                         <!-- Counter -->
@@ -700,8 +760,18 @@ body {
                         </div>
                         
                     </div>
+                    <?php else: ?>
+                    <!-- NO MEDIA FALLBACK -->
+                    <div class="media-carousel no-media-fallback">
+                        <div class="media-slide">
+                            <div class="no-media-content">
+                                <i class="fa-solid fa-image"></i>
+                                <p>No media available</p>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
                 
                 <!-- Title -->
                 <h1 class="campaign-title"><?= htmlspecialchars($c['title']) ?></h1>
@@ -842,7 +912,8 @@ window.CrowdSparkTheme = {
     get: getTheme
 };
 
-// Carousel functionality
+// Carousel functionality (only if media exists)
+<?php if(!empty($allMedia)): ?>
 let currentIndex = 0;
 const totalSlides = <?= count($allMedia) ?>;
 
@@ -896,6 +967,7 @@ if(carousel) {
         if (touchEnd - touchStart > 50) changeSlide(-1);
     });
 }
+<?php endif; ?>
 </script>
 
 </body>

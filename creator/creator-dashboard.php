@@ -551,6 +551,28 @@ body {
     box-shadow: 0 12px 32px rgba(16, 185, 129, 0.25);
 }
 
+.thumb-fallback {
+    width: 90px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: #fff;
+    font-size: 32px;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+    border: 2px solid rgba(16, 185, 129, 0.15);
+    transition: all 0.3s ease;
+}
+
+.thumb-fallback:hover {
+    transform: scale(1.1) rotate(2deg);
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.25);
+}
+
 .campaign-title {
     font-weight: 700;
     font-size: 1.1rem;
@@ -830,27 +852,28 @@ body {
                         $raised  = $c['raised'] ?? 0;
                         $percent = $c['goal'] > 0 ? min(100, ($raised / $c['goal']) * 100) : 0;
                         
-                        // Get thumbnail URL - use placeholder if not available
-                        $thumbnail = !empty($c['thumbnail_url']) ? htmlspecialchars($c['thumbnail_url']) : 'https://via.placeholder.com/90x68?text=No+Image';
+                        // Check if thumbnail exists
+                        $hasThumbnail = !empty($c['thumbnail_url']);
                     ?>
                     <tr class="campaign-row" style="cursor:pointer;"
                         onclick="window.location='campaign-details.php?id=<?= $c['id'] ?>'">
                         <td>
                             <div class="campaign-preview">
-                                <img src="<?= $thumbnail ?>"
-                                     alt="<?= htmlspecialchars($c['title'] ?? 'Campaign image') ?>"
-                                     class="thumb"
-                                     onerror="this.src='https://via.placeholder.com/90x68?text=No+Image'">
-                                <div>
-                                    <div class="campaign-title"><?= htmlspecialchars($c['title']) ?></div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: <?= $percent ?>%"></div>
+                                <?php if ($hasThumbnail): ?>
+                                    <img src="<?= htmlspecialchars($c['thumbnail_url']) ?>"
+                                        alt="<?= htmlspecialchars($c['title']) ?>"
+                                        class="thumb"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <!-- Fallback shown if image fails to load -->
+                                    <div class="thumb-fallback" style="display:none;">
+                                        <?= strtoupper(substr($c['title'], 0, 1)) ?>
                                     </div>
-                                    <?php if ($c['status'] === 'rejected' && !empty($c['reject_reason'])): ?>
-                                        <div class="reject-notice">
-                                            <?= htmlspecialchars($c['reject_reason']) ?>
-                                        </div>
-                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <!-- Show fallback directly if no thumbnail -->
+                                    <div class="thumb-fallback">
+                                        <?= strtoupper(substr($c['title'], 0, 1)) ?>
+                                    </div>
+                                <?php endif; ?>
                                 </div>
                             </div>
                         </td>

@@ -13,23 +13,22 @@ $user_id = $_SESSION['user_id'];
 // Get filter from URL
 $filter = $_GET['filter'] ?? 'all';
 
-// Fetch all campaigns for stats
-        $allCampaigns = $pdo->prepare("
-        SELECT c.*,
-        (
-            SELECT media_url 
-            FROM campaign_media 
-            WHERE campaign_id = c.id 
-            AND media_type='thumbnail'
-            LIMIT 1
-        ) as thumbnail
-        FROM campaigns c
-        WHERE c.user_id=?
-        ORDER BY c.id DESC
-        ");
-        $allCampaigns->execute([$user_id]);
-        $allCampaigns = $allCampaigns->fetchAll(PDO::FETCH_ASSOC);
-
+// Fetch all campaigns for stats (excluding draft)
+$allCampaigns = $pdo->prepare("
+    SELECT c.*,
+    (
+        SELECT media_url 
+        FROM campaign_media 
+        WHERE campaign_id = c.id 
+        AND media_type='thumbnail'
+        LIMIT 1
+    ) as thumbnail
+    FROM campaigns c
+    WHERE c.user_id=? AND c.status != 'draft'
+    ORDER BY c.id DESC
+");
+$allCampaigns->execute([$user_id]);
+$allCampaigns = $allCampaigns->fetchAll(PDO::FETCH_ASSOC);
 
 // Count by status
 $totalCampaigns = count($allCampaigns);
@@ -471,6 +470,9 @@ body {
     height: 220px;
     overflow: hidden;
     background: rgba(236, 72, 153, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .campaign-thumbnail img {
@@ -482,6 +484,19 @@ body {
 
 .campaign-card:hover .campaign-thumbnail img {
     transform: scale(1.1);
+}
+
+.no-thumb {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ec4899, #f472b6);
+    color: #fff;
+    font-size: 80px;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
 }
 
 .campaign-status-badge {
@@ -828,15 +843,22 @@ body {
                 
                 <!-- Thumbnail -->
                 <div class="campaign-thumbnail">
-                    <?php
-                    $thumb = !empty($campaign['thumbnail']) 
-                    ? $campaign['thumbnail'] 
-                    : "/CroudSpark-X/assets/noimg.jpg";
-                    ?>
-
-                    <img src="<?= htmlspecialchars($thumb) ?>"
-                    alt="<?= htmlspecialchars($campaign['title']) ?>"
-                    onerror="this.src=''">
+                    <?php if(!empty($campaign['thumbnail'])): ?>
+                        <img 
+                            src="<?= htmlspecialchars($campaign['thumbnail']) ?>"
+                            alt="<?= htmlspecialchars($campaign['title']) ?>"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
+                        <!-- fallback letter hidden -->
+                        <div class="no-thumb" style="display:none;">
+                            <?= strtoupper(substr($campaign['title'],0,1)) ?>
+                        </div>
+                    <?php else: ?>
+                        <!-- if no thumbnail uploaded -->
+                        <div class="no-thumb">
+                            <?= strtoupper(substr($campaign['title'],0,1)) ?>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="campaign-status-badge status-<?= $campaign['status'] ?>">
                         <?= ucfirst($campaign['status']) ?>
@@ -908,7 +930,7 @@ body {
         <h3>No <?= $filter != 'all' ? ucfirst($filter) : '' ?> Campaigns Found</h3>
         <p>
             <?php if($filter == 'all'): ?>
-                You haven't created any campaigns yet. Start your first fundraising campaign today!
+                You haven't submitted any campaigns yet. Start your first fundraising campaign today!
             <?php else: ?>
                 No campaigns with "<?= ucfirst($filter) ?>" status. Try a different filter.
             <?php endif; ?>

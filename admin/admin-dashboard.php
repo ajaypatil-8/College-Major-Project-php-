@@ -60,12 +60,23 @@ $recentCampaigns = $pdo->query("
 
 /* PENDING CAMPAIGNS FOR APPROVAL */
 $pendingCampaigns = $pdo->query("
-    SELECT c.*, u.name, u.email 
+    SELECT 
+        c.*, 
+        u.name, 
+        u.email,
+        (
+            SELECT media_url 
+            FROM campaign_media 
+            WHERE campaign_id = c.id 
+            AND media_type='thumbnail'
+            LIMIT 1
+        ) as thumbnail
     FROM campaigns c
     LEFT JOIN users u ON c.user_id=u.id
     WHERE c.status='pending'
     ORDER BY c.id DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 
@@ -719,6 +730,20 @@ body {
     color: var(--text-secondary);
 }
 
+
+        .no-thumb{
+            width:100%;
+            height:140px;
+            background:linear-gradient(135deg,#ec4899,#ef4444);
+            color:#fff;
+            font-size:40px;
+            font-weight:bold;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:14px;
+        }
+
 /* Animations */
 @keyframes fadeInUp {
     from {
@@ -921,46 +946,62 @@ body {
         <?php foreach($pendingCampaigns as $p): ?>
         <div class="pending-card">
             
-            <img src="<?= $p['thumbnail'] ?? '/CroudSpark-X/assets/noimg.jpg' ?>" 
-                 alt="Campaign" 
-                 class="pending-image">
+<?php 
+$hasThumb = !empty($p['thumbnail']);
+?>
 
-            <div class="pending-content">
-                <h3><?= htmlspecialchars($p['title']) ?></h3>
-                <p><?= htmlspecialchars(substr($p['short_desc'], 0, 120)) ?>...</p>
-                
-                <div class="pending-meta">
-                    <div class="meta-item">
-                        <i class="fa-solid fa-user"></i>
-                        <?= htmlspecialchars($p['name']) ?>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fa-solid fa-indian-rupee-sign"></i>
-                        Goal: ₹<?= number_format($p['goal']) ?>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fa-solid fa-tag"></i>
-                        <?= $p['category'] ?>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fa-solid fa-calendar"></i>
-                        <?= date('d M Y', strtotime($p['created_at'])) ?>
-                    </div>
-                </div>
-            </div>
+<?php if($hasThumb): ?>
+    <img src="<?= htmlspecialchars($p['thumbnail']) ?>" 
+         class="pending-image"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
 
-            <div class="pending-actions">
-                <a class="btn-review" href="/CroudSpark-X/admin/view-campaign.php?id=<?= $p['id'] ?>">
-                    <i class="fa-solid fa-eye"></i> Review
-                </a>
-                <a class="btn-approve" href="/CroudSpark-X/admin/approve.php?id=<?= $p['id'] ?>">
-                    <i class="fa-solid fa-check"></i> Approve
-                </a>
-                <a class="btn-reject" href="/CroudSpark-X/admin/reject.php?id=<?= $p['id'] ?>">
-                    <i class="fa-solid fa-times"></i> Reject
-                </a>
-            </div>
+    <!-- fallback if image broken -->
+    <div class="no-thumb" style="display:none;">
+        <?= strtoupper(substr($p['title'],0,1)) ?>
+    </div>
 
+<?php else: ?>
+    <div class="no-thumb">
+        <?= strtoupper(substr($p['title'],0,1)) ?>
+    </div>
+<?php endif; ?>
+
+
+<div class="pending-content">
+    <h3><?= htmlspecialchars($p['title']) ?></h3>
+    <p><?= htmlspecialchars(substr($p['short_desc'], 0, 120)) ?>...</p>
+    
+    <div class="pending-meta">
+        <div class="meta-item">
+            <i class="fa-solid fa-user"></i>
+            <?= htmlspecialchars($p['name']) ?>
+        </div>
+        <div class="meta-item">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+            Goal: ₹<?= number_format($p['goal']) ?>
+        </div>
+        <div class="meta-item">
+            <i class="fa-solid fa-tag"></i>
+            <?= $p['category'] ?>
+        </div>
+        <div class="meta-item">
+            <i class="fa-solid fa-calendar"></i>
+            <?= date('d M Y', strtotime($p['created_at'])) ?>
+        </div>
+    </div>
+</div>
+
+<div class="pending-actions">
+    <a class="btn-review" href="/CroudSpark-X/admin/view-campaign.php?id=<?= $p['id'] ?>">
+        <i class="fa-solid fa-eye"></i> Review
+    </a>
+    <a class="btn-approve" href="/CroudSpark-X/admin/approve.php?id=<?= $p['id'] ?>">
+        <i class="fa-solid fa-check"></i> Approve
+    </a>
+    <a class="btn-reject" href="/CroudSpark-X/admin/reject.php?id=<?= $p['id'] ?>">
+        <i class="fa-solid fa-times"></i> Reject
+    </a>
+</div>
         </div>
         <?php endforeach; ?>
     </div>

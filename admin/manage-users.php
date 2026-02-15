@@ -611,6 +611,21 @@ body {
     color: var(--text-secondary);
 }
 
+
+.user-letter{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ec4899,#ef4444);
+    color:#fff;
+    font-weight:900;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    text-transform:uppercase;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .table-card {
@@ -724,11 +739,29 @@ body {
                     
                     <td>
                         <div class="user-cell">
-                            <img 
-                                class="user-avatar" 
-                                src="<?= $u['profile_image'] ?: 'https://via.placeholder.com/48' ?>"
-                                alt="User"
-                            >
+                           <?php if(!empty($u['profile_image'])): ?>
+
+                                    <img 
+                                    class="user-avatar"
+                                    src="<?= htmlspecialchars($u['profile_image']) ?>"
+                                    alt="User"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                    >
+
+                                    <!-- fallback if image broken -->
+                                    <div class="user-letter" style="display:none;">
+                                        <?= strtoupper(substr($u['name'],0,1)) ?>
+                                    </div>
+
+                                <?php else: ?>
+
+                                    <!-- if no image uploaded -->
+                                    <div class="user-letter">
+                                        <?= strtoupper(substr($u['name'],0,1)) ?>
+                                    </div>
+
+                                <?php endif; ?>
+
                             <div class="user-name">
                                 <?= htmlspecialchars($u['name']) ?>
                             </div>
