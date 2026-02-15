@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                 --text-secondary: #475569;
                 --text-tertiary: #64748b;
                 --border-color: rgba(15, 23, 42, 0.1);
-                --orb-opacity: 0.20;
+                --orb-opacity: 0.5;
             }
 
             [data-theme="dark"] {

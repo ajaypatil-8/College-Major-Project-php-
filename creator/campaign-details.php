@@ -64,8 +64,71 @@ $donors = $donors_stmt->fetchAll(PDO::FETCH_ASSOC);
 require_once __DIR__ . "/../includes/header.php";
 ?>
 
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaign Details - CrowdSpark</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ===== THEME VARIABLES ===== */
+:root {
+    /* Light Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-hover: rgba(245, 158, 11, 0.3);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] {
+    /* Dark Theme */
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --bg-card-hover: rgba(30, 30, 40, 0.9);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    
+    --border-color: rgba(255, 255, 255, 0.15);
+    --border-hover: rgba(245, 158, 11, 0.4);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* Yellow/Amber accent colors - STAY CONSTANT */
+:root,
+[data-theme="dark"] {
+    --accent-primary: #f59e0b;
+    --accent-secondary: #fbbf24;
+    --accent-gradient: linear-gradient(45deg, #f59e0b, #fbbf24);
+    --orb-1: linear-gradient(45deg, #f59e0b, #fbbf24);
+    --orb-2: linear-gradient(45deg, #d97706, #f59e0b);
+    --orb-3: linear-gradient(45deg, #b45309, #d97706);
+}
 
 * {
     margin: 0;
@@ -75,10 +138,11 @@ require_once __DIR__ . "/../includes/header.php";
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Animated Background - Yellow/Amber theme */
@@ -90,7 +154,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -103,7 +168,7 @@ body {
 .orb-1 {
     width: 500px;
     height: 500px;
-    background: linear-gradient(45deg, #f59e0b, #fbbf24);
+    background: var(--orb-1);
     top: -10%;
     left: -10%;
     animation-delay: 0s;
@@ -112,7 +177,7 @@ body {
 .orb-2 {
     width: 400px;
     height: 400px;
-    background: linear-gradient(45deg, #d97706, #f59e0b);
+    background: var(--orb-2);
     bottom: -10%;
     right: -10%;
     animation-delay: 5s;
@@ -121,7 +186,7 @@ body {
 .orb-3 {
     width: 350px;
     height: 350px;
-    background: linear-gradient(45deg, #b45309, #d97706);
+    background: var(--orb-3);
     top: 50%;
     left: 50%;
     animation-delay: 10s;
@@ -172,13 +237,13 @@ body {
     align-items: center;
     gap: 8px;
     margin-bottom: 2rem;
-    color: #f59e0b;
+    color: var(--accent-primary);
     font-weight: 700;
     text-decoration: none;
     padding: 12px 24px;
     border-radius: 50px;
     background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    border: 1px solid var(--border-hover);
     transition: all 0.3s ease;
 }
 
@@ -189,14 +254,15 @@ body {
 
 /* ===== CAMPAIGN HERO ===== */
 .campaign-hero {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(245, 158, 11, 0.1);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
     margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     position: relative;
+    transition: all 0.3s ease;
 }
 
 .campaign-hero::before {
@@ -206,7 +272,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    background: var(--accent-gradient);
 }
 
 .hero-image {
@@ -230,14 +296,14 @@ body {
     font-size: clamp(2rem, 5vw, 2.8rem);
     font-weight: 900;
     margin: 0 0 1.5rem;
-    background: linear-gradient(135deg, #fff, #f59e0b);
+    background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 1.2;
 }
 
 .meta {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 1rem;
     margin-bottom: 2rem;
     display: flex;
@@ -253,7 +319,7 @@ body {
 }
 
 .meta-item i {
-    color: #f59e0b;
+    color: var(--accent-primary);
 }
 
 .status-badge-detail {
@@ -286,9 +352,10 @@ body {
     gap: 2rem;
     margin: 2.5rem 0 3rem;
     padding: 2rem;
-    background: rgba(30, 30, 40, 0.6);
+    background: var(--bg-secondary);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 }
 
 .stat-block {
@@ -298,7 +365,7 @@ body {
 .stat-number {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 900;
-    background: linear-gradient(45deg, #f59e0b, #fbbf24);
+    background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 1;
@@ -306,7 +373,7 @@ body {
 }
 
 .stat-label {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 0.95rem;
     font-weight: 600;
 }
@@ -323,7 +390,7 @@ body {
 
 .progress-fill-large {
     height: 100%;
-    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    background: var(--accent-gradient);
     transition: width 1.2s cubic-bezier(0.65, 0, 0.35, 1);
     position: relative;
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
@@ -343,7 +410,7 @@ body {
 /* ===== DESCRIPTION ===== */
 .description {
     line-height: 1.8;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 1.05rem;
     margin-bottom: 3rem;
 }
@@ -368,13 +435,14 @@ body {
 
 /* ===== DONORS SECTION ===== */
 .donors-section {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 20px;
     padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
     margin-top: 3rem;
+    transition: all 0.3s ease;
 }
 
 .donors-section h2 {
@@ -382,7 +450,7 @@ body {
     margin: 0 0 2rem;
     font-size: 1.8rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #fff, #f59e0b);
+    background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -392,7 +460,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1.2rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     transition: all 0.3s ease;
 }
 
@@ -414,7 +482,7 @@ body {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    background: var(--accent-gradient);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -433,12 +501,12 @@ body {
 .donor-name {
     font-weight: 700;
     font-size: 1.05rem;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .donor-date {
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: var(--text-tertiary);
 }
 
 .donor-amount {
@@ -453,7 +521,7 @@ body {
 .empty-donors {
     text-align: center;
     padding: 3rem;
-    color: #94a3b8;
+    color: var(--text-tertiary);
 }
 
 .empty-donors i {
@@ -514,6 +582,9 @@ body {
     }
 }
 </style>
+</head>
+
+<body>
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -619,5 +690,39 @@ body {
 
     </div>
 </div>
+
+<script>
+// Theme System
+function getTheme() {
+    return localStorage.getItem('crowdspark-theme') || 'light';
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('crowdspark-theme', theme);
+}
+
+function toggleTheme() {
+    const currentTheme = getTheme();
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+}
+
+// Initialize theme
+(function() {
+    const savedTheme = getTheme();
+    setTheme(savedTheme);
+})();
+
+// Expose globally
+window.CrowdSparkTheme = {
+    toggle: toggleTheme,
+    set: setTheme,
+    get: getTheme
+};
+</script>
+
+</body>
+</html>
 
 <?php require_once __DIR__ . "/../includes/footer.php"; ?>

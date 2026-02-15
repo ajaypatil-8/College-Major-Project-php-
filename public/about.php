@@ -23,7 +23,7 @@ require_once __DIR__ . "/../includes/header.php";
             --text-tertiary: #64748b;
             --border-color: rgba(15, 23, 42, 0.1);
             --border-hover: rgba(139, 92, 246, 0.3);
-            --orb-opacity: 0.20;
+            --orb-opacity: 0.5;
         }
 
         [data-theme="dark"] {
@@ -730,7 +730,7 @@ require_once __DIR__ . "/../includes/header.php";
         <div class="cta-section">
             <h2>Join Us in Making a Difference</h2>
             <p>
-                Whether you want to support a cause or start a fundraiser,
+                Whether you want to support a cause or start a campaign,
                 CrowdSpark is here to help you create meaningful impact.
             </p>
 
@@ -739,7 +739,7 @@ require_once __DIR__ . "/../includes/header.php";
                     <i class="fas fa-compass"></i> Explore Campaigns
                 </a>
                 <a href="/CroudSpark-X/creator/create-campaign.php" class="btn btn-secondary">
-                    <i class="fas fa-plus-circle"></i> Start a Fundraiser
+                    <i class="fas fa-plus-circle"></i> Start a campaign
                 </a>
             </div>
         </div>

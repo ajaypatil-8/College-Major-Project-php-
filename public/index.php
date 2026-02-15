@@ -28,7 +28,7 @@ require_once __DIR__ . "/../config/db.php";
             --border-color: rgba(15, 23, 42, 0.1);
             --border-hover: rgba(245, 158, 11, 0.3);
             
-            --orb-opacity: 0.15;
+            --orb-opacity: 0.25;
             
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
             --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);

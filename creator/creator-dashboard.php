@@ -66,8 +66,71 @@ $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
 require_once __DIR__ . "/../includes/header.php";
 ?>
 
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creator Dashboard - CrowdSpark</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ===== THEME VARIABLES ===== */
+:root {
+    /* Light Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-hover: rgba(16, 185, 129, 0.3);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] {
+    /* Dark Theme */
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --bg-card-hover: rgba(30, 30, 40, 0.9);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    
+    --border-color: rgba(255, 255, 255, 0.15);
+    --border-hover: rgba(16, 185, 129, 0.4);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* Green/Emerald accent colors - STAY CONSTANT */
+:root,
+[data-theme="dark"] {
+    --accent-primary: #10b981;
+    --accent-secondary: #34d399;
+    --accent-gradient: linear-gradient(45deg, #10b981, #34d399);
+    --orb-1: linear-gradient(45deg, #10b981, #34d399);
+    --orb-2: linear-gradient(45deg, #059669, #10b981);
+    --orb-3: linear-gradient(45deg, #047857, #059669);
+}
 
 /* ===== BASE STYLES ===== */
 * { 
@@ -77,12 +140,13 @@ require_once __DIR__ . "/../includes/header.php";
 }
 
 body {
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     font-family: 'DM Sans', sans-serif;
     line-height: 1.6;
     position: relative;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Animated Background - Green/Emerald theme */
@@ -94,7 +158,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -107,7 +172,7 @@ body {
 .orb-1 {
     width: 500px;
     height: 500px;
-    background: linear-gradient(45deg, #10b981, #34d399);
+    background: var(--orb-1);
     top: -10%;
     left: -10%;
     animation-delay: 0s;
@@ -116,7 +181,7 @@ body {
 .orb-2 {
     width: 400px;
     height: 400px;
-    background: linear-gradient(45deg, #059669, #10b981);
+    background: var(--orb-2);
     bottom: -10%;
     right: -10%;
     animation-delay: 5s;
@@ -125,7 +190,7 @@ body {
 .orb-3 {
     width: 350px;
     height: 350px;
-    background: linear-gradient(45deg, #047857, #059669);
+    background: var(--orb-3);
     top: 50%;
     left: 50%;
     animation-delay: 10s;
@@ -202,11 +267,13 @@ body {
     gap: 1.5rem;
     animation: slideInRight 0.7s ease-out;
     padding: 2rem 2.5rem;
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 60px rgba(16, 185, 129, 0.12);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 .dashboard-header::before {
@@ -216,7 +283,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #10b981, #34d399);
+    background: var(--accent-gradient);
     border-radius: 24px 24px 0 0;
 }
 
@@ -226,7 +293,7 @@ body {
     font-size: 3rem;
     font-weight: 900;
     letter-spacing: -0.05em;
-    background: linear-gradient(45deg, #10b981, #34d399);
+    background: linear-gradient(45deg, var(--text-primary), var(--accent-primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -234,7 +301,7 @@ body {
 
 /* ===== PRIMARY BUTTON ===== */
 .btn-primary {
-    background: linear-gradient(45deg, #10b981, #34d399);
+    background: var(--accent-gradient);
     color: white;
     padding: 1.2rem 2.5rem;
     border-radius: 50px;
@@ -282,13 +349,13 @@ body {
 }
 
 .stat-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     padding: 2.5rem 2rem;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
+    box-shadow: var(--shadow-md);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
     animation: fadeInUp 0.6s ease-out backwards;
@@ -301,7 +368,7 @@ body {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(45deg, #10b981, #34d399);
+    background: var(--accent-gradient);
     transform: scaleX(0);
     transition: transform 0.4s ease;
 }
@@ -320,11 +387,11 @@ body {
 
 .stat-card:hover {
     transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2);
+    box-shadow: var(--shadow-lg);
 }
 
 .stat-label {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 0.95rem;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -336,20 +403,20 @@ body {
     font-size: 3rem;
     font-weight: 900;
     line-height: 1;
-    background: linear-gradient(45deg, #10b981, #34d399);
+    background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .stat-raised .stat-value { 
-    background: linear-gradient(45deg, #10b981, #34d399); 
+    background: var(--accent-gradient);
     -webkit-background-clip: text; 
     -webkit-text-fill-color: transparent; 
 }
 
 .stat-approved .stat-value { 
-    background: linear-gradient(45deg, #10b981, #34d399); 
+    background: var(--accent-gradient);
     -webkit-background-clip: text; 
     -webkit-text-fill-color: transparent; 
 }
@@ -375,13 +442,13 @@ body {
 
 /* ===== CARD ===== */
 .card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 20px;
     padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
+    box-shadow: var(--shadow-md);
     margin-bottom: 2.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     transition: all 0.3s ease;
     animation: fadeInUp 0.8s ease-out;
     position: relative;
@@ -400,7 +467,7 @@ body {
 }
 
 .card:hover {
-    box-shadow: 0 20px 60px rgba(16, 185, 129, 0.15);
+    box-shadow: var(--shadow-lg);
     transform: translateY(-4px);
 }
 
@@ -409,7 +476,7 @@ body {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     font-weight: 800;
-    background: linear-gradient(45deg, #10b981, #34d399);
+    background: linear-gradient(45deg, var(--text-primary), var(--accent-primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -426,7 +493,7 @@ body {
     text-align: left;
     padding: 1.2rem 1.5rem;
     background: rgba(16, 185, 129, 0.08);
-    color: #fff;
+    color: var(--text-primary);
     font-size: 0.9rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -441,7 +508,7 @@ body {
     padding: 1.8rem 1.5rem;
     border: none;
     vertical-align: middle;
-    background: rgba(20, 20, 30, 0.6);
+    background: var(--bg-secondary);
     transition: all 0.3s ease;
 }
 
@@ -454,7 +521,7 @@ body {
 
 .campaign-row:hover {
     transform: scale(1.02);
-    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.12);
+    box-shadow: var(--shadow-md);
 }
 
 .campaign-row:hover td {
@@ -488,7 +555,7 @@ body {
     font-weight: 700;
     font-size: 1.1rem;
     margin: 0 0 0.8rem;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 /* ===== PROGRESS BAR ===== */
@@ -503,7 +570,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #10b981, #34d399);
+    background: var(--accent-gradient);
     transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
     position: relative;
@@ -572,7 +639,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     transition: all 0.3s ease;
     animation: fadeInUp 0.5s ease-out backwards;
 }
@@ -595,19 +662,19 @@ body {
     display: block;
     margin-bottom: 0.4rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     font-size: 1.05rem;
 }
 
 .donor-info small {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     font-weight: 500;
 }
 
 .amount {
     font-weight: 900;
-    background: linear-gradient(45deg, #10b981, #34d399);
+    background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -618,7 +685,7 @@ body {
 .tips-list {
     padding-left: 1.5rem;
     margin: 0;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     line-height: 2;
 }
 
@@ -636,19 +703,19 @@ body {
 .tips-list li:nth-child(5) { animation-delay: 0.5s; }
 
 .tips-list li:hover {
-    color: #10b981;
+    color: var(--accent-primary);
     transform: translateX(8px);
 }
 
 .tips-list li::marker {
-    color: #10b981;
+    color: var(--accent-primary);
     font-size: 1.2em;
 }
 
 /* ===== EMPTY STATE ===== */
 .empty-state {
     text-align: center;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     padding: 4rem 2rem;
     font-size: 1.2rem;
     font-weight: 500;
@@ -691,6 +758,9 @@ body {
     }
 }
 </style>
+</head>
+
+<body>
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -764,7 +834,7 @@ body {
                         $thumbnail = !empty($c['thumbnail_url']) ? htmlspecialchars($c['thumbnail_url']) : 'https://via.placeholder.com/90x68?text=No+Image';
                     ?>
                     <tr class="campaign-row" style="cursor:pointer;"
-                        onclick="window.location='view-campaign.php?id=<?= $c['id'] ?>'">
+                        onclick="window.location='campaign-details.php?id=<?= $c['id'] ?>'">
                         <td>
                             <div class="campaign-preview">
                                 <img src="<?= $thumbnail ?>"
@@ -843,5 +913,39 @@ body {
 
     </div>
 </div>
+
+<script>
+// Theme System
+function getTheme() {
+    return localStorage.getItem('crowdspark-theme') || 'light';
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('crowdspark-theme', theme);
+}
+
+function toggleTheme() {
+    const currentTheme = getTheme();
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+}
+
+// Initialize theme
+(function() {
+    const savedTheme = getTheme();
+    setTheme(savedTheme);
+})();
+
+// Expose globally
+window.CrowdSparkTheme = {
+    toggle: toggleTheme,
+    set: setTheme,
+    get: getTheme
+};
+</script>
+
+</body>
+</html>
 
 <?php require_once __DIR__ . "/../includes/footer.php"; ?>

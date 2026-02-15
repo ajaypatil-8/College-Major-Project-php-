@@ -72,6 +72,62 @@ $pendingCampaigns = $pdo->query("
 <?php require_once __DIR__."/../includes/header.php"; ?>
 
 <style>
+/* ===== THEME VARIABLES ===== */
+:root {
+    /* Light Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-hover: rgba(239, 68, 68, 0.3);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] {
+    /* Dark Theme */
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --bg-card-hover: rgba(30, 30, 40, 0.9);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    
+    --border-color: rgba(255, 255, 255, 0.15);
+    --border-hover: rgba(239, 68, 68, 0.4);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* Red/Pink orbs for Admin - visible on both themes */
+[data-theme="dark"] {
+    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
+    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
+    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
+}
+
+[data-theme="light"] {
+    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
+    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
+    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -80,10 +136,11 @@ $pendingCampaigns = $pdo->query("
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Animated Background - Red/Pink theme for Admin */
@@ -95,7 +152,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -108,7 +166,7 @@ body {
 .orb-1 {
     width: 500px;
     height: 500px;
-    background: linear-gradient(45deg, #ef4444, #f87171);
+    background: var(--orb-1);
     top: -10%;
     left: -10%;
     animation-delay: 0s;
@@ -117,7 +175,7 @@ body {
 .orb-2 {
     width: 400px;
     height: 400px;
-    background: linear-gradient(45deg, #ec4899, #f472b6);
+    background: var(--orb-2);
     bottom: -10%;
     right: -10%;
     animation-delay: 5s;
@@ -126,7 +184,7 @@ body {
 .orb-3 {
     width: 350px;
     height: 350px;
-    background: linear-gradient(45deg, #dc2626, #ef4444);
+    background: var(--orb-3);
     top: 50%;
     left: 50%;
     animation-delay: 10s;
@@ -163,14 +221,14 @@ body {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 900;
-    background: linear-gradient(135deg, #fff, #ef4444);
+    background: linear-gradient(135deg, var(--text-primary), #ef4444);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 0 0 10px;
 }
 
 .page-subtitle {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 1.1rem;
 }
 
@@ -203,8 +261,8 @@ body {
 }
 
 .btn-secondary {
-    background: rgba(30, 30, 40, 0.8);
-    color: #fff;
+    background: var(--bg-card);
+    color: var(--text-primary);
     border: 2px solid rgba(239, 68, 68, 0.3);
 }
 
@@ -222,9 +280,9 @@ body {
 }
 
 .stat-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     border-radius: 24px;
     padding: 32px;
     transition: all 0.4s ease;
@@ -257,8 +315,8 @@ body {
 }
 
 .stat-card:hover {
-    background: rgba(30, 30, 40, 0.9);
-    border-color: rgba(239, 68, 68, 0.4);
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
     transform: translateY(-8px);
 }
 
@@ -295,12 +353,12 @@ body {
     font-size: 36px;
     font-weight: 900;
     margin: 0;
-    color: #fff;
+    color: var(--text-primary);
     line-height: 1;
 }
 
 .stat-content p {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     margin: 8px 0 0;
     font-weight: 600;
     font-size: 14px;
@@ -331,9 +389,9 @@ body {
 }
 
 .card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     border-radius: 24px;
     padding: 32px;
     animation: fadeInUp 0.8s ease;
@@ -343,7 +401,7 @@ body {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     margin-bottom: 24px;
-    background: linear-gradient(135deg, #fff, #ef4444);
+    background: linear-gradient(135deg, var(--text-primary), #ef4444);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -360,7 +418,7 @@ body {
     align-items: center;
     gap: 12px;
     padding: 16px;
-    background: rgba(30, 30, 40, 0.6);
+    background: var(--bg-secondary);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
@@ -391,12 +449,12 @@ body {
     font-size: 14px;
     font-weight: 700;
     margin: 0 0 4px;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .campaign-info p {
     font-size: 12px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -412,7 +470,7 @@ body {
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #fff, #ef4444);
+    background: linear-gradient(135deg, var(--text-primary), #ef4444);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: flex;
@@ -431,11 +489,11 @@ body {
 
 /* Table */
 .table-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 24px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     margin-bottom: 30px;
 }
 
@@ -453,16 +511,16 @@ body {
     text-align: left;
     font-size: 13px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .table-card td {
     padding: 18px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     font-size: 14px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
 }
 
 .table-card tbody tr {
@@ -517,11 +575,11 @@ body {
 }
 
 .pending-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     display: grid;
     grid-template-columns: 200px 1fr auto;
     gap: 24px;
@@ -543,7 +601,7 @@ body {
 
 .pending-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(239, 68, 68, 0.4);
+    border-color: var(--border-hover);
 }
 
 .pending-image {
@@ -557,11 +615,11 @@ body {
     font-size: 20px;
     font-weight: 800;
     margin: 0 0 8px;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .pending-content p {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     margin: 6px 0;
     font-size: 14px;
     line-height: 1.6;
@@ -579,7 +637,7 @@ body {
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
 }
 
 .meta-item i {
@@ -610,13 +668,13 @@ body {
 }
 
 .btn-review {
-    background: rgba(30, 30, 40, 0.8);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
 .btn-review:hover {
-    background: rgba(40, 40, 50, 0.9);
+    background: var(--bg-card-hover);
 }
 
 .btn-approve {
@@ -645,7 +703,7 @@ body {
 .empty-state {
     text-align: center;
     padding: 60px 20px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
 }
 
 .empty-state i {
@@ -658,7 +716,7 @@ body {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
 }
 
 /* Animations */
@@ -674,17 +732,6 @@ body {
 }
 
 /* Responsive */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @media (max-width: 1200px) {
     .cards-grid {
         grid-template-columns: 1fr;

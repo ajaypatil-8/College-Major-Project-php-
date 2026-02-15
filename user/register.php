@@ -61,25 +61,60 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     }
 }
 ?>
-
-<style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - CrowdSpark</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ===== THEME VARIABLES ===== */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    --border-color: rgba(15, 23, 42, 0.1);
+    --orb-opacity: 0.25;
 }
+
+[data-theme="dark"] {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.15);
+    --orb-opacity: 0.25;
+    --orb-1: linear-gradient(45deg, #8b5cf6, #a78bfa);
+    --orb-2: linear-gradient(45deg, #7c3aed, #8b5cf6);
+    --orb-3: linear-gradient(45deg, #6d28d9, #7c3aed);
+}
+
+[data-theme="light"] {
+    --orb-1: linear-gradient(45deg, #c4b5fd, #a78bfa);
+    --orb-2: linear-gradient(45deg, #a78bfa, #8b5cf6);
+    --orb-3: linear-gradient(45deg, #8b5cf6, #c4b5fd);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Animated Background - Purple/Violet theme */
 .bg-animation {
     position: fixed;
     top: 0;
@@ -88,7 +123,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -98,32 +134,9 @@ body {
     animation: float 20s infinite ease-in-out;
 }
 
-.orb-1 {
-    width: 500px;
-    height: 500px;
-    background: linear-gradient(45deg, #8b5cf6, #a78bfa);
-    top: -10%;
-    left: -10%;
-    animation-delay: 0s;
-}
-
-.orb-2 {
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(45deg, #7c3aed, #8b5cf6);
-    bottom: -10%;
-    right: -10%;
-    animation-delay: 5s;
-}
-
-.orb-3 {
-    width: 350px;
-    height: 350px;
-    background: linear-gradient(45deg, #6d28d9, #7c3aed);
-    top: 50%;
-    left: 50%;
-    animation-delay: 10s;
-}
+.orb-1 { width: 500px; height: 500px; background: var(--orb-1); top: -10%; left: -10%; }
+.orb-2 { width: 400px; height: 400px; background: var(--orb-2); bottom: -10%; right: -10%; animation-delay: 5s; }
+.orb-3 { width: 350px; height: 350px; background: var(--orb-3); top: 50%; left: 50%; animation-delay: 10s; }
 
 @keyframes float {
     0%, 100% { transform: translate(0, 0) scale(1); }
@@ -132,66 +145,41 @@ body {
     75% { transform: translate(40px, -40px) scale(1.05); }
 }
 
-/* ===== ANIMATIONS ===== */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+@keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    backdrop-filter: blur(20px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-}
-
-@keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-12px) rotate(2deg); }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ===== PAGE CONTAINER ===== */
 .auth-page {
     position: relative;
     z-index: 1;
@@ -209,12 +197,12 @@ body {
 }
 
 .auth-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     padding: 50px 45px;
     border-radius: 32px;
     box-shadow: 0 20px 60px rgba(139, 92, 246, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
@@ -235,7 +223,6 @@ body {
     box-shadow: 0 30px 80px rgba(139, 92, 246, 0.15);
 }
 
-/* ===== BRAND SECTION ===== */
 .auth-brand {
     text-align: center;
     margin-bottom: 36px;
@@ -261,19 +248,18 @@ body {
     font-size: 2.5rem;
     font-weight: 900;
     margin-bottom: 10px;
-    background: linear-gradient(135deg, #fff, #8b5cf6);
+    background: linear-gradient(135deg, var(--text-primary), #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .auth-sub {
     font-size: 1rem;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     margin-bottom: 32px;
     font-weight: 500;
 }
 
-/* ===== ALERT MESSAGES ===== */
 .alert {
     padding: 16px 20px;
     border-radius: 16px;
@@ -297,19 +283,12 @@ body {
     animation: shimmer 2s infinite;
 }
 
-.alert-error {
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-    border-left: 4px solid #ef4444;
-}
+.alert-error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-left: 4px solid #ef4444; }
+[data-theme="light"] .alert-error { color: #dc2626; }
 
-.alert-success {
-    background: rgba(16, 185, 129, 0.2);
-    color: #6ee7b7;
-    border-left: 4px solid #10b981;
-}
+.alert-success { background: rgba(16, 185, 129, 0.2); color: #10b981; border-left: 4px solid #10b981; }
+[data-theme="light"] .alert-success { color: #059669; }
 
-/* ===== PROFILE UPLOAD ===== */
 .profile-upload {
     display: flex;
     flex-direction: column;
@@ -390,7 +369,6 @@ body {
     font-size: 16px;
 }
 
-/* ===== FORM ===== */
 .auth-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -419,7 +397,7 @@ body {
     display: block;
     font-size: 12px;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 10px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -430,12 +408,12 @@ body {
     width: 100%;
     padding: 16px 18px;
     border-radius: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    border: 2px solid var(--border-color);
     font-size: 15px;
-    background: rgba(10, 10, 20, 0.6);
+    background: var(--bg-secondary);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
-    color: #fff;
+    color: var(--text-primary);
     font-family: 'DM Sans', sans-serif;
 }
 
@@ -446,7 +424,7 @@ body {
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-weight: 400;
 }
 
@@ -454,12 +432,10 @@ body {
 .form-group textarea:focus {
     outline: none;
     border-color: #8b5cf6;
-    background: rgba(20, 20, 30, 0.7);
     box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
     transform: translateY(-2px);
 }
 
-/* ===== PASSWORD TOGGLE ===== */
 .pass-wrap {
     position: relative;
 }
@@ -470,7 +446,7 @@ body {
     top: 50%;
     margin-top: 6px;
     cursor: pointer;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-size: 18px;
     transition: all 0.3s ease;
     padding: 8px;
@@ -481,7 +457,6 @@ body {
     transform: scale(1.15);
 }
 
-/* ===== BUTTON ===== */
 .btn-auth {
     grid-column: 1 / -1;
     width: 100%;
@@ -527,7 +502,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* ===== LOADING STATE ===== */
 .btn-auth.loading {
     pointer-events: none;
     opacity: 0.8;
@@ -548,12 +522,11 @@ body {
     animation: spin 0.7s linear infinite;
 }
 
-/* ===== FOOTER ===== */
 .auth-footer {
     text-align: center;
     margin-top: 32px;
     font-size: 15px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-weight: 500;
     animation: fadeIn 0.8s ease-out 0.7s both;
 }
@@ -585,10 +558,9 @@ body {
     color: #a78bfa;
 }
 
-/* ===== PASSWORD STRENGTH ===== */
 .password-strength {
     height: 4px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--border-color);
     border-radius: 2px;
     margin-top: 8px;
     overflow: hidden;
@@ -606,7 +578,162 @@ body {
 .strength-medium { width: 66%; background: #f59e0b; }
 .strength-strong { width: 100%; background: #10b981; }
 
-/* ===== RESPONSIVE ===== */
+/* Image Cropper Modal */
+.crop-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.crop-modal.active {
+    display: flex;
+}
+
+.crop-container {
+    background: var(--bg-card);
+    border-radius: 20px;
+    max-width: 650px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.3s ease;
+}
+
+.crop-header {
+    padding: 24px 28px;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.crop-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--text-primary), #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: rotate(90deg);
+}
+
+.crop-body {
+    padding: 24px;
+    max-height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+}
+
+#cropImage {
+    max-width: 100%;
+    max-height: 400px;
+}
+
+.crop-controls {
+    padding: 20px 28px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    border-top: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.crop-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.crop-btn:hover {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: #8b5cf6;
+    color: #8b5cf6;
+    transform: scale(1.1);
+}
+
+.crop-footer {
+    padding: 24px 28px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-cancel, .btn-apply {
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.btn-cancel {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-cancel:hover {
+    background: var(--bg-card);
+    border-color: var(--text-tertiary);
+    transform: translateY(-2px);
+}
+
+.btn-apply {
+    background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+    border: none;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+}
+
+.btn-apply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+}
+
 @media (max-width: 768px) {
     .auth-form {
         grid-template-columns: 1fr;
@@ -629,6 +756,16 @@ body {
         height: 65px;
         font-size: 34px;
     }
+    
+    .crop-controls {
+        flex-wrap: wrap;
+    }
+    
+    .crop-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -645,10 +782,32 @@ body {
         height: 95px;
         font-size: 36px;
     }
+    
+    .crop-header {
+        padding: 20px;
+    }
+    
+    .crop-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .crop-footer {
+        flex-direction: column;
+    }
+    
+    .btn-cancel, .btn-apply {
+        width: 100%;
+    }
 }
-</style>
+    </style>
+</head>
+<body>
 
-<!-- Background Animation -->
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+    <i class="fas fa-moon"></i>
+</button>
+
 <div class="bg-animation">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -677,80 +836,45 @@ body {
             </div>
             <?php endif; ?>
 
-            <form method="POST" enctype="multipart/form-data" class="auth-form">
+            <form method="POST" enctype="multipart/form-data" class="auth-form" id="registerForm">
 
-                <!-- Profile Image Upload -->
                 <div class="profile-upload full-width">
                     <div class="profile-preview" id="preview">👤</div>
                     <label class="upload-btn">
                         <i class="fa fa-camera"></i>
                         Choose Profile Image
-                        <input type="file" name="profile" accept="image/*" hidden onchange="previewImage(event)">
+                        <input type="file" name="profile" accept="image/*" hidden onchange="openCropper(event)" id="profileInput">
                     </label>
                 </div>
 
-                <!-- Form Fields -->
                 <div class="form-group full-width">
                     <label>Full Name</label>
-                    <input 
-                        type="text" 
-                        name="name" 
-                        required 
-                        placeholder="Enter your full name"
-                        autocomplete="name"
-                    >
+                    <input type="text" name="name" required placeholder="Enter your full name" autocomplete="name">
                 </div>
 
                 <div class="form-group full-width">
                     <label>Email Address</label>
-                    <input 
-                        type="email" 
-                        name="email" 
-                        required 
-                        placeholder="you@example.com"
-                        autocomplete="email"
-                    >
+                    <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
                 </div>
 
                 <div class="form-group">
                     <label>Phone Number</label>
-                    <input 
-                        type="text" 
-                        name="phone" 
-                        placeholder="+1 (555) 000-0000"
-                        autocomplete="tel"
-                    >
+                    <input type="text" name="phone" placeholder="+1 (555) 000-0000" autocomplete="tel">
                 </div>
 
                 <div class="form-group">
                     <label>City</label>
-                    <input 
-                        type="text" 
-                        name="city" 
-                        placeholder="Your city"
-                        autocomplete="address-level2"
-                    >
+                    <input type="text" name="city" placeholder="Your city" autocomplete="address-level2">
                 </div>
 
                 <div class="form-group full-width">
                     <label>Bio</label>
-                    <textarea 
-                        name="bio" 
-                        placeholder="Tell us a bit about yourself and your interests..."
-                    ></textarea>
+                    <textarea name="bio" placeholder="Tell us a bit about yourself and your interests..."></textarea>
                 </div>
 
                 <div class="form-group pass-wrap">
                     <label>Password</label>
-                    <input 
-                        type="password" 
-                        name="password" 
-                        id="pass1" 
-                        required 
-                        placeholder="Minimum 6 characters"
-                        autocomplete="new-password"
-                        oninput="checkPasswordStrength(this.value)"
-                    >
+                    <input type="password" name="password" id="pass1" required placeholder="Minimum 6 characters" autocomplete="new-password" oninput="checkPasswordStrength(this.value)">
                     <i class="fa fa-eye toggle-password" onclick="togglePass('pass1', this)" id="toggleIcon1"></i>
                     <div class="password-strength">
                         <div class="password-strength-bar" id="strengthBar"></div>
@@ -759,14 +883,7 @@ body {
 
                 <div class="form-group pass-wrap">
                     <label>Confirm Password</label>
-                    <input 
-                        type="password" 
-                        name="confirm_password" 
-                        id="pass2" 
-                        required 
-                        placeholder="Re-enter password"
-                        autocomplete="new-password"
-                    >
+                    <input type="password" name="confirm_password" id="pass2" required placeholder="Re-enter password" autocomplete="new-password">
                     <i class="fa fa-eye toggle-password" onclick="togglePass('pass2', this)" id="toggleIcon2"></i>
                 </div>
 
@@ -783,23 +900,157 @@ body {
     </div>
 </div>
 
+<!-- Image Cropper Modal -->
+<div class="crop-modal" id="cropModal">
+    <div class="crop-container">
+        <div class="crop-header">
+            <h3>✨ Adjust Your Profile Picture</h3>
+            <button onclick="closeCropModal()" class="close-btn" type="button">&times;</button>
+        </div>
+        <div class="crop-body">
+            <img id="cropImage" src="">
+        </div>
+        <div class="crop-controls">
+            <button onclick="cropper.zoom(0.1)" class="crop-btn" type="button" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+            <button onclick="cropper.zoom(-0.1)" class="crop-btn" type="button" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <button onclick="cropper.rotate(90)" class="crop-btn" type="button" title="Rotate Right"><i class="fas fa-redo"></i></button>
+            <button onclick="cropper.rotate(-90)" class="crop-btn" type="button" title="Rotate Left"><i class="fas fa-undo"></i></button>
+            <button onclick="cropper.scaleX(-cropper.getData().scaleX || -1)" class="crop-btn" type="button" title="Flip Horizontal"><i class="fas fa-arrows-alt-h"></i></button>
+        </div>
+        <div class="crop-footer">
+            <button onclick="closeCropModal()" class="btn-cancel" type="button">Cancel</button>
+            <button onclick="applyCrop()" class="btn-apply" type="button">Apply & Save</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <script>
-// Image Preview
-function previewImage(e) {
+// Theme Toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    const icon = document.querySelector('#themeToggle i');
+    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+// Load saved theme
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const icon = document.querySelector('#themeToggle i');
+    icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+});
+
+// Image Cropper
+let cropper = null;
+let croppedImageBlob = null;
+
+function openCropper(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(ev) {
-            const preview = document.getElementById("preview");
-            preview.innerHTML = `<img src="${ev.target.result}">`;
-            preview.style.transform = "scale(1.1)";
-            setTimeout(() => {
-                preview.style.transform = "scale(1)";
-            }, 300);
+            document.getElementById('cropImage').src = ev.target.result;
+            document.getElementById('cropModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            if (cropper) {
+                cropper.destroy();
+            }
+            
+            cropper = new Cropper(document.getElementById('cropImage'), {
+                aspectRatio: 1,
+                viewMode: 2,
+                dragMode: 'move',
+                autoCropArea: 1,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+                minCropBoxWidth: 100,
+                minCropBoxHeight: 100,
+            });
         }
         reader.readAsDataURL(file);
     }
 }
+
+function closeCropModal() {
+    document.getElementById('cropModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+    document.getElementById('profileInput').value = '';
+}
+
+function applyCrop() {
+    cropper.getCroppedCanvas({
+        width: 400,
+        height: 400,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high',
+    }).toBlob((blob) => {
+        croppedImageBlob = blob;
+        
+        const url = URL.createObjectURL(blob);
+        const preview = document.getElementById("preview");
+        preview.innerHTML = `<img src="${url}">`;
+        preview.style.transform = "scale(1.1)";
+        setTimeout(() => {
+            preview.style.transform = "scale(1)";
+        }, 300);
+        
+        closeCropModal();
+    }, 'image/jpeg', 0.92);
+}
+
+// Form submission with cropped image
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    if (croppedImageBlob) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        formData.delete('profile');
+        formData.append('profile', croppedImageBlob, 'profile.jpg');
+        
+        const btn = document.querySelector('.btn-auth');
+        btn.classList.add('loading');
+        btn.textContent = '';
+        
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData
+        }).then(response => response.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        }).catch(error => {
+            console.error('Error:', error);
+            btn.classList.remove('loading');
+            btn.textContent = 'CREATE ACCOUNT';
+        });
+    } else {
+        const btn = document.querySelector('.btn-auth');
+        const pass1 = document.getElementById('pass1').value;
+        const pass2 = document.getElementById('pass2').value;
+        
+        if (pass1 === pass2 && pass1.length >= 6) {
+            btn.classList.add('loading');
+            btn.textContent = '';
+        }
+    }
+});
 
 // Toggle Password Visibility
 function togglePass(inputId, icon) {
@@ -834,29 +1085,6 @@ function checkPasswordStrength(password) {
     }
 }
 
-// Add loading state on form submit
-document.querySelector('.auth-form').addEventListener('submit', function(e) {
-    const btn = document.querySelector('.btn-auth');
-    const pass1 = document.getElementById('pass1').value;
-    const pass2 = document.getElementById('pass2').value;
-    
-    if (pass1 === pass2 && pass1.length >= 6) {
-        btn.classList.add('loading');
-        btn.textContent = '';
-    }
-});
-
-// Add input focus animations
-document.querySelectorAll('.form-group input, .form-group textarea').forEach(input => {
-    input.addEventListener('focus', function() {
-        this.parentElement.style.zIndex = '10';
-    });
-    
-    input.addEventListener('blur', function() {
-        this.parentElement.style.zIndex = '1';
-    });
-});
-
 // Validate password match in real-time
 const pass1 = document.getElementById('pass1');
 const pass2 = document.getElementById('pass2');
@@ -866,10 +1094,18 @@ if (pass2) {
         if (this.value && pass1.value && this.value !== pass1.value) {
             this.style.borderColor = '#ef4444';
         } else {
-            this.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+            this.style.borderColor = '';
         }
     });
 }
+
+// Escape key to close modal
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('cropModal').classList.contains('active')) {
+        closeCropModal();
+    }
+});
 </script>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+</body>
+</html>

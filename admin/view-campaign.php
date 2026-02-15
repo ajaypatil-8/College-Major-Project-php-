@@ -70,21 +70,60 @@ if(isset($_POST['reject'])){
 <?php require_once __DIR__."/../includes/header.php"; ?>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ===== THEME VARIABLES ===== */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-hover: rgba(239, 68, 68, 0.3);
+    --orb-opacity: 0.25;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
+
+[data-theme="dark"] {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --bg-card-hover: rgba(30, 30, 40, 0.9);
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.15);
+    --border-hover: rgba(239, 68, 68, 0.4);
+    --orb-opacity: 0.25;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
+    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
+    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
+}
+
+[data-theme="light"] {
+    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
+    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
+    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
+}
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Animated Background */
 .bg-animation {
     position: fixed;
     top: 0;
@@ -93,7 +132,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -103,31 +143,9 @@ body {
     animation: float 20s infinite ease-in-out;
 }
 
-.orb-1 {
-    width: 500px;
-    height: 500px;
-    background: linear-gradient(45deg, #ef4444, #f87171);
-    top: -10%;
-    left: -10%;
-}
-
-.orb-2 {
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(45deg, #ec4899, #f472b6);
-    bottom: -10%;
-    right: -10%;
-    animation-delay: 5s;
-}
-
-.orb-3 {
-    width: 350px;
-    height: 350px;
-    background: linear-gradient(45deg, #dc2626, #ef4444);
-    top: 50%;
-    left: 50%;
-    animation-delay: 10s;
-}
+.orb-1 { width: 500px; height: 500px; background: var(--orb-1); top: -10%; left: -10%; }
+.orb-2 { width: 400px; height: 400px; background: var(--orb-2); bottom: -10%; right: -10%; animation-delay: 5s; }
+.orb-3 { width: 350px; height: 350px; background: var(--orb-3); top: 50%; left: 50%; animation-delay: 10s; }
 
 @keyframes float {
     0%, 100% { transform: translate(0, 0) scale(1); }
@@ -137,17 +155,15 @@ body {
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Container - PROPERLY CONSTRAINED */
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
 .review-container {
     position: relative;
     z-index: 1;
@@ -158,16 +174,15 @@ body {
     box-sizing: border-box;
 }
 
-/* Header */
 .review-header {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 30px 40px;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 40px;
     animation: fadeInUp 0.6s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     width: 100%;
     box-sizing: border-box;
 }
@@ -177,7 +192,7 @@ body {
     font-size: 2.2rem;
     font-weight: 900;
     margin: 0 0 8px;
-    background: linear-gradient(135deg, #fff, #ef4444);
+    background: linear-gradient(135deg, var(--text-primary), #ef4444);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -187,7 +202,7 @@ body {
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     flex-wrap: wrap;
 }
 
@@ -196,7 +211,6 @@ body {
     text-decoration: none;
 }
 
-/* Grid Layout - PROPERLY RESPONSIVE */
 .review-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
@@ -204,13 +218,12 @@ body {
     width: 100%;
 }
 
-/* Card */
 .info-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     padding: 28px;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     margin-bottom: 24px;
     transition: all 0.3s ease;
     animation: fadeInUp 0.6s ease;
@@ -221,7 +234,7 @@ body {
 
 .info-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(239, 68, 68, 0.4);
+    border-color: var(--border-hover);
 }
 
 .card-header {
@@ -230,7 +243,7 @@ body {
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 16px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid var(--border-color);
     flex-wrap: wrap;
     gap: 12px;
 }
@@ -239,7 +252,7 @@ body {
     font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     font-weight: 900;
-    color: #fff;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -266,27 +279,15 @@ body {
     text-transform: capitalize;
 }
 
-.status-pending {
-    background: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
-}
+.status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.status-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
 
-.status-approved {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10b981;
-}
-
-.status-rejected {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-}
-
-/* Campaign Info */
 .campaign-title {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     font-weight: 900;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 16px;
     line-height: 1.3;
     word-wrap: break-word;
@@ -301,7 +302,7 @@ body {
 }
 
 .meta-item {
-    background: rgba(30, 30, 40, 0.6);
+    background: var(--bg-secondary);
     padding: 16px;
     border-radius: 12px;
     border-left: 4px solid #ef4444;
@@ -311,7 +312,7 @@ body {
 .meta-label {
     font-size: 11px;
     font-weight: 700;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 6px;
@@ -320,7 +321,7 @@ body {
 .meta-value {
     font-size: 16px;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
@@ -336,13 +337,12 @@ body {
     margin-top: 12px;
 }
 
-/* Story Box */
 .story-box {
-    background: rgba(30, 30, 40, 0.6);
+    background: var(--bg-secondary);
     padding: 24px;
     border-radius: 14px;
     line-height: 1.8;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 14px;
     border-left: 4px solid #ef4444;
     max-height: 500px;
@@ -351,25 +351,15 @@ body {
     overflow-wrap: break-word;
 }
 
-.story-box::-webkit-scrollbar {
-    width: 6px;
-}
+.story-box::-webkit-scrollbar { width: 6px; }
+.story-box::-webkit-scrollbar-track { background: var(--border-color); }
+.story-box::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, 0.3); border-radius: 10px; }
 
-.story-box::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.story-box::-webkit-scrollbar-thumb {
-    background: rgba(239, 68, 68, 0.3);
-    border-radius: 10px;
-}
-
-/* Thumbnail */
 .thumbnail-showcase {
     position: relative;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-lg);
     margin-bottom: 20px;
 }
 
@@ -390,16 +380,9 @@ body {
     color: #fff;
 }
 
-.thumbnail-overlay h4 {
-    font-size: 16px;
-    margin-bottom: 6px;
-}
+.thumbnail-overlay h4 { font-size: 16px; margin-bottom: 6px; }
+.thumbnail-overlay p { font-size: 13px; }
 
-.thumbnail-overlay p {
-    font-size: 13px;
-}
-
-/* Media Grid */
 .media-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -411,34 +394,21 @@ body {
     position: relative;
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
-.media-item:hover {
-    transform: scale(1.05);
-}
+.media-item:hover { transform: scale(1.05); }
+.media-item img { width: 100%; height: 140px; object-fit: cover; display: block; }
+.media-item video { width: 100%; height: 140px; }
 
-.media-item img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    display: block;
-}
-
-.media-item video {
-    width: 100%;
-    height: 140px;
-}
-
-/* Sidebar */
 .sidebar-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     padding: 24px;
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     margin-bottom: 20px;
     width: 100%;
     box-sizing: border-box;
@@ -448,7 +418,7 @@ body {
 .sidebar-title {
     font-size: 16px;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 18px;
     display: flex;
     align-items: center;
@@ -459,32 +429,16 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     font-size: 13px;
     gap: 10px;
     min-width: 0;
 }
 
-.info-row:last-child {
-    border-bottom: none;
-}
+.info-row:last-child { border-bottom: none; }
+.info-row label { color: var(--text-secondary); font-weight: 600; flex-shrink: 0; }
+.info-row span { color: var(--text-primary); font-weight: 700; text-align: right; word-wrap: break-word; overflow-wrap: break-word; min-width: 0; }
 
-.info-row label {
-    color: #cbd5e1;
-    font-weight: 600;
-    flex-shrink: 0;
-}
-
-.info-row span {
-    color: #fff;
-    font-weight: 700;
-    text-align: right;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    min-width: 0;
-}
-
-/* Creator Card */
 .creator-profile {
     display: flex;
     align-items: center;
@@ -509,51 +463,23 @@ body {
     flex-shrink: 0;
 }
 
-.creator-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
+.creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.creator-info { min-width: 0; flex: 1; }
+.creator-info h4 { font-size: 16px; font-weight: 800; margin-bottom: 4px; color: var(--text-primary); word-wrap: break-word; overflow-wrap: break-word; }
+.creator-info p { font-size: 12px; color: var(--text-secondary); margin: 2px 0; word-wrap: break-word; overflow-wrap: break-word; }
 
-.creator-info {
-    min-width: 0;
-    flex: 1;
-}
-
-.creator-info h4 {
-    font-size: 16px;
-    font-weight: 800;
-    margin-bottom: 4px;
-    color: #fff;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-.creator-info p {
-    font-size: 12px;
-    color: #cbd5e1;
-    margin: 2px 0;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* ID Proof */
 .id-proof-image {
     width: 100%;
     border-radius: 14px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.id-proof-image:hover {
-    transform: scale(1.02);
-}
+.id-proof-image:hover { transform: scale(1.02); }
 
-/* Action Panel */
 .action-panel {
-    background: rgba(30, 30, 40, 0.8);
+    background: var(--bg-secondary);
     backdrop-filter: blur(20px);
     padding: 24px;
     border-radius: 18px;
@@ -564,7 +490,7 @@ body {
     font-size: 16px;
     font-weight: 800;
     margin-bottom: 16px;
-    color: #fff;
+    color: var(--text-primary);
     text-align: center;
 }
 
@@ -610,9 +536,9 @@ body {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    background: rgba(30, 30, 40, 0.6);
-    color: #fff;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
     margin-bottom: 10px;
     resize: vertical;
     min-height: 90px;
@@ -621,31 +547,11 @@ body {
     box-sizing: border-box;
 }
 
-.reject-reason:focus {
-    outline: none;
-    border-color: #ef4444;
-}
+.reject-reason:focus { outline: none; border-color: #ef4444; }
 
-/* Progress Bar */
-.progress-section {
-    margin-top: 20px;
-}
-
-.progress-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.progress-bar {
-    height: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 999px;
-    overflow: hidden;
-}
-
+.progress-section { margin-top: 20px; }
+.progress-label { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; font-weight: 600; }
+.progress-bar { height: 10px; background: var(--border-color); border-radius: 999px; overflow: hidden; }
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #ef4444, #f87171);
@@ -666,40 +572,25 @@ body {
     animation: shimmer 2s infinite;
 }
 
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-/* Donations Table */
-.donations-table {
-    margin-top: 16px;
-    overflow-x: auto;
-}
-
-.donations-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
+.donations-table { margin-top: 16px; overflow-x: auto; }
+.donations-table table { width: 100%; border-collapse: collapse; }
 .donations-table th {
     background: rgba(239, 68, 68, 0.2);
     padding: 10px;
     text-align: left;
     font-size: 11px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     text-transform: uppercase;
 }
 
 .donations-table td {
     padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     font-size: 13px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
 }
 
-/* Lightbox */
 .lightbox {
     display: none;
     position: fixed;
@@ -714,83 +605,32 @@ body {
     padding: 20px;
 }
 
-.lightbox.active {
-    display: flex;
-}
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 90%; max-height: 90%; border-radius: 12px; }
+.lightbox-close { position: absolute; top: 30px; right: 30px; font-size: 36px; color: #fff; cursor: pointer; z-index: 10001; }
 
-.lightbox img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 12px;
-}
-
-.lightbox-close {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    font-size: 36px;
-    color: #fff;
-    cursor: pointer;
-    z-index: 10001;
-}
-
-/* Responsive */
 @media (max-width: 1200px) {
-    .review-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .review-container {
-        padding: 120px 30px 60px;
-    }
+    .review-grid { grid-template-columns: 1fr; }
+    .review-container { padding: 120px 30px 60px; }
 }
 
 @media (max-width: 768px) {
-    .review-container {
-        padding: 120px 20px 60px;
-    }
-    
-    .review-header {
-        padding: 20px 24px;
-    }
-    
-    .review-header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .campaign-title {
-        font-size: 1.5rem;
-    }
-    
-    .campaign-meta {
-        grid-template-columns: 1fr;
-    }
-    
-    .thumbnail-showcase img {
-        height: 250px;
-    }
-    
-    .media-gallery {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .info-card {
-        padding: 20px;
-    }
+    .review-container { padding: 120px 20px 60px; }
+    .review-header { padding: 20px 24px; }
+    .review-header h1 { font-size: 1.8rem; }
+    .campaign-title { font-size: 1.5rem; }
+    .campaign-meta { grid-template-columns: 1fr; }
+    .thumbnail-showcase img { height: 250px; }
+    .media-gallery { grid-template-columns: repeat(2, 1fr); }
+    .info-card { padding: 20px; }
 }
 
 @media (max-width: 480px) {
-    .review-container {
-        padding: 120px 15px 60px;
-    }
-    
-    .media-gallery {
-        grid-template-columns: 1fr;
-    }
+    .review-container { padding: 120px 15px 60px; }
+    .media-gallery { grid-template-columns: 1fr; }
 }
 </style>
 
-<!-- Background Animation -->
 <div class="bg-animation">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -798,8 +638,6 @@ body {
 </div>
 
 <div class="review-container">
-
-    <!-- HEADER -->
     <div class="review-header">
         <h1>🛡️ Campaign Review Panel</h1>
         <div class="review-breadcrumb">
@@ -809,13 +647,8 @@ body {
         </div>
     </div>
 
-    <!-- GRID -->
     <div class="review-grid">
-        
-        <!-- LEFT COLUMN -->
         <div>
-
-            <!-- CAMPAIGN INFO -->
             <div class="info-card">
                 <div class="card-header">
                     <h2 class="card-title">
@@ -826,10 +659,8 @@ body {
                         <?= ucfirst($campaign['status']) ?>
                     </span>
                 </div>
-
                 <h3 class="campaign-title"><?= htmlspecialchars($campaign['title']) ?></h3>
                 <span class="category-badge"><i class="fa-solid fa-tag"></i> <?= $campaign['category'] ?></span>
-
                 <div class="campaign-meta">
                     <div class="meta-item">
                         <div class="meta-label">Goal Amount</div>
@@ -848,8 +679,6 @@ body {
                         <div class="meta-value"><?= date('d M Y', strtotime($campaign['end_date'])) ?></div>
                     </div>
                 </div>
-
-                <!-- Progress -->
                 <?php 
                 $progress = $campaign['goal'] > 0 ? ($totalRaised / $campaign['goal']) * 100 : 0;
                 $progress = min($progress, 100);
@@ -865,7 +694,6 @@ body {
                 </div>
             </div>
 
-            <!-- STORY -->
             <div class="info-card">
                 <div class="card-header">
                     <h2 class="card-title">
@@ -878,7 +706,6 @@ body {
                 </div>
             </div>
 
-            <!-- THUMBNAIL -->
             <div class="info-card">
                 <div class="card-header">
                     <h2 class="card-title">
@@ -897,7 +724,6 @@ body {
                 </div>
             </div>
 
-            <!-- MEDIA GALLERY -->
             <?php if($media): ?>
             <div class="info-card">
                 <div class="card-header">
@@ -924,7 +750,6 @@ body {
             </div>
             <?php endif; ?>
 
-            <!-- DONATIONS -->
             <?php if($donations): ?>
             <div class="info-card">
                 <div class="card-header">
@@ -955,18 +780,13 @@ body {
                 </div>
             </div>
             <?php endif; ?>
-
         </div>
 
-        <!-- RIGHT COLUMN (SIDEBAR) -->
         <div>
-
-            <!-- CREATOR INFO -->
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
                     <i class="fa-solid fa-user"></i> Creator Information
                 </h3>
-                
                 <div class="creator-profile">
                     <div class="creator-avatar">
                         <?= strtoupper(substr($campaign['name'], 0, 1)) ?>
@@ -980,7 +800,6 @@ body {
                 </div>
             </div>
 
-            <!-- BANK DETAILS -->
             <?php if($bank): ?>
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
@@ -1005,7 +824,6 @@ body {
             </div>
             <?php endif; ?>
 
-            <!-- ID PROOF -->
             <?php if($doc): ?>
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
@@ -1015,13 +833,12 @@ body {
                      alt="ID Proof" 
                      class="id-proof-image"
                      onclick="openLightbox(this.src)">
-                <p style="text-align: center; color: #cbd5e1; font-size: 11px; margin-top: 10px;">
+                <p style="text-align: center; color: var(--text-secondary); font-size: 11px; margin-top: 10px;">
                     <i class="fa-solid fa-info-circle"></i> Click to view full size
                 </p>
             </div>
             <?php endif; ?>
 
-            <!-- CAMPAIGN STATS -->
             <div class="sidebar-card">
                 <h3 class="sidebar-title">
                     <i class="fa-solid fa-chart-simple"></i> Campaign Stats
@@ -1053,19 +870,14 @@ body {
                 </div>
             </div>
 
-            <!-- ADMIN ACTIONS -->
             <?php if($campaign['status'] == 'pending'): ?>
             <div class="action-panel">
                 <h3 class="action-title">⚡ Admin Action Required</h3>
-                
-                <!-- Approve -->
                 <form method="POST" onsubmit="return confirm('Are you sure you want to APPROVE this campaign?')">
                     <button type="submit" name="approve" class="btn-action btn-approve">
                         <i class="fa-solid fa-check-circle"></i> Approve Campaign
                     </button>
                 </form>
-
-                <!-- Reject -->
                 <form method="POST" onsubmit="return confirm('Are you sure you want to REJECT this campaign?')">
                     <textarea 
                         name="reason" 
@@ -1083,19 +895,15 @@ body {
                 <i class="fa-solid fa-<?= $campaign['status'] == 'approved' ? 'check-circle' : 'times-circle' ?>" 
                    style="font-size: 56px; color: <?= $campaign['status'] == 'approved' ? '#10b981' : '#ef4444' ?>; margin-bottom: 14px;"></i>
                 <h3 style="margin-bottom: 6px; font-size: 16px;">Campaign <?= ucfirst($campaign['status']) ?></h3>
-                <p style="color: #cbd5e1; font-size: 13px;">
+                <p style="color: var(--text-secondary); font-size: 13px;">
                     <?= $campaign['status'] == 'approved' ? 'This campaign has been approved and is now live.' : 'This campaign was rejected.' ?>
                 </p>
             </div>
             <?php endif; ?>
-
         </div>
-
     </div>
-
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
     <span class="lightbox-close">&times;</span>
     <img src="" alt="Full View" id="lightboxImage">

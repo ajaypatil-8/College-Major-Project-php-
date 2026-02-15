@@ -101,6 +101,62 @@ foreach($messages as $m) {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
+/* ===== THEME VARIABLES ===== */
+:root {
+    /* Light Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-hover: rgba(239, 68, 68, 0.3);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] {
+    /* Dark Theme */
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --bg-card-hover: rgba(30, 30, 40, 0.9);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    
+    --border-color: rgba(255, 255, 255, 0.15);
+    --border-hover: rgba(239, 68, 68, 0.4);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* Red/Pink orbs for Admin - visible on both themes */
+[data-theme="dark"] {
+    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
+    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
+    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
+}
+
+[data-theme="light"] {
+    --orb-1: linear-gradient(45deg, #ef4444, #f87171);
+    --orb-2: linear-gradient(45deg, #ec4899, #f472b6);
+    --orb-3: linear-gradient(45deg, #dc2626, #ef4444);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -109,10 +165,11 @@ foreach($messages as $m) {
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Animated Background - Red/Pink theme */
@@ -124,7 +181,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -137,7 +195,7 @@ body {
 .orb-1 {
     width: 500px;
     height: 500px;
-    background: linear-gradient(45deg, #ef4444, #f87171);
+    background: var(--orb-1);
     top: -10%;
     left: -10%;
     animation-delay: 0s;
@@ -146,7 +204,7 @@ body {
 .orb-2 {
     width: 400px;
     height: 400px;
-    background: linear-gradient(45deg, #ec4899, #f472b6);
+    background: var(--orb-2);
     bottom: -10%;
     right: -10%;
     animation-delay: 5s;
@@ -155,7 +213,7 @@ body {
 .orb-3 {
     width: 350px;
     height: 350px;
-    background: linear-gradient(45deg, #dc2626, #ef4444);
+    background: var(--orb-3);
     top: 50%;
     left: 50%;
     animation-delay: 10s;
@@ -209,14 +267,14 @@ body {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.5rem, 6vw, 3.5rem);
     font-weight: 900;
-    background: linear-gradient(135deg, #fff, #ef4444);
+    background: linear-gradient(135deg, var(--text-primary), #ef4444);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 0 0 10px;
 }
 
 .page-subtitle {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 1.1rem;
     font-weight: 500;
 }
@@ -230,9 +288,9 @@ body {
 }
 
 .stat-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 24px;
     text-align: center;
@@ -257,18 +315,18 @@ body {
 
 .stat-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(239, 68, 68, 0.4);
+    border-color: var(--border-hover);
 }
 
 .stat-number {
     font-size: 36px;
     font-weight: 900;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 
 .stat-label {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 14px;
     font-weight: 600;
 }
@@ -298,14 +356,24 @@ body {
 
 .alert-error {
     background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
+    color: #ef4444;
     border-left: 4px solid #ef4444;
+}
+
+[data-theme="light"] .alert-error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
 }
 
 .alert-success {
     background: rgba(16, 185, 129, 0.2);
-    color: #6ee7b7;
+    color: #10b981;
     border-left: 4px solid #10b981;
+}
+
+[data-theme="light"] .alert-success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
 }
 
 /* Messages Grid */
@@ -315,11 +383,11 @@ body {
 }
 
 .message-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
@@ -338,7 +406,7 @@ body {
 
 .message-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(239, 68, 68, 0.4);
+    border-color: var(--border-hover);
 }
 
 .message-header {
@@ -357,12 +425,12 @@ body {
 .user-name {
     font-size: 18px;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .user-email {
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-size: 14px;
 }
 
@@ -387,16 +455,16 @@ body {
 .message-subject {
     font-size: 16px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 12px;
 }
 
 .message-content {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     line-height: 1.7;
     margin-bottom: 24px;
     padding: 20px;
-    background: rgba(10, 10, 20, 0.4);
+    background: var(--bg-secondary);
     border-radius: 12px;
     border-left: 3px solid rgba(239, 68, 68, 0.3);
 }
@@ -404,13 +472,13 @@ body {
 .reply-section {
     margin-top: 24px;
     padding-top: 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-color);
 }
 
 .reply-label {
     font-size: 14px;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -422,7 +490,7 @@ body {
 }
 
 .reply-text {
-    color: #cbd5e1;
+    color: var(--text-secondary);
     line-height: 1.7;
     padding: 16px;
     background: rgba(16, 185, 129, 0.1);
@@ -432,7 +500,7 @@ body {
 
 .reply-timestamp {
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
 }
 
 /* Reply Form */
@@ -447,9 +515,9 @@ body {
     min-height: 140px;
     padding: 16px;
     border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    background: rgba(10, 10, 20, 0.6);
-    color: #fff;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
     font-size: 15px;
     font-weight: 500;
     font-family: 'DM Sans', sans-serif;
@@ -458,13 +526,12 @@ body {
 }
 
 .reply-textarea::placeholder {
-    color: #94a3b8;
+    color: var(--text-tertiary);
 }
 
 .reply-textarea:focus {
     outline: none;
     border-color: #ef4444;
-    background: rgba(20, 20, 30, 0.7);
     box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
 }
 
@@ -497,7 +564,7 @@ body {
 .empty-state {
     text-align: center;
     padding: 80px 20px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
 }
 
 .empty-state i {
@@ -511,7 +578,7 @@ body {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
 }
 
 /* Responsive */

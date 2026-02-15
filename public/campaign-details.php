@@ -55,8 +55,71 @@ foreach($media as $mm){
 
 <?php require_once __DIR__."/../includes/header.php"; ?>
 
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?= htmlspecialchars($c['title']) ?> - CrowdSpark</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ===== THEME VARIABLES ===== */
+:root {
+    /* Light Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    
+    --border-color: rgba(15, 23, 42, 0.1);
+    --border-hover: rgba(6, 182, 212, 0.3);
+    
+    --orb-opacity: 0.3;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] {
+    /* Dark Theme */
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --bg-card-hover: rgba(30, 30, 40, 0.9);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    
+    --border-color: rgba(255, 255, 255, 0.15);
+    --border-hover: rgba(6, 182, 212, 0.4);
+    
+    --orb-opacity: 0.25;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* Cyan accent colors - STAY CONSTANT */
+:root,
+[data-theme="dark"] {
+    --accent-primary: #06b6d4;
+    --accent-secondary: #22d3ee;
+    --accent-gradient: linear-gradient(135deg, #06b6d4, #22d3ee);
+    --orb-1: linear-gradient(45deg, #06b6d4, #22d3ee);
+    --orb-2: linear-gradient(45deg, #0891b2, #06b6d4);
+    --orb-3: linear-gradient(45deg, #0e7490, #0891b2);
+}
 
 * {
     margin: 0;
@@ -66,13 +129,14 @@ foreach($media as $mm){
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Animated Background - Blue/Cyan theme */
+/* Animated Background - Cyan theme */
 .bg-animation {
     position: fixed;
     top: 0;
@@ -81,7 +145,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -94,7 +159,7 @@ body {
 .orb-1 {
     width: 500px;
     height: 500px;
-    background: linear-gradient(45deg, #06b6d4, #22d3ee);
+    background: var(--orb-1);
     top: -10%;
     left: -10%;
     animation-delay: 0s;
@@ -103,7 +168,7 @@ body {
 .orb-2 {
     width: 400px;
     height: 400px;
-    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    background: var(--orb-2);
     bottom: -10%;
     right: -10%;
     animation-delay: 5s;
@@ -112,7 +177,7 @@ body {
 .orb-3 {
     width: 350px;
     height: 350px;
-    background: linear-gradient(45deg, #0e7490, #0891b2);
+    background: var(--orb-3);
     top: 50%;
     left: 50%;
     animation-delay: 10s;
@@ -162,10 +227,10 @@ body {
     margin-bottom: 40px;
     border-radius: 24px;
     overflow: hidden;
-    background: rgba(20, 20, 30, 0.6);
+    background: var(--bg-card);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 60px rgba(6, 182, 212, 0.15);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
     animation: slideIn 0.6s ease-out;
 }
 
@@ -189,7 +254,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #000;
+    background: var(--bg-secondary);
 }
 
 .media-slide img,
@@ -282,7 +347,7 @@ body {
     font-size: 3.2rem;
     font-weight: 900;
     margin: 0 0 20px;
-    background: linear-gradient(135deg, #fff, #06b6d4);
+    background: linear-gradient(135deg, var(--text-primary), #06b6d4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 1.2;
@@ -294,9 +359,14 @@ body {
     gap: 12px;
     margin-bottom: 30px;
     padding: 16px;
-    background: rgba(20, 20, 30, 0.4);
+    background: var(--bg-card);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.creator-info:hover {
+    border-color: var(--border-hover);
 }
 
 .creator-avatar {
@@ -309,12 +379,12 @@ body {
 
 .creator-name {
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .creator-label {
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
 }
 
 .campaign-meta {
@@ -323,10 +393,10 @@ body {
     gap: 20px;
     margin-bottom: 30px;
     padding: 24px;
-    background: rgba(20, 20, 30, 0.6);
+    background: var(--bg-card);
     backdrop-filter: blur(10px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 .meta-item {
@@ -336,7 +406,7 @@ body {
 .meta-label {
     font-size: 12px;
     font-weight: 800;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
@@ -346,7 +416,7 @@ body {
 .meta-value {
     font-size: 20px;
     font-weight: 900;
-    color: #fff;
+    color: var(--text-primary);
     display: block;
 }
 
@@ -356,18 +426,23 @@ body {
 }
 
 .section-card {
-    background: rgba(20, 20, 30, 0.6);
+    background: var(--bg-card);
     backdrop-filter: blur(10px);
     padding: 32px;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.section-card:hover {
+    border-color: var(--border-hover);
 }
 
 .section-card h3 {
     font-size: 24px;
     font-weight: 900;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 16px;
     display: flex;
     align-items: center;
@@ -384,7 +459,7 @@ body {
 
 .section-card p {
     line-height: 1.8;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     font-size: 16px;
 }
 
@@ -396,12 +471,12 @@ body {
 }
 
 .donate-card {
-    background: rgba(20, 20, 30, 0.9);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     padding: 36px;
     border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(6, 182, 212, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
@@ -435,13 +510,13 @@ body {
 
 .stat-goal {
     font-size: 14px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     margin-top: 4px;
 }
 
 .progress-bar-wrapper {
     height: 12px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--border-color);
     border-radius: 999px;
     overflow: hidden;
     margin-bottom: 16px;
@@ -476,14 +551,14 @@ body {
 
 .info-label {
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     margin-top: 4px;
 }
 
 .donate-section h3 {
     font-size: 22px;
     font-weight: 900;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 20px;
     text-align: center;
 }
@@ -491,40 +566,9 @@ body {
 .login-prompt {
     text-align: center;
     padding: 20px;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 20px;
-}
-
-.donate-form label {
-    display: block;
-    font-size: 12px;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.donate-form input {
-    width: 100%;
-    padding: 16px 20px;
-    border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    font-size: 20px;
-    background: rgba(10, 10, 20, 0.6);
-    transition: all 0.3s ease;
-    font-weight: 700;
-    color: #fff;
-    font-family: 'DM Sans', sans-serif;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.donate-form input:focus {
-    outline: none;
-    border-color: #06b6d4;
-    box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
 }
 
 .donate-btn {
@@ -542,13 +586,20 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     text-decoration: none;
-    display: block;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .donate-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 16px 40px rgba(6, 182, 212, 0.5);
+}
+
+.donate-btn i {
+    font-size: 20px;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -589,6 +640,9 @@ body {
     }
 }
 </style>
+</head>
+
+<body>
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -723,7 +777,7 @@ body {
                                 <div class="info-label">Backers</div>
                             </div>
                             <div class="info-item">
-                                <div class="info-value"><?= ceil((strtotime($c['end_date']) - time()) / 86400) ?></div>
+                                <div class="info-value"><?= max(0, ceil((strtotime($c['end_date']) - time()) / 86400)) ?></div>
                                 <div class="info-label">Days Left</div>
                             </div>
                         </div>
@@ -744,22 +798,9 @@ body {
                         
                         <?php else: ?>
                         
-                        <form action="/CroudSpark-X/public/fake-payment.php" method="POST" class="donate-form">
-                            <input type="hidden" name="campaign_id" value="<?= $c['id'] ?>">
-                            
-                            <label>Enter Amount (₹)</label>
-                            <input 
-                                type="number" 
-                                name="amount" 
-                                required
-                                placeholder="₹ 1,000"
-                                min="1"
-                            >
-                            
-                            <button type="submit" class="donate-btn">
-                                <i class="fa fa-heart"></i> Donate Now
-                            </button>
-                        </form>
+                        <a href="/CroudSpark-X/public/donate.php?id=<?= $c['id'] ?>" class="donate-btn">
+                            <i class="fa fa-heart"></i> Donate Now
+                        </a>
                         
                         <?php endif; ?>
                     </div>
@@ -772,6 +813,35 @@ body {
 </div>
 
 <script>
+// Theme System
+function getTheme() {
+    return localStorage.getItem('crowdspark-theme') || 'light';
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('crowdspark-theme', theme);
+}
+
+function toggleTheme() {
+    const currentTheme = getTheme();
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+}
+
+// Initialize theme
+(function() {
+    const savedTheme = getTheme();
+    setTheme(savedTheme);
+})();
+
+// Expose globally
+window.CrowdSparkTheme = {
+    toggle: toggleTheme,
+    set: setTheme,
+    get: getTheme
+};
+
 // Carousel functionality
 let currentIndex = 0;
 const totalSlides = <?= count($allMedia) ?>;
@@ -815,15 +885,20 @@ let touchStart = 0;
 let touchEnd = 0;
 const carousel = document.querySelector('.media-carousel');
 
-carousel.addEventListener('touchstart', e => {
-    touchStart = e.changedTouches[0].screenX;
-});
+if(carousel) {
+    carousel.addEventListener('touchstart', e => {
+        touchStart = e.changedTouches[0].screenX;
+    });
 
-carousel.addEventListener('touchend', e => {
-    touchEnd = e.changedTouches[0].screenX;
-    if (touchStart - touchEnd > 50) changeSlide(1);
-    if (touchEnd - touchStart > 50) changeSlide(-1);
-});
+    carousel.addEventListener('touchend', e => {
+        touchEnd = e.changedTouches[0].screenX;
+        if (touchStart - touchEnd > 50) changeSlide(1);
+        if (touchEnd - touchStart > 50) changeSlide(-1);
+    });
+}
 </script>
+
+</body>
+</html>
 
 <?php require_once __DIR__."/../includes/footer.php"; ?>

@@ -41,25 +41,59 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     }
 }
 ?>
-
-<style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CrowdSpark</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ===== THEME VARIABLES ===== */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    --border-color: rgba(15, 23, 42, 0.1);
+    --orb-opacity: 0.75;
 }
+
+[data-theme="dark"] {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.15);
+    --orb-opacity: 0.25;
+    --orb-1: linear-gradient(45deg, #64748b, #94a3b8);
+    --orb-2: linear-gradient(45deg, #475569, #64748b);
+    --orb-3: linear-gradient(45deg, #334155, #475569);
+}
+
+[data-theme="light"] {
+    --orb-1: linear-gradient(45deg, #cbd5e1, #94a3b8);
+    --orb-2: linear-gradient(45deg, #94a3b8, #64748b);
+    --orb-3: linear-gradient(45deg, #64748b, #cbd5e1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Animated Background - Slate/Gray theme */
 .bg-animation {
     position: fixed;
     top: 0;
@@ -68,7 +102,8 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
-    opacity: 0.25;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
 .orb {
@@ -78,32 +113,9 @@ body {
     animation: float 20s infinite ease-in-out;
 }
 
-.orb-1 {
-    width: 500px;
-    height: 500px;
-    background: linear-gradient(45deg, #64748b, #94a3b8);
-    top: -10%;
-    left: -10%;
-    animation-delay: 0s;
-}
-
-.orb-2 {
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(45deg, #475569, #64748b);
-    bottom: -10%;
-    right: -10%;
-    animation-delay: 5s;
-}
-
-.orb-3 {
-    width: 350px;
-    height: 350px;
-    background: linear-gradient(45deg, #334155, #475569);
-    top: 50%;
-    left: 50%;
-    animation-delay: 10s;
-}
+.orb-1 { width: 500px; height: 500px; background: var(--orb-1); top: -10%; left: -10%; }
+.orb-2 { width: 400px; height: 400px; background: var(--orb-2); bottom: -10%; right: -10%; animation-delay: 5s; }
+.orb-3 { width: 350px; height: 350px; background: var(--orb-3); top: 50%; left: 50%; animation-delay: 10s; }
 
 @keyframes float {
     0%, 100% { transform: translate(0, 0) scale(1); }
@@ -112,55 +124,40 @@ body {
     75% { transform: translate(40px, -40px) scale(1.05); }
 }
 
-/* ===== ANIMATIONS ===== */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+@keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    backdrop-filter: blur(20px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 8px 20px rgba(100, 116, 139, 0.2);
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-}
-
-@keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ===== PAGE CONTAINER ===== */
 .auth-page {
     position: relative;
     z-index: 1;
@@ -178,12 +175,12 @@ body {
 }
 
 .auth-card {
-    background: rgba(20, 20, 30, 0.85);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     padding: 50px 45px;
     border-radius: 32px;
     box-shadow: 0 20px 60px rgba(100, 116, 139, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
@@ -204,7 +201,6 @@ body {
     box-shadow: 0 30px 80px rgba(100, 116, 139, 0.15);
 }
 
-/* ===== BRAND SECTION ===== */
 .auth-brand {
     text-align: center;
     margin-bottom: 36px;
@@ -230,19 +226,18 @@ body {
     font-size: 2.5rem;
     font-weight: 900;
     margin-bottom: 10px;
-    background: linear-gradient(135deg, #fff, #64748b);
+    background: linear-gradient(135deg, var(--text-primary), #64748b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .auth-sub {
     font-size: 1rem;
-    color: #cbd5e1;
+    color: var(--text-secondary);
     margin-bottom: 32px;
     font-weight: 500;
 }
 
-/* ===== ALERT MESSAGES ===== */
 .alert {
     padding: 16px 20px;
     border-radius: 16px;
@@ -266,19 +261,9 @@ body {
     animation: shimmer 2s infinite;
 }
 
-.alert-error {
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-    border-left: 4px solid #ef4444;
-}
+.alert-error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-left: 4px solid #ef4444; }
+[data-theme="light"] .alert-error { color: #dc2626; }
 
-.alert-success {
-    background: rgba(16, 185, 129, 0.2);
-    color: #6ee7b7;
-    border-left: 4px solid #10b981;
-}
-
-/* ===== FORM ===== */
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -298,7 +283,7 @@ body {
     display: block;
     font-size: 12px;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 10px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -308,29 +293,27 @@ body {
     width: 100%;
     padding: 16px 20px;
     border-radius: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    border: 2px solid var(--border-color);
     font-size: 15px;
-    background: rgba(10, 10, 20, 0.6);
+    background: var(--bg-secondary);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
-    color: #fff;
+    color: var(--text-primary);
     font-family: 'DM Sans', sans-serif;
 }
 
 .form-group input::placeholder {
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-weight: 400;
 }
 
 .form-group input:focus {
     outline: none;
     border-color: #64748b;
-    background: rgba(20, 20, 30, 0.7);
     box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.15);
     transform: translateY(-2px);
 }
 
-/* ===== PASSWORD TOGGLE ===== */
 .pass-wrap {
     position: relative;
 }
@@ -341,7 +324,7 @@ body {
     top: 50%;
     margin-top: 6px;
     cursor: pointer;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-size: 18px;
     transition: all 0.3s ease;
     padding: 8px;
@@ -352,7 +335,6 @@ body {
     transform: scale(1.15);
 }
 
-/* ===== FORGOT PASSWORD ===== */
 .forgot {
     text-align: right;
     margin-top: -12px;
@@ -387,7 +369,6 @@ body {
     color: #94a3b8;
 }
 
-/* ===== BUTTON ===== */
 .btn-auth {
     width: 100%;
     padding: 18px;
@@ -432,7 +413,6 @@ body {
     transform: translateY(-1px);
 }
 
-/* ===== LOADING STATE ===== */
 .btn-auth.loading {
     pointer-events: none;
     opacity: 0.8;
@@ -453,12 +433,11 @@ body {
     animation: spin 0.8s linear infinite;
 }
 
-/* ===== FOOTER ===== */
 .auth-footer {
     text-align: center;
     margin-top: 32px;
     font-size: 15px;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-weight: 500;
     animation: fadeIn 0.8s ease-out 0.6s both;
 }
@@ -490,29 +469,21 @@ body {
     color: #94a3b8;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
-    .auth-page {
-        padding: 100px 20px 60px;
-    }
-    
-    .auth-card {
-        padding: 40px 30px;
-    }
-    
-    .auth-card h2 {
-        font-size: 2rem;
-    }
-    
-    .brand-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 30px;
-    }
+    .auth-page { padding: 100px 20px 60px; }
+    .auth-card { padding: 40px 30px; }
+    .auth-card h2 { font-size: 2rem; }
+    .brand-icon { width: 60px; height: 60px; font-size: 30px; }
 }
-</style>
+    </style>
+</head>
+<body>
 
-<!-- Background Animation -->
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+    <i class="fas fa-moon"></i>
+</button>
+
 <div class="bg-animation">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -539,25 +510,12 @@ body {
                 
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input 
-                        type="email" 
-                        name="email" 
-                        required 
-                        placeholder="you@example.com"
-                        autocomplete="email"
-                    >
+                    <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
                 </div>
 
                 <div class="form-group pass-wrap">
                     <label>Password</label>
-                    <input 
-                        type="password" 
-                        name="password" 
-                        id="pass" 
-                        required 
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                    >
+                    <input type="password" name="password" id="pass" required placeholder="Enter your password" autocomplete="current-password">
                     <i class="fa fa-eye toggle-password" onclick="togglePass()" id="toggleIcon"></i>
                 </div>
 
@@ -579,6 +537,26 @@ body {
 </div>
 
 <script>
+// Theme Toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    const icon = document.querySelector('#themeToggle i');
+    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+// Load saved theme
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const icon = document.querySelector('#themeToggle i');
+    icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+});
+
 function togglePass() {
     const input = document.getElementById("pass");
     const icon = document.getElementById("toggleIcon");
@@ -594,14 +572,12 @@ function togglePass() {
     }
 }
 
-// Add loading state on form submit
 document.querySelector('.auth-form').addEventListener('submit', function() {
     const btn = document.querySelector('.btn-auth');
     btn.classList.add('loading');
     btn.textContent = '';
 });
 
-// Add focus animations
 document.querySelectorAll('.form-group input').forEach(input => {
     input.addEventListener('focus', function() {
         this.parentElement.style.transform = 'scale(1.01)';
@@ -613,4 +589,5 @@ document.querySelectorAll('.form-group input').forEach(input => {
 });
 </script>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+</body>
+</html>
