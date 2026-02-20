@@ -4,7 +4,7 @@ session_start();
 /* Check login */
 function requireLogin(){
     if(!isset($_SESSION['user_id'])){
-        header("Location: /CroudSpark-X/auth/login.php");
+        header("Location: /auth/login.php");
         exit;
     }
 }

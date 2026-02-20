@@ -1,11 +1,11 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
-require_once __DIR__."/../uploads/upload.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
 
 // Login required
 if(!isset($_SESSION['user_id'])){
-    header("Location: /CroudSpark-X/user/login.php");
+    header("Locationuser/login.php");
     exit;
 }
 
@@ -19,7 +19,7 @@ $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if(!$user){
-    header("Location: /CroudSpark-X/user/login.php");
+    header("Locationuser/login.php");
     exit;
 }
 
@@ -87,7 +87,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 }
 
-require_once __DIR__."/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php";
 ?>
 
 <style>
@@ -883,7 +883,7 @@ require_once __DIR__."/../includes/header.php";
                         <i class="fa-solid fa-save"></i>
                         Save Changes
                     </button>
-                    <a href="/CroudSpark-X/dashboard/user-dashboard.php" class="btn btn-secondary">
+                    <a href ="/dashboard/user-dashboard.php" class="btn btn-secondary">
                         <i class="fa-solid fa-times"></i>
                         Cancel
                     </a>
@@ -893,11 +893,11 @@ require_once __DIR__."/../includes/header.php";
 
             <!-- QUICK LINKS -->
             <div class="quick-links">
-                <a href="/CroudSpark-X/dashboard/change-password.php" class="quick-link">
+                <a href="/dashboard/change-password.php" class="quick-link">
                     <i class="fa-solid fa-lock"></i>
                     Change Password
                 </a>
-                <a href="/CroudSpark-X/dashboard/user-dashboard.php" class="quick-link">
+                <a href="/dashboard/user-dashboard.php" class="quick-link">
                     <i class="fa-solid fa-gauge"></i>
                     My Dashboard
                 </a>
@@ -971,4 +971,4 @@ document.querySelectorAll('.form-group input:not([type="file"]), .form-group tex
 });
 </script>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

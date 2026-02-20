@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . "/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - CrowdSpark</title>
@@ -628,8 +628,8 @@ require_once __DIR__ . "/../includes/header.php";
             }
         }
     </style>
-</head>
-<body>
+
+
 
     <div class="bg-animation">
         <div class="orb orb-1"></div>
@@ -735,10 +735,10 @@ require_once __DIR__ . "/../includes/header.php";
             </p>
 
             <div class="cta-actions">
-                <a href="/CroudSpark-X/public/explore-campaigns.php" class="btn btn-primary">
+                <a href = "/public/explore-campaigns.php" class="btn btn-primary">
                     <i class="fas fa-compass"></i> Explore Campaigns
                 </a>
-                <a href="/CroudSpark-X/creator/create-campaign.php" class="btn btn-secondary">
+                <a href="/creator/create-campaign.php" class="btn btn-secondary">
                     <i class="fas fa-plus-circle"></i> Start a campaign
                 </a>
             </div>
@@ -746,7 +746,6 @@ require_once __DIR__ . "/../includes/header.php";
 
     </div>
 
-    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/footer.php"; ?>
 
-</body>
-</html>
+

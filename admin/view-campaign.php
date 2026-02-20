@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 if(!isset($_SESSION['user_id']) || $_SESSION['role']!="admin"){
-    echo "<script>window.location='../public/index.php';</script>";
+    echo "<script>window.location='../index.php';</script>";
     exit;
 }
 
@@ -82,7 +82,7 @@ if(isset($_POST['reject'])){
     exit;
 }
 
-require_once __DIR__."/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php";
 ?>
 
 <style>
@@ -666,7 +666,7 @@ body {
     <div class="review-header">
         <h1>🛡️ Campaign Review Panel</h1>
         <div class="review-breadcrumb">
-            <a href="/CroudSpark-X/admin/admin-dashboard.php">Dashboard</a>
+            <a href ="/admin/admin-dashboard.php">Dashboard</a>
             <i class="fa-solid fa-chevron-right"></i>
             <span>Review Campaign</span>
         </div>
@@ -985,4 +985,4 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

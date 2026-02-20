@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . "/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/config/db.php";
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'creator') {
-    header("Location: ../public/index.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -63,12 +63,12 @@ $stmt = $pdo->prepare("
 $stmt->execute([$creator_id]);
 $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-require_once __DIR__ . "/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en" data-theme="light">
-<head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Creator Dashboard - CrowdSpark</title>
@@ -780,9 +780,9 @@ body {
     }
 }
 </style>
-</head>
 
-<body>
+
+
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -795,7 +795,7 @@ body {
 
     <header class="dashboard-header">
         <h1>Creator Dashboard</h1>
-        <a href="/CroudSpark-X/creator/create-campaign.php" class="btn-primary">+ Create New Campaign</a>
+        <a href ="/creator/create-campaign.php" class="btn-primary">+ Create New Campaign</a>
     </header>
 
     <section class="stats-grid">
@@ -968,7 +968,7 @@ window.CrowdSparkTheme = {
 };
 </script>
 
-</body>
-</html>
 
-<?php require_once __DIR__ . "/../includes/footer.php"; ?>
+
+
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/footer.php"; ?>

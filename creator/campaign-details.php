@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . "/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/config/db.php";
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'creator') {
-    header("Location: ../public/index.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -59,12 +59,12 @@ $donors_stmt = $pdo->prepare("
 $donors_stmt->execute([$campaign_id]);
 $donors = $donors_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-require_once __DIR__ . "/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en" data-theme="light">
-<head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= htmlspecialchars($campaign['title']) ?> - Campaign Details</title>
@@ -602,9 +602,9 @@ body {
     }
 }
 </style>
-</head>
 
-<body>
+
+
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -769,7 +769,7 @@ window.CrowdSparkTheme = {
 };
 </script>
 
-</body>
-</html>
 
-<?php require_once __DIR__ . "/../includes/footer.php"; ?>
+
+
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/footer.php"; ?>

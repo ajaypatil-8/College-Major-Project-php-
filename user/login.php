@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 $msg = "";
 
@@ -28,11 +28,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
             /* ADMIN REDIRECT */
             if($user['role']=="admin"){
-                header("Location: /CroudSpark-X/admin/admin-dashboard.php");
+                header("Location: /admin/admin-dashboard.php");
                 exit;
             }
 
-            header("Location: /CroudSpark-X/public/index.php");
+            header("Location: /index.php");
             exit;
 
         }else{
@@ -41,9 +41,9 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     }
 }
 ?>
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CrowdSpark</title>
@@ -476,8 +476,8 @@ body {
     .brand-icon { width: 60px; height: 60px; font-size: 30px; }
 }
     </style>
-</head>
-<body>
+
+
 
 <!-- Theme Toggle Button -->
 <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
@@ -588,6 +588,3 @@ document.querySelectorAll('.form-group input').forEach(input => {
     });
 });
 </script>
-
-</body>
-</html>

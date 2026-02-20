@@ -9,7 +9,7 @@ function isLoggedIn() {
 /* Protect page (only logged in users) */
 function requireAuth() {
     if(!isLoggedIn()){
-        header("Location: /CroudSpark-X/auth/login.php");
+        header("Location: /auth/login.php");
         exit;
     }
 }
@@ -18,6 +18,6 @@ function requireAuth() {
 function logoutUser(){
     session_unset();
     session_destroy();
-    header("Location: /CroudSpark-X/public/index.php");
+    header("Location: /index.php");
     exit;
 }

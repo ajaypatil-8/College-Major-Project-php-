@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 /* LOGIN REQUIRED */
 if(!isset($_SESSION['user_id'])){
@@ -45,7 +45,7 @@ if(isset($_POST['change_password'])){
 }
 ?>
 
-<?php require_once __DIR__."/../includes/header.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php"; ?>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
@@ -529,7 +529,7 @@ body {
 
             <div class="forgot-pass-link">
                 <p>Can't remember your current password?</p>
-                <a href="../user/forgotpassword.php" class="btn-forgot">
+                <a href="/user/forgotpassword.php" class="btn-forgot">
                     <i class="fa fa-unlock-alt"></i> Forgot Password
                 </a>
             </div>
@@ -625,4 +625,4 @@ document.getElementById('changePassForm').addEventListener('submit', function(e)
 });
 </script>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

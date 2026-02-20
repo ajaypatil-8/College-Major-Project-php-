@@ -13,9 +13,9 @@ if (strpos($current, 'explore') !== false || strpos($current, 'campaign') !== fa
 }
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en" data-theme="light" data-page="<?= $pageTheme ?>">
-<head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CrowdSpark - Support Dreams, Change Lives</title>
@@ -716,33 +716,33 @@ body {
 
 </style>
 
-</head>
 
-<body>
+
+
 
 <!-- NAVBAR -->
 <div class="nav-wrap">
     <nav class="navbar" id="navbar">
         
-        <a href="/CroudSpark-X/public/index.php" class="logo">
+        <a href="/index.php" class="logo">
             <span class="logo-icon">✨</span>
             Crowd<span>Spark</span>
         </a>
 
         <div class="nav-links">
-            <a class="<?= $current=='index.php'?'active':'' ?>" href="/CroudSpark-X/public/index.php">
+            <a class="<?= $current=='index.php'?'active':'' ?>" href="/index.php">
                 <i class="fa-solid fa-house"></i> Home
             </a>
 
-            <a class="<?= (strpos($current, 'explore') !== false || strpos($current, 'campaign') !== false)?'active':'' ?>" href="/CroudSpark-X/public/explore-campaigns.php">
+            <a class="<?= (strpos($current, 'explore') !== false || strpos($current, 'campaign') !== false)?'active':'' ?>" href = "/public/explore-campaigns.php">
                 <i class="fa-solid fa-layer-group"></i> Projects
             </a>
 
-            <a class="<?= $current=='about.php'?'active':'' ?>" href="/CroudSpark-X/public/about.php">
+            <a class="<?= $current=='about.php'?'active':'' ?>" href="/public/about.php">
                 <i class="fa-solid fa-circle-info"></i> About
             </a>
 
-            <a class="<?= $current=='contact.php'?'active':'' ?>" href="/CroudSpark-X/public/contact.php">
+            <a class="<?= $current=='contact.php'?'active':'' ?>" href="/public/contact.php">
                 <i class="fa-solid fa-phone"></i> Contact
             </a>
         </div>
@@ -756,25 +756,25 @@ body {
 
             <?php if(!isset($_SESSION['user_id'])): ?>
 
-                <a href="/CroudSpark-X/user/login.php" class="btn-nav btn-login">
+                <a href = "/user/login.php" class="btn-nav btn-login">
                     <i class="fa-solid fa-sign-in"></i> Login
                 </a>
-                <a href="/CroudSpark-X/user/login.php" class="btn-nav btn-creator">
+                <a href = "/user/becomecreator.php" class="btn-nav btn-creator">
                     <i class="fa-solid fa-rocket"></i> Start Project
                 </a>
 
             <?php else: ?>
 
                 <?php if($_SESSION['role']=="creator"): ?>
-                    <a href="/CroudSpark-X/creator/create-campaign.php" class="btn-nav btn-creator">
+                    <a href="/creator/create-campaign.php" class="btn-nav btn-creator">
                         <i class="fa-solid fa-plus"></i> New Campaign
                     </a>
                 <?php elseif($_SESSION['role']=="admin"): ?>
-                    <a href="/CroudSpark-X/admin/admin-dashboard.php" class="btn-nav btn-creator">
+                    <a href="/admin/admin-dashboard.php" class="btn-nav btn-creator">
                         <i class="fa-solid fa-shield"></i> Admin
                     </a>
                 <?php else: ?>
-                    <a href="/CroudSpark-X/user/becomecreator.php" class="btn-nav btn-creator">
+                    <a href="/user/becomecreator.php" class="btn-nav btn-creator">
                         <i class="fa-solid fa-star"></i> Become Creator
                     </a>
                 <?php endif; ?>
@@ -825,30 +825,30 @@ body {
         <div class="sidebar-links">
 
             <?php if($_SESSION['role']=="admin"): ?>
-                <a href="/CroudSpark-X/admin/admin-dashboard.php">
+                <a href = "/admin/admin-dashboard.php">
                     <i class="fa-solid fa-shield"></i> Admin Dashboard
                 </a>
             <?php endif; ?>
 
             <?php if($_SESSION['role']=="creator"): ?>
-                <a href="/CroudSpark-X/creator/creator-dashboard.php">
+                <a href="/creator/creator-dashboard.php">
                     <i class="fa-solid fa-chart-line"></i> Creator Dashboard
                 </a>
-                <a href="/CroudSpark-X/creator/my-campaigns.php">
+                <a href="/creator/my-campaigns.php">
                     <i class="fa-solid fa-layer-group"></i> My Campaigns
                 </a>
             <?php endif; ?>
 
-            <a href="/CroudSpark-X/dashboard/user-dashboard.php">
+            <a href="/dashboard/user-dashboard.php">
                 <i class="fa-solid fa-user"></i> My Dashboard
             </a>
-            <a href="/CroudSpark-X/dashboard/edit-profile.php">
+            <a href="/dashboard/edit-profile.php">
                 <i class="fa-solid fa-pen"></i> Edit Profile
             </a>
-            <a href="/CroudSpark-X/dashboard/change-password.php">
+            <a href="/dashboard/change-password.php">
                 <i class="fa-solid fa-lock"></i> Change Password
             </a>
-            <a href="/CroudSpark-X/dashboard/my-donations.php">
+            <a href="/dashboard/my-donations.php">
                 <i class="fa-solid fa-heart"></i> My Donations
             </a>
 
@@ -862,7 +862,7 @@ body {
             <div class="theme-switch" onclick="toggleTheme()"></div>
         </div>
 
-        <a href="/CroudSpark-X/user/logout.php" class="logout-btn">
+        <a href = "/user/logout.php" class="logout-btn">
             <i class="fa-solid fa-sign-out"></i> Logout
         </a>
     </div>
@@ -918,5 +918,4 @@ window.addEventListener('scroll', () => {
 });
 </script>
 
-</body>
-</html>
+

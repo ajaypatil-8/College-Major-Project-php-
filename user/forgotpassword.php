@@ -1,14 +1,16 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
-require_once __DIR__."/../config/db.php";
-require_once __DIR__."/../config/env.php";
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/env.php";
 
-require __DIR__."/../vendor/phpmailer/src/PHPMailer.php";
-require __DIR__."/../vendor/phpmailer/src/SMTP.php";
-require __DIR__."/../vendor/phpmailer/src/Exception.php";
+/* Load PHPMailer manually */
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/PHPMailer.php";
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/SMTP.php";
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/Exception.php";
 
 $msg="";
 $success="";
@@ -16,6 +18,7 @@ $step=1;
 
 /* STEP 1 — SEND OTP */
 if(isset($_POST['send_otp'])){
+
     $email = trim($_POST['email']);
     $stmt=$pdo->prepare("SELECT id FROM users WHERE email=?");
     $stmt->execute([$email]);
@@ -23,45 +26,39 @@ if(isset($_POST['send_otp'])){
     if($stmt->rowCount()==0){
         $msg="Email not found in our system";
     }else{
+
         $otp = rand(100000,999999);
         $_SESSION['reset_email']=$email;
         $_SESSION['reset_otp']=$otp;
         $_SESSION['otp_time']=time();
 
-        $mail = new PHPMailer(true);
+        /* IMPORTANT: full namespace */
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 
-try{
-    $mail->isSMTP();
-    $mail->Host       = $_ENV['MAIL_HOST'];
-    $mail->SMTPAuth   = true;
-    $mail->Username   = $_ENV['MAIL_USER'];
-    $mail->Password   = $_ENV['MAIL_PASS'];
-    $mail->SMTPSecure = 'tls';
-    $mail->Port       = $_ENV['MAIL_PORT'];
+        try{
+            $mail->isSMTP();
+            $mail->Host       = $_ENV['MAIL_HOST'];
+            $mail->SMTPAuth   = true;
+            $mail->Username   = $_ENV['MAIL_USER'];
+            $mail->Password   = $_ENV['MAIL_PASS'];
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = $_ENV['MAIL_PORT'];
 
-    $mail->setFrom($_ENV['MAIL_FROM'], $_ENV['MAIL_FROM_NAME']);
-    $mail->addAddress($email);
+            $mail->setFrom($_ENV['MAIL_FROM'], $_ENV['MAIL_FROM_NAME']);
+            $mail->addAddress($email);
 
-    $mail->isHTML(true);
-    $mail->Subject = "Password Reset OTP - CrowdSpark";
-    $mail->Body    = "
-    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;'>
-        <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; text-align: center;'>
-            <h1 style='color: white; margin: 0 0 20px 0; font-size: 32px;'>🔐 Password Reset</h1>
-            <div style='background: white; padding: 30px; border-radius: 15px; margin: 20px 0;'>
-                <p style='color: #64748b; margin: 0 0 20px 0; font-size: 16px;'>Your verification code is:</p>
-                <h2 style='color: #f43f5e; font-size: 48px; margin: 0; letter-spacing: 8px; font-weight: 900;'>$otp</h2>
-            </div>
-            <p style='color: rgba(255,255,255,0.9); margin: 20px 0 0 0; font-size: 14px;'>This code will expire in 10 minutes</p>
-            <p style='color: rgba(255,255,255,0.8); margin: 10px 0 0 0; font-size: 13px;'>If you didn't request this, please ignore this email</p>
-        </div>
-    </div>
-    ";
+            $mail->isHTML(true);
+            $mail->Subject = "Password Reset OTP - CrowdSpark";
+            $mail->Body    = "
+                <h2>Your OTP is: $otp</h2>
+                <p>This code expires in 10 minutes.</p>
+            ";
 
-    $mail->send();
-    $success="OTP sent successfully! Check your email";
-    $step=2;
-}catch(Exception $e){
+            $mail->send();
+            $success="OTP sent successfully! Check your email";
+            $step=2;
+
+        }catch(Exception $e){
     $msg="Failed to send email. Please try again later";
 }
     }
@@ -117,9 +114,9 @@ if(isset($_POST['change_pass'])){
     }
 }
 ?>
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password - CrowdSpark</title>
@@ -597,8 +594,8 @@ body {
     animation: fadeIn 0.5s ease-out;
 }
     </style>
-</head>
-<body>
+
+
 
 <!-- Theme Toggle Button -->
 <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
@@ -808,6 +805,3 @@ if (pass2) {
     });
 }
 </script>
-
-</body>
-</html>

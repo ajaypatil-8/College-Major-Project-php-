@@ -1,6 +1,6 @@
 <div id="sidebar">
  <p><?= $_SESSION['name'] ?></p>
  <p><?= $_SESSION['role'] ?></p>
- <a href="/CroudSpark-X/dashboard/index.php">Dashboard</a>
- <a href="/CroudSpark-X/logout.php">Logout</a>
+ <a href = "/dashboard/index.php">Dashboard</a>
+ <a href="/logout.php">Logout</a>
 </div>

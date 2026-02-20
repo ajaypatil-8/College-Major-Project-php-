@@ -1,10 +1,16 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+ini_set('display_errors', 0);
+error_reporting(0);
 
 session_start();
-require_once __DIR__."/../config/db.php";
-require_once __DIR__."/../config/env.php";
+
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/env.php";
+
+/* ===== LOAD PHPMAILER MANUALLY (InfinityFree FIX) ===== */
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/PHPMailer.php";
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/SMTP.php";
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/Exception.php";
 
 /* LOGIN REQUIRED */
 if(!isset($_SESSION['user_id'])){
@@ -33,11 +39,7 @@ if(isset($_POST['send_otp'])){
     $stmt->execute([$otp,$user_id]);
 
     /* ===== SEND MAIL ===== */
-    require __DIR__."/../vendor/phpmailer/src/PHPMailer.php";
-    require __DIR__."/../vendor/phpmailer/src/SMTP.php";
-    require __DIR__."/../vendor/phpmailer/src/Exception.php";
-
-    $mail = new PHPMailer(true);
+   $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 
 try{
     $mail->isSMTP();
@@ -86,7 +88,7 @@ if(isset($_POST['verify_otp'])){
         $stmt->execute([$user_id]);
         $_SESSION['role']="creator";
         $success="You are now a creator! Redirecting...";
-        echo "<script>setTimeout(()=>{ window.location='/CroudSpark-X/creator/create-campaign.php' },2000)</script>";
+        echo "<script>setTimeout(()=>{ window.location.href='../creator/create-campaign.php' },2000)</script>";
         $step=3;
     }else{
         $msg="Invalid OTP. Please try again";
@@ -94,9 +96,9 @@ if(isset($_POST['verify_otp'])){
     }
 }
 ?>
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Become a Creator - CrowdSpark</title>
@@ -518,8 +520,8 @@ body {
     }
 }
     </style>
-</head>
-<body>
+
+
 
 <!-- Theme Toggle Button -->
 <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
@@ -661,6 +663,3 @@ function createConfetti() {
 createConfetti();
 <?php endif; ?>
 </script>
-
-</body>
-</html>

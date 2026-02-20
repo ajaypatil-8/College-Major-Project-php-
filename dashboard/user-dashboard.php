@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once __DIR__ . "/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/config/db.php";
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /CroudSpark-X/user/login.php");
+    header("Locationuser/login.php");
     exit();
 }
 
@@ -72,12 +72,12 @@ $supportedCampaignsStmt = $pdo->prepare("
 $supportedCampaignsStmt->execute([$user_id]);
 $supportedCampaigns = $supportedCampaignsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-require_once __DIR__ . "/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard - CrowdSpark</title>
@@ -627,8 +627,8 @@ require_once __DIR__ . "/../includes/header.php";
             }
         }
     </style>
-</head>
-<body>
+
+
 
     <!-- Background Animation -->
     <div class="bg-animation">
@@ -688,7 +688,7 @@ require_once __DIR__ . "/../includes/header.php";
         <div class="user-section">
             <div class="user-section-header">
                 <h2>Recent Donations</h2>
-                <a href="/CroudSpark-X/dashboard/my-donations.php" class="btn-secondary">
+                <a href ="/dashboard/my-donations.php" class="btn-secondary">
                     View All <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -718,7 +718,7 @@ require_once __DIR__ . "/../includes/header.php";
         <div class="user-section">
             <div class="user-section-header">
                 <h2>Campaigns You Support</h2>
-                <a href="/CroudSpark-X/public/explore-campaigns.php" class="btn-secondary">
+                <a href ="/public/explore-campaigns.php" class="btn-secondary">
                     Discover More <i class="fa-solid fa-compass"></i>
                 </a>
             </div>
@@ -757,7 +757,6 @@ require_once __DIR__ . "/../includes/header.php";
 
     </section>
 
-    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/footer.php"; ?>
 
-</body>
-</html>
+

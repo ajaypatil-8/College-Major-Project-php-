@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once '../config/db.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . "/config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
 
 // Handle form submission
 $success_message = '';
@@ -11,41 +12,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     $email = trim($_POST['email']);
     $subject = trim($_POST['subject']);
     $message = trim($_POST['message']);
-    
-    // Basic validation
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
-    $subject = trim($_POST['subject']);
-    $message = trim($_POST['message']);
-    
+
     if (empty($name) || empty($email) || empty($subject) || empty($message)) {
         $error_message = "Please fill in all fields";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error_message = "Please enter a valid email address";
     } else {
-        
         try {
             $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, subject, message, created_at) VALUES (?, ?, ?, ?, NOW())");
             $stmt->execute([$name, $email, $subject, $message]);
 
             $success_message = "Message sent successfully! We'll get back to you soon.";
-            $_POST = array(); // clear form
+            $_POST = array();
         } catch (PDOException $e) {
             $error_message = "Database error. Try again.";
         }
-
     }
-  }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - CrowdSpark</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -93,12 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             box-sizing: border-box;
         }
 
-        body {
+            body {
             font-family: 'DM Sans', sans-serif;
-            background: #0f0f0f;
-            color: #fff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow-x: hidden;
             position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Animated Background */
@@ -174,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             font-family: 'Playfair Display', serif;
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
-            background: linear-gradient(135deg, #fff, #f59e0b);
+            background: linear-gradient(135deg, var(--text-primary), #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
@@ -183,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
         .contact-header p {
             font-size: 1.25rem;
-            color: #cbd5e1;
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
@@ -204,9 +191,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
         }
 
         .info-card {
-            background: rgba(20, 20, 30, 0.85);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 24px;
             padding: 40px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -263,11 +250,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             font-size: 1.5rem;
             margin-bottom: 15px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .info-card p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             line-height: 1.8;
             margin-bottom: 8px;
             font-size: 1rem;
@@ -287,9 +274,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
         /* Message Form */
         .message-form-container {
-            background: rgba(20, 20, 30, 0.9);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             border-radius: 32px;
             padding: 50px;
             animation: fadeInRight 0.8s ease 0.2s both;
@@ -318,13 +305,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #fff, #f59e0b);
+           background: linear-gradient(135deg, var(--text-primary), #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .form-header p {
-            color: #cbd5e1;
+             color: var(--text-secondary);
             font-size: 1.05rem;
         }
 
@@ -339,7 +326,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             display: block;
             margin-bottom: 12px;
             font-weight: 600;
-            color: #fff;
+           color: var(--text-primary);
             font-size: 0.95rem;
             letter-spacing: 0.5px;
         }
@@ -348,10 +335,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
         .form-textarea {
             width: 100%;
             padding: 18px 24px;
-            background: rgba(10, 10, 20, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
             border-radius: 16px;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 1rem;
             font-family: 'DM Sans', sans-serif;
             transition: all 0.3s ease;
@@ -360,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
         .form-input:focus,
         .form-textarea:focus {
-            background: rgba(20, 20, 30, 0.7);
+            background: var(--bg-secondary);
             border-color: #f59e0b;
             box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
         }
@@ -456,9 +443,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
         .quick-contact {
             text-align: center;
             padding: 80px 40px;
-            background: rgba(20, 20, 30, 0.7);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
             animation: fadeInUp 0.8s ease 0.4s both;
         }
 
@@ -466,13 +453,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff, #f59e0b);
+             background: linear-gradient(135deg, var(--text-primary), #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .quick-contact p {
-            color: #cbd5e1;
+            color: var(--text-secondary);
             font-size: 1.1rem;
             margin-bottom: 40px;
             max-width: 600px;
@@ -489,10 +476,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
         .quick-link {
             padding: 16px 32px;
-            background: rgba(30, 30, 40, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
             border-radius: 50px;
-            color: #fff;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -595,10 +582,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             }
         }
     </style>
-</head>
-<body>
 
-    <?php include '../includes/header.php'; ?>
+
+
+   
+    
 
     <!-- Background Animation -->
     <div class="bg-animation">
@@ -627,8 +615,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                     </div>
                     <h3>Email Us</h3>
                     <p>Our team is here to help</p>
-                    <a href="mailto:support@crowdspark.com">support@crowdspark.com</a><br>
-                    <a href="mailto:hello@crowdspark.com">hello@crowdspark.com</a>
+                    <a href="mailto:crowdspark.business@gmail.com">crowdspark.business@gmail.com</a><br>
                 </div>
 
                 <div class="info-card">
@@ -637,8 +624,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                     </div>
                     <h3>Call Us</h3>
                     <p>Mon-Fri from 9am to 6pm</p>
-                    <a href="tel:+1234567890">+1 (234) 567-890</a><br>
-                    <a href="tel:+1234567891">+1 (234) 567-891</a>
+                    <a href="tel:+1234567890">+91 8544###2210</a><br>
                 </div>
 
                 <div class="info-card">
@@ -647,7 +633,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                     </div>
                     <h3>Visit Us</h3>
                     <p>Come say hello at our office</p>
-                    <p>123 Innovation Street<br>San Francisco, CA 94102<br>United States</p>
+                    <p>255 main steet<br>Palus , Maharashtra 416310<br>India</p>
                 </div>
 
             </div>
@@ -759,7 +745,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
     </div>
 
-    <?php include '../includes/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 
-</body>
-</html>
+

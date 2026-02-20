@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . "/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/config/db.php";
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /CroudSpark-X/user/login.php");
+    header("Locationuser/login.php");
     exit;
 }
 
@@ -95,12 +95,12 @@ $statsStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 $statsStmt->execute();
 $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
 
-require_once __DIR__ . "/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Donations - CrowdSpark</title>
@@ -672,8 +672,8 @@ require_once __DIR__ . "/../includes/header.php";
             }
         }
     </style>
-</head>
-<body>
+
+
 
     <!-- Background Animation -->
     <div class="bg-animation">
@@ -869,7 +869,7 @@ require_once __DIR__ . "/../includes/header.php";
             <i class="fa-solid fa-heart-crack"></i>
             <h3>No Donations Yet</h3>
             <p>You haven't made any donations yet. Start supporting campaigns to make an impact!</p>
-            <a href="/CroudSpark-X/public/explore-campaigns.php" class="btn-primary">
+            <a href ="/public/explore-campaigns.php" class="btn-primary">
                 <i class="fa-solid fa-compass"></i> Explore Campaigns
             </a>
         </div>
@@ -877,7 +877,6 @@ require_once __DIR__ . "/../includes/header.php";
 
     </section>
 
-    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/footer.php"; ?>
 
-</body>
-</html>
+

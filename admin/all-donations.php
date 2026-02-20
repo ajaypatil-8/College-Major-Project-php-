@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 /* ===== ADMIN CHECK ===== */
 if(!isset($_SESSION['user_id']) || $_SESSION['role']!='admin'){
@@ -36,7 +36,7 @@ $avgDonation = $successCount > 0 ? $totalAmount / $successCount : 0;
 $total_pages = ceil($total / $limit);
 ?>
 
-<?php require_once __DIR__."/../includes/header.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php"; ?>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
@@ -652,4 +652,4 @@ body {
 
 </div>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

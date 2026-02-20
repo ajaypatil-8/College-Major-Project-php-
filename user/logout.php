@@ -6,6 +6,6 @@ $_SESSION = [];
 session_destroy();
 
 
-header("Location: /CroudSpark-X/public/index.php");
+header("Location:/index.php");
 exit;
 ?>

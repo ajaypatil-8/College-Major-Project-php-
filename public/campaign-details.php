@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 $id = $_GET['id'] ?? null;
 if(!$id){
@@ -53,11 +53,11 @@ foreach($media as $mm){
 }
 ?>
 
-<?php require_once __DIR__."/../includes/header.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php"; ?>
 
-<!DOCTYPE html>
+
 <html lang="en" data-theme="light">
-<head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= htmlspecialchars($c['title']) ?> - CrowdSpark</title>
@@ -700,9 +700,9 @@ body {
     }
 }
 </style>
-</head>
 
-<body>
+
+
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -862,13 +862,13 @@ body {
                         <div class="login-prompt">
                             <p>Please login to support this campaign and help make a difference!</p>
                         </div>
-                        <a href="/CroudSpark-X/user/login.php" class="donate-btn">
+                        <a href = "/user/login.php" class="donate-btn">
                             <i class="fa fa-sign-in-alt"></i> Login to Donate
                         </a>
                         
                         <?php else: ?>
                         
-                        <a href="/CroudSpark-X/public/donate.php?id=<?= $c['id'] ?>" class="donate-btn">
+                        <a href="/public/donate.php?id=<?= $c['id'] ?>" class="donate-btn">
                             <i class="fa fa-heart"></i> Donate Now
                         </a>
                         
@@ -970,7 +970,7 @@ if(carousel) {
 <?php endif; ?>
 </script>
 
-</body>
-</html>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+
+
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

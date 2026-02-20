@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 /* ADMIN CHECK */
 if(!isset($_SESSION['user_id']) || $_SESSION['role']!="admin"){
-    echo "<script>window.location='../public/index.php';</script>";
+    echo "<script>window.location='../index.php';</script>";
     exit;
 }
 
@@ -80,7 +80,7 @@ $pendingCampaigns = $pdo->query("
 
 ?>
 
-<?php require_once __DIR__."/../includes/header.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php"; ?>
 
 <style>
 /* ===== THEME VARIABLES ===== */
@@ -806,10 +806,10 @@ body {
             <p class="page-subtitle">Manage campaigns, users, and platform analytics</p>
         </div>
         <div class="header-actions">
-            <a href="/CroudSpark-X/admin/manage-users.php" class="btn-action btn-secondary">
+            <a href ="/admin/manage-users.php" class="btn-action btn-secondary">
                 <i class="fa-solid fa-users"></i> Manage Users
             </a>
-            <a href="/CroudSpark-X/admin/admin-reply.php" class="btn-action btn-primary">
+            <a href="/admin/admin-reply.php" class="btn-action btn-primary">
                 <i class="fa-solid fa-chart-line"></i> View Users Messages 
             </a>
         </div>
@@ -992,13 +992,13 @@ $hasThumb = !empty($p['thumbnail']);
 </div>
 
 <div class="pending-actions">
-    <a class="btn-review" href="/CroudSpark-X/admin/view-campaign.php?id=<?= $p['id'] ?>">
+    <a class="btn-review" href ="/admin/view-campaign.php?id=<?= $p['id'] ?>">
         <i class="fa-solid fa-eye"></i> Review
     </a>
-    <a class="btn-approve" href="/CroudSpark-X/admin/approve.php?id=<?= $p['id'] ?>">
+    <a class="btn-approve" href="/admin/approve.php?id=<?= $p['id'] ?>">
         <i class="fa-solid fa-check"></i> Approve
     </a>
-    <a class="btn-reject" href="/CroudSpark-X/admin/reject.php?id=<?= $p['id'] ?>">
+    <a class="btn-reject" href="/admin/reject.php?id=<?= $p['id'] ?>">
         <i class="fa-solid fa-times"></i> Reject
     </a>
 </div>
@@ -1012,7 +1012,7 @@ $hasThumb = !empty($p['thumbnail']);
         <h2 class="section-title">
             <i class="fa-solid fa-heart"></i> Recent Donations
         </h2>
-        <a href="/CroudSpark-X/admin/all-donations.php" class="btn-action btn-secondary">View All</a>
+        <a href="/admin/all-donations.php" class="btn-action btn-secondary">View All</a>
     </div>
 
     <div class="table-card">
@@ -1063,7 +1063,7 @@ $hasThumb = !empty($p['thumbnail']);
         <h2 class="section-title">
             <i class="fa-solid fa-layer-group"></i> Recent Campaigns
         </h2>
-        <a href="/CroudSpark-X/admin/all-campaigns.php" class="btn-action btn-secondary">View All</a>
+        <a href="/admin/all-campaigns.php" class="btn-action btn-secondary">View All</a>
     </div>
 
     <div class="table-card">
@@ -1105,4 +1105,4 @@ $hasThumb = !empty($p['thumbnail']);
 
 </div>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

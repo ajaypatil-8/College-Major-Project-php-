@@ -17,7 +17,7 @@ config/cloudinary.php
 
 # Uploads (user images/files)
 uploads/
-public/uploads/
+publuploads/
 
 # Logs
 *.log
@@ -45,3 +45,11 @@ composer.phar
 *.zip
 *.rar
 *.tar
+
+
+config/db.php
+.env
+error_log
+uploads/
+vendor/
+config/env.php

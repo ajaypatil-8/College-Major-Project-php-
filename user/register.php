@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
-require_once __DIR__."/../uploads/upload.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
 
 $msg="";
 $success="";
@@ -61,9 +61,9 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     }
 }
 ?>
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - CrowdSpark</title>
@@ -800,8 +800,8 @@ body {
     }
 }
     </style>
-</head>
-<body>
+
+
 
 <!-- Theme Toggle Button -->
 <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
@@ -1107,5 +1107,4 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 
-</body>
-</html>
+

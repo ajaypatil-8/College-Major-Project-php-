@@ -431,19 +431,19 @@
                 
                 <!-- Social Links -->
                 <div class="footer-social">
-                    <a href="#" class="social-link" aria-label="Facebook">
+                    <a href = "#" class="social-link" aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="Twitter">
+                    <a href = "#" class="social-link" aria-label="Twitter">
                         <i class="fab fa-twitter"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="Instagram">
+                    <a href = "#" class="social-link" aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="LinkedIn">
+                    <a href = "#" class="social-link" aria-label="LinkedIn">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="YouTube">
+                    <a href = "#" class="social-link" aria-label="YouTube">
                         <i class="fab fa-youtube"></i>
                     </a>
                 </div>
@@ -454,27 +454,27 @@
                 <h4 class="footer-title">Quick Links</h4>
                 <ul class="footer-links">
                     <li>
-                        <a href="/CroudSpark-X/public/index.php">
+                        <a href = "/index.php">
                             <i class="fa-solid fa-chevron-right"></i> Home
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/explore-campaigns.php">
+                        <a href = "/public/explore-campaigns.php">
                             <i class="fa-solid fa-chevron-right"></i> Browse Campaigns
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/about.php">
+                        <a href = "/public/about.php">
                             <i class="fa-solid fa-chevron-right"></i> About Us
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/contact.php">
+                        <a href = "/public/contact.php">
                             <i class="fa-solid fa-chevron-right"></i> Contact
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/user/login.php">
+                        <a href = "/user/login.php">
                             <i class="fa-solid fa-chevron-right"></i> Start Campaign
                         </a>
                     </li>
@@ -486,27 +486,27 @@
                 <h4 class="footer-title">Support</h4>
                 <ul class="footer-links">
                     <li>
-                        <a href="#">
+                        <a href = "#">
                             <i class="fa-solid fa-chevron-right"></i> FAQ
                         </a>
                     </li>
                     <li>
-                        <a href="/CroudSpark-X/public/contact.php">
+                        <a href = "/public/contact.php">
                             <i class="fa-solid fa-chevron-right"></i> Contact Us
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href = "#">
                             <i class="fa-solid fa-chevron-right"></i> Help Center
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href = "#">
                             <i class="fa-solid fa-chevron-right"></i> Trust & Safety
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href = "#">
                             <i class="fa-solid fa-chevron-right"></i> Report Issue
                         </a>
                     </li>
@@ -518,17 +518,17 @@
                 <h4 class="footer-title">Stay Updated</h4>
                 <ul class="footer-links">
                     <li>
-                        <a href="#">
+                        <a href = "#">
                             <i class="fa-solid fa-chevron-right"></i> Privacy Policy
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href = "#">
                             <i class="fa-solid fa-chevron-right"></i> Terms of Service
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href = "#">
                             <i class="fa-solid fa-chevron-right"></i> Cookie Policy
                         </a>
                     </li>
@@ -575,14 +575,14 @@
         <!-- Bottom Section -->
         <div class="footer-bottom">
             <div class="footer-copyright">
-                © 2024 <a href="/CroudSpark-X/public/index.php">CrowdSpark</a>. All rights reserved.
+                © 2024 <a href = "/index.php">CrowdSpark</a>. All rights reserved.
                 Made with <span style="color: #ef4444;">❤</span> in India
             </div>
             
             <ul class="footer-bottom-links">
-                <li><a href="#">Sitemap</a></li>
-                <li><a href="#">Accessibility</a></li>
-                <li><a href="#">Press Kit</a></li>
+                <li><a href = "#">Sitemap</a></li>
+                <li><a href = "#">Accessibility</a></li>
+                <li><a href = "#">Press Kit</a></li>
             </ul>
         </div>
         

@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 // Login required
 if(!isset($_SESSION['user_id'])){
-    header("Location: /CroudSpark-X/user/login.php");
+    header("Locationuser/login.php");
     exit;
 }
 
@@ -13,7 +13,7 @@ $user_id = $_SESSION['user_id'];
 // Get filter from URL
 $filter = $_GET['filter'] ?? 'all';
 
-// Fetch all campaigns for stats (excluding draft)
+
 $allCampaigns = $pdo->prepare("
     SELECT c.*,
     (
@@ -57,12 +57,12 @@ foreach($campaigns as $campaign) {
     $campaignStats[$campaign['id']] = $stats->fetch(PDO::FETCH_ASSOC);
 }
 
-require_once __DIR__."/../includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php";
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en" data-theme="light">
-<head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Campaigns - CrowdSpark</title>
@@ -728,9 +728,9 @@ body {
     }
 }
 </style>
-</head>
 
-<body>
+
+
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -818,7 +818,7 @@ body {
             </a>
         </div>
         
-        <a href="/CroudSpark-X/creator/create-campaign.php" class="create-btn">
+        <a href ="/create-campaign.php" class="create-btn">
             <i class="fa-solid fa-plus"></i> Create New Campaign
         </a>
     </div>
@@ -836,7 +836,7 @@ body {
             $progress = min($progress, 100);
             
             // Detail page link
-            $detailLink = "/CroudSpark-X/creator/campaign-details.php?id=" . $campaign['id'];
+            $detailLink = "campaign-details.php?id=" . $campaign['id'];
             ?>
             
             <a href="<?= $detailLink ?>" class="campaign-card">
@@ -936,7 +936,7 @@ body {
             <?php endif; ?>
         </p>
         <?php if($filter == 'all'): ?>
-        <a href="/CroudSpark-X/creator/create-campaign.php" class="create-btn">
+        <a href ="/create-campaign.php" class="create-btn">
             <i class="fa-solid fa-plus"></i> Create Your First Campaign
         </a>
         <?php endif; ?>
@@ -976,7 +976,7 @@ window.CrowdSparkTheme = {
 };
 </script>
 
-</body>
-</html>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+
+
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

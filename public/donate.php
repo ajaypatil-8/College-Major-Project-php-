@@ -1,11 +1,11 @@
 <?php
 session_start();
-require_once __DIR__."/../config/env.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/env.php";
 
 $campaign_id = $_GET['id'] ?? 0;
 
 // Fetch campaign details
-require_once __DIR__."/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
 
 $stmt = $pdo->prepare("
     SELECT c.*,
@@ -23,9 +23,9 @@ if (!$campaign) {
 }
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en" data-theme="light">
-<head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Donate - <?= htmlspecialchars($campaign['title']) ?> | CrowdSpark</title>
@@ -626,9 +626,9 @@ input::placeholder {
     }
 }
 </style>
-</head>
 
-<body>
+
+
 
 <!-- Background Animation -->
 <div class="bg-animation">
@@ -645,7 +645,7 @@ input::placeholder {
 
 <div class="donate-container">
 
-    <a href="/CroudSpark-X/public/campaign-details.php?id=<?= $campaign_id ?>" class="back-link">
+    <a href = "/public/campaign-details.php?id=<?= $campaign_id ?>" class="back-link">
         <i class="fa-solid fa-arrow-left"></i> Back to Campaign
     </a>
 
@@ -813,7 +813,7 @@ function payNow() {
     btn.disabled = true;
 
     /* STEP 1: CREATE ORDER */
-    fetch('/CroudSpark-X/public/create-order.php', {
+    fetchpublic/create-order.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: "amount=" + amount
@@ -850,7 +850,7 @@ function payNow() {
 
             "handler": function (response) {
                 /* STEP 3: SAVE PAYMENT */
-                fetch('/CroudSpark-X/public/verify-payment.php', {
+                fetchpublic/verify-payment.php', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     body:
@@ -864,7 +864,7 @@ function payNow() {
                 .then(res => res.json())
                 .then(data => {
                     if (data.status == "success") {
-                        window.location = "/CroudSpark-X/dashboard/user-dashboard.php";
+                        window.location =dashboauser-dashboard.php";
                     } else {
                         alert("Payment verification failed. Please contact support.");
                         console.log(data);
@@ -900,5 +900,4 @@ function payNow() {
 }
 </script>
 
-</body>
-</html>
+

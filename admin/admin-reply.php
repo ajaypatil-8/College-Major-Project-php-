@@ -1,14 +1,10 @@
 <?php
 session_start();
-require_once __DIR__."/../config/db.php";
-require_once __DIR__."/../config/env.php";
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require __DIR__."/../vendor/phpmailer/src/PHPMailer.php";
-require __DIR__."/../vendor/phpmailer/src/SMTP.php";
-require __DIR__."/../vendor/phpmailer/src/Exception.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/config/env.php";
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/PHPMailer.php";
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/SMTP.php";
+require $_SERVER['DOCUMENT_ROOT']."/vendor/phpmailer/src/Exception.php";
 
 /* ===== ADMIN LOGIN CHECK ===== */
 if(!isset($_SESSION['user_id']) || $_SESSION['role']!='admin'){
@@ -38,7 +34,7 @@ if(isset($_POST['send_reply'])){
             $user_email=$data['email'];
             $user_name=$data['name'];
 
-            $mail = new PHPMailer(true);
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 
             try{
                 $mail->isSMTP();
@@ -96,7 +92,7 @@ foreach($messages as $m) {
 }
 ?>
 
-<?php require_once __DIR__."/../includes/header.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/header.php"; ?>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
@@ -726,4 +722,4 @@ body {
 
 </div>
 
-<?php require_once __DIR__."/../includes/footer.php"; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT']."/includes/footer.php"; ?>

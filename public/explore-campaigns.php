@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . "/../includes/header.php";
-require_once __DIR__ . "/../config/db.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/config/db.php";
 ?>
 
-<!DOCTYPE html>
+
 <html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore Campaigns - CrowdSpark</title>
@@ -600,8 +600,8 @@ require_once __DIR__ . "/../config/db.php";
             }
         }
     </style>
-</head>
-<body>
+
+
 
     <!-- Background Animation -->
     <div class="bg-animation">
@@ -705,7 +705,7 @@ require_once __DIR__ . "/../config/db.php";
                         <div class='campaign-card' style='animation-delay: {$delay}s' data-category='{$category}' data-title='{$title}' data-raised='{$raisedAmount}' data-created='{$row['created_at']}'>
                             <div class='card-image'>
                                 <span class='card-category'>{$category}</span>
-                               <img src='{$imagePath}' alt='{$title}' loading='lazy' onerror=\"this.src='/CroudSpark-X/uploads/default-campaign.jpg'\">
+                               <img src='{$imagePath}' alt='{$title}' loading='lazy' onerror=\"this.src='uploads/default-campaign.jpg'\">
                             </div>
                             <div class='card-body'>
                                 <h3 class='card-title'>{$title}</h3>
@@ -727,7 +727,7 @@ require_once __DIR__ . "/../config/db.php";
                                 
                                 <div class='card-footer'>
                                     <span class='percentage'>" . number_format($percent, 1) . "%</span>
-                                    <a href='/CroudSpark-X/public/campaign-details.php?id={$row['id']}' class='view-btn'>
+                                    <a href='/campaign-details.php?id={$row['id']}' class='view-btn'>
                                         View Campaign <i class='fas fa-arrow-right'></i>
                                     </a>
                                 </div>
@@ -833,7 +833,6 @@ require_once __DIR__ . "/../config/db.php";
         });
     </script>
 
-    <?php require_once __DIR__ . "/../includes/footer.php"; ?>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/footer.php"; ?>
 
-</body>
-</html>
+
