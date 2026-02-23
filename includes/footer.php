@@ -486,7 +486,7 @@
                 <h4 class="footer-title">Support</h4>
                 <ul class="footer-links">
                     <li>
-                        <a href = "#">
+                        <a href = "/public/faq.php">
                             <i class="fa-solid fa-chevron-right"></i> FAQ
                         </a>
                     </li>
@@ -496,17 +496,17 @@
                         </a>
                     </li>
                     <li>
-                        <a href = "#">
+                        <a href = "/public/helpcenter.php">
                             <i class="fa-solid fa-chevron-right"></i> Help Center
                         </a>
                     </li>
                     <li>
-                        <a href = "#">
+                        <a href = "/public/trust-safety.php">
                             <i class="fa-solid fa-chevron-right"></i> Trust & Safety
                         </a>
                     </li>
                     <li>
-                        <a href = "#">
+                        <a href = "/public/report-issue.php">
                             <i class="fa-solid fa-chevron-right"></i> Report Issue
                         </a>
                     </li>

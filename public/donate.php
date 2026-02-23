@@ -106,10 +106,13 @@ body {
     position: relative;
     transition: background-color 0.3s ease, color 0.3s ease;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
+    padding: 60px 20px;
+}
+    
+    .donate-container{
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 20px;
 }
 
 /* Animated Background */
@@ -784,120 +787,99 @@ function setAmount(value) {
     event.target.classList.add('active');
 }
 
-// Payment function
 function payNow() {
-    let name = document.getElementById("donor_name").value.trim();
-    let email = document.getElementById("donor_email").value.trim();
-    let amount = document.getElementById("amount").value;
-    let campaignId = document.getElementById("campaign_id").value;
+let name = document.getElementById("donor_name").value.trim();
+let email = document.getElementById("donor_email").value.trim();
+let amount = document.getElementById("amount").value;
+let campaignId = document.getElementById("campaign_id").value;
 
-    // Validation
-    if (!email) {
-        alert("Please enter your email address");
-        document.getElementById("donor_email").focus();
+if (!email) {
+    alert("Enter email");
+    return;
+}
+
+if (!amount || amount < 1) {
+    alert("Enter valid amount");
+    return;
+}
+
+if (name === "") name = "Anonymous";
+
+const btn = document.querySelector('.submit-btn');
+const original = btn.innerHTML;
+btn.innerHTML = "Processing...";
+btn.disabled = true;
+
+// CREATE ORDER
+fetch('/public/create-order.php', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body: "amount=" + amount
+})
+.then(res => res.json())
+.then(order => {
+
+    if(order.status !== "success"){
+        alert("Order creation failed");
+        btn.innerHTML = original;
+        btn.disabled = false;
+        console.log(order);
         return;
     }
 
-    if (!amount || amount < 1) {
-        alert("Please enter a valid donation amount");
-        document.getElementById("amount").focus();
-        return;
-    }
+    var options = {
+        key: "<?= $_ENV['RAZORPAY_KEY_ID'] ?>",
+        amount: amount * 100,
+        currency: "INR",
+        name: "CrowdSpark",
+        description: "Campaign Donation",
+        order_id: order.order_id,
 
-    if (name == "") name = "Anonymous";
+        prefill: {
+            name: name,
+            email: email
+        },
 
-    // Disable button during processing
-    const btn = document.querySelector('.submit-btn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-    btn.disabled = true;
+        theme: { color: "#ec4899" },
 
-    /* STEP 1: CREATE ORDER */
-    fetchpublic/create-order.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: "amount=" + amount
-    })
-    .then(res => res.json())
-    .then(order => {
-        
-        if (order.status != "success") {
-            alert("Order creation failed. Please try again.");
-            console.log(order);
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            return;
-        }
+        handler: function (response) {
 
-        /* STEP 2: OPEN RAZORPAY */
-        var options = {
-            "key": "<?= $_ENV['RAZORPAY_KEY_ID'] ?>",
-            "amount": amount * 100,
-            "currency": "INR",
-            "name": "CrowdSpark Donation",
-            "description": "Support <?= htmlspecialchars($campaign['title']) ?>",
-            "order_id": order.order_id,
-            "image": "<?= htmlspecialchars($campaign['thumbnail_url'] ?? '') ?>",
-
-            "prefill": {
-                "name": name,
-                "email": email
-            },
-
-            "theme": {
-                "color": "#ec4899"
-            },
-
-            "handler": function (response) {
-                /* STEP 3: SAVE PAYMENT */
-                fetchpublic/verify-payment.php', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body:
-                        "razorpay_payment_id=" + response.razorpay_payment_id +
-                        "&razorpay_order_id=" + response.razorpay_order_id +
-                        "&campaign_id=" + campaignId +
-                        "&amount=" + amount +
-                        "&donor_name=" + encodeURIComponent(name) +
-                        "&donor_email=" + encodeURIComponent(email)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status == "success") {
-                        window.location =dashboauser-dashboard.php";
-                    } else {
-                        alert("Payment verification failed. Please contact support.");
-                        console.log(data);
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    }
-                })
-                .catch(err => {
-                    alert("An error occurred. Please try again.");
-                    console.error(err);
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                });
-            },
-
-            "modal": {
-                "ondismiss": function() {
-                    btn.innerHTML = originalText;
+            fetch('/public/verify-payment.php', {
+                method:'POST',
+                headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                body:
+                    "razorpay_payment_id="+response.razorpay_payment_id+
+                    "&razorpay_order_id="+response.razorpay_order_id+
+                    "&campaign_id="+campaignId+
+                    "&amount="+amount+
+                    "&donor_name="+encodeURIComponent(name)+
+                    "&donor_email="+encodeURIComponent(email)
+            })
+            .then(res=>res.json())
+            .then(data=>{
+                if(data.status==="success"){
+                    window.location="/dashboard/user-dashboard.php";
+                }else{
+                    alert("Payment saved failed");
+                    console.log(data);
+                    btn.innerHTML = original;
                     btn.disabled = false;
                 }
-            }
-        };
+            });
+        }
+    };
 
-        var rzp = new Razorpay(options);
-        rzp.open();
-    })
-    .catch(err => {
-        alert("An error occurred. Please try again.");
-        console.error(err);
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    });
+    var rzp = new Razorpay(options);
+    rzp.open();
+
+    btn.innerHTML = original;
+    btn.disabled = false;
+})
+.catch(err=>{
+    console.error(err);
+    alert("Server error");
+    btn.innerHTML = original;
+    btn.disabled = false;
+});
 }
 </script>
-
-
