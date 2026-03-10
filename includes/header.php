@@ -15,10 +15,14 @@ if (strpos($current, 'explore') !== false || strpos($current, 'campaign') !== fa
 
 
 <html lang="en" data-theme="light" data-page="<?= $pageTheme ?>">
+<head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>CrowdSpark - Support Dreams, Change Lives</title>
+
+<link rel="icon" href="/favicon.ico">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -867,6 +871,9 @@ body {
     </div>
 
 </div>
+</head>
+
+<body>
 
 <?php endif; ?>
 
