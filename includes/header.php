@@ -3,9 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $current = basename($_SERVER['PHP_SELF']);
-
-// Determine current page theme
-$pageTheme = 'orange'; // default
+$pageTheme = 'orange';
 if (strpos($current, 'explore') !== false || strpos($current, 'campaign') !== false) {
     $pageTheme = 'cyan';
 } elseif (strpos($current, 'about') !== false) {
@@ -25,7 +23,6 @@ if (strpos($current, 'explore') !== false || strpos($current, 'campaign') !== fa
 
 <style>
 
-/* ===== THEME VARIABLES ===== */
 :root {
     --bg-primary: #f4f6fb;
     --bg-card: rgba(255, 255, 255, 0.92);
@@ -82,7 +79,7 @@ if (strpos($current, 'explore') !== false || strpos($current, 'campaign') !== fa
     --divider: rgba(255, 255, 255, 0.05);
 }
 
-/* PAGE ACCENT COLORS */
+
 [data-page="orange"] {
     --accent-primary: #f59e0b;
     --accent-secondary: #fb923c;
@@ -117,9 +114,6 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* =============================================
-   NAVBAR
-   ============================================= */
 .nav-wrap {
     position: fixed;
     top: 0; left: 0;

@@ -314,15 +314,21 @@ body {
     transform: translateY(-2px);
 }
 
+/* ===== EYE ICON FIX =====
+   .pass-wrap wraps ONLY the input, so top:50% centers on the input */
 .pass-wrap {
     position: relative;
+}
+
+.pass-wrap input {
+    padding-right: 50px;
 }
 
 .pass-wrap .toggle-password {
     position: absolute;
     right: 20px;
     top: 50%;
-    margin-top: 6px;
+    transform: translateY(-50%);
     cursor: pointer;
     color: var(--text-tertiary);
     font-size: 18px;
@@ -332,7 +338,7 @@ body {
 
 .pass-wrap .toggle-password:hover {
     color: #64748b;
-    transform: scale(1.15);
+    transform: translateY(-50%) scale(1.15);
 }
 
 .forgot {
@@ -513,10 +519,13 @@ body {
                     <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
                 </div>
 
-                <div class="form-group pass-wrap">
+                <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" id="pass" required placeholder="Enter your password" autocomplete="current-password">
-                    <i class="fa fa-eye toggle-password" onclick="togglePass()" id="toggleIcon"></i>
+                    <!-- pass-wrap wraps ONLY the input so eye top:50% = input center -->
+                    <div class="pass-wrap">
+                        <input type="password" name="password" id="pass" required placeholder="Enter your password" autocomplete="current-password">
+                        <i class="fa fa-eye toggle-password" onclick="togglePass()" id="toggleIcon"></i>
+                    </div>
                 </div>
 
                 <div class="forgot">

@@ -29,7 +29,6 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         $msg="Passwords do not match";
     }
     else{
-
         $check=$pdo->prepare("SELECT id FROM users WHERE email=?");
         $check->execute([$email]);
 
@@ -54,1057 +53,634 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
             $success="Account created successfully 🚀";
 
-            echo "<script>
-            setTimeout(()=>{window.location='login.php'},1500)
-            </script>";
+            echo "<script>setTimeout(()=>{window.location='login.php'},1500)</script>";
         }
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - CrowdSpark</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
 
-<html lang="en">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - CrowdSpark</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
-    <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
-
-/* ===== THEME VARIABLES ===== */
 :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-card: rgba(255, 255, 255, 0.9);
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-tertiary: #64748b;
-    --border-color: rgba(15, 23, 42, 0.1);
-    --orb-opacity: 0.25;
-}
-
-[data-theme="dark"] {
-    --bg-primary: #0f0f0f;
-    --bg-secondary: #1a1a1a;
-    --bg-card: rgba(20, 20, 30, 0.85);
-    --text-primary: #ffffff;
-    --text-secondary: #cbd5e1;
-    --text-tertiary: #94a3b8;
-    --border-color: rgba(255, 255, 255, 0.15);
-    --orb-opacity: 0.25;
-    --orb-1: linear-gradient(45deg, #8b5cf6, #a78bfa);
-    --orb-2: linear-gradient(45deg, #7c3aed, #8b5cf6);
-    --orb-3: linear-gradient(45deg, #6d28d9, #7c3aed);
+    --bg: #0c0e16;
+    --card-bg: rgba(18, 21, 36, 0.88);
+    --card-border: rgba(255,255,255,0.08);
+    --input-bg: rgba(255,255,255,0.05);
+    --input-border: rgba(255,255,255,0.1);
+    --text-1: #f0f2f8;
+    --text-2: #8b93aa;
+    --text-3: #555e78;
+    --accent: #8b5cf6;
+    --accent2: #a78bfa;
+    --accent-grad: linear-gradient(135deg, #8b5cf6, #a78bfa);
+    --accent-glow: rgba(139,92,246,0.25);
+    --success-c: #10b981;
+    --error-c: #ef4444;
+    --orb-opacity: 0.18;
 }
 
 [data-theme="light"] {
-    --orb-1: linear-gradient(45deg, #c4b5fd, #a78bfa);
-    --orb-2: linear-gradient(45deg, #a78bfa, #8b5cf6);
-    --orb-3: linear-gradient(45deg, #8b5cf6, #c4b5fd);
+    --bg: #f4f6fb;
+    --card-bg: rgba(255,255,255,0.93);
+    --card-border: rgba(15,23,42,0.08);
+    --input-bg: rgba(15,23,42,0.03);
+    --input-border: rgba(15,23,42,0.1);
+    --text-1: #0d1117;
+    --text-2: #5a6478;
+    --text-3: #9aa3b2;
+    --orb-opacity: 0.45;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    overflow-x: hidden;
-    position: relative;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.bg-animation {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    overflow: hidden;
-    opacity: var(--orb-opacity);
-    transition: opacity 0.3s ease;
-}
-
-.orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    animation: float 20s infinite ease-in-out;
-}
-
-.orb-1 { width: 500px; height: 500px; background: var(--orb-1); top: -10%; left: -10%; }
-.orb-2 { width: 400px; height: 400px; background: var(--orb-2); bottom: -10%; right: -10%; animation-delay: 5s; }
-.orb-3 { width: 350px; height: 350px; background: var(--orb-3); top: 50%; left: 50%; animation-delay: 10s; }
-
-@keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(50px, 50px) scale(1.1); }
-    50% { transform: translate(-30px, 80px) scale(0.9); }
-    75% { transform: translate(40px, -40px) scale(1.05); }
-}
-
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-@keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-@keyframes bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
-@keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Theme Toggle Button */
-.theme-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--bg-card);
-    border: 2px solid var(--border-color);
-    backdrop-filter: blur(20px);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.theme-toggle:hover {
-    transform: scale(1.1) rotate(10deg);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
-}
-
-.auth-page {
-    position: relative;
-    z-index: 1;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-1);
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 120px 20px 80px;
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 600px;
-    animation: fadeInUp 0.8s ease;
-}
-
-.auth-card {
-    background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    padding: 50px 45px;
-    border-radius: 32px;
-    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.1);
-    border: 1px solid var(--border-color);
-    transition: all 0.4s ease;
+    padding: 40px 20px 60px;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    transition: background .3s ease, color .3s ease;
     position: relative;
-    overflow: hidden;
 }
 
-.auth-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+/* Orbs */
+.bg-scene { position:fixed; inset:0; pointer-events:none; overflow:hidden; opacity:var(--orb-opacity); transition:opacity .3s ease; }
+.orb { position:absolute; border-radius:50%; filter:blur(90px); animation:orbFloat 20s ease-in-out infinite; }
+.o1 { width:520px; height:520px; background:linear-gradient(135deg,#8b5cf6,#a78bfa); top:-15%; left:-15%; }
+.o2 { width:380px; height:380px; background:linear-gradient(135deg,#a78bfa,#8b5cf6); bottom:-12%; right:-12%; animation-delay:7s; }
+.o3 { width:260px; height:260px; background:linear-gradient(135deg,#8b5cf688,#a78bfa88); top:40%; left:60%; animation-delay:13s; }
+
+@keyframes orbFloat {
+    0%,100% { transform:translate(0,0) scale(1); }
+    33%      { transform:translate(45px,55px) scale(1.07); }
+    66%      { transform:translate(-25px,20px) scale(.93); }
 }
 
-.auth-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 30px 80px rgba(139, 92, 246, 0.15);
+/* Theme btn */
+.theme-btn {
+    position:fixed; top:20px; right:20px;
+    width:44px; height:44px;
+    border-radius:12px;
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    backdrop-filter:blur(20px);
+    color:var(--text-2); font-size:17px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .25s ease; z-index:999;
+    box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.theme-btn:hover { border-color:var(--accent); color:var(--accent); transform:rotate(15deg) scale(1.08); }
+[data-theme="dark"] .theme-btn .fa-moon { display:block; }
+[data-theme="dark"] .theme-btn .fa-sun  { display:none; }
+[data-theme="light"] .theme-btn .fa-moon { display:none; }
+[data-theme="light"] .theme-btn .fa-sun  { display:block; }
+
+/* Card */
+.card {
+    position:relative; z-index:1;
+    width:100%; max-width:560px;
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:28px;
+    padding:44px 42px;
+    backdrop-filter:blur(24px) saturate(180%);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);
+    box-shadow:0 24px 64px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,0.04);
+    animation:cardIn .7s cubic-bezier(.22,1,.36,1) both;
+    margin-top:20px;
+}
+.card::before {
+    content:''; position:absolute;
+    top:0; left:40px; right:40px; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(139,92,246,.65),transparent);
+    border-radius:1px;
+}
+@keyframes cardIn {
+    from { opacity:0; transform:translateY(32px) scale(.97); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
 }
 
-.auth-brand {
-    text-align: center;
-    margin-bottom: 36px;
-    animation: fadeIn 0.8s ease-out 0.2s both;
-}
-
+/* Brand */
+.brand { text-align:center; margin-bottom:32px; }
 .brand-icon {
-    width: 75px;
-    height: 75px;
-    background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 18px;
-    font-size: 40px;
-    box-shadow: 0 15px 40px rgba(139, 92, 246, 0.3);
-    animation: bounce 2.5s infinite;
+    width:62px; height:62px;
+    border-radius:18px;
+    background:var(--accent-grad);
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; margin:0 auto 16px;
+    box-shadow:0 8px 28px var(--accent-glow);
+    animation:iconBounce 3s ease infinite;
 }
-
-.auth-card h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 900;
-    margin-bottom: 10px;
-    background: linear-gradient(135deg, var(--text-primary), #8b5cf6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+@keyframes iconBounce {
+    0%,100% { transform:translateY(0); }
+    50%      { transform:translateY(-6px); }
 }
-
-.auth-sub {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin-bottom: 32px;
-    font-weight: 500;
+.brand h1 {
+    font-family:'Syne',sans-serif;
+    font-size:1.9rem; font-weight:900; letter-spacing:-.4px;
+    background:var(--accent-grad);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:8px;
 }
+.brand p { font-size:14px; color:var(--text-2); font-weight:500; line-height:1.5; }
 
+/* Alert */
 .alert {
-    padding: 16px 20px;
-    border-radius: 16px;
-    font-size: 14px;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 24px;
-    animation: shake 0.5s ease;
-    position: relative;
-    overflow: hidden;
+    padding:14px 18px; border-radius:12px;
+    font-size:13.5px; font-weight:600;
+    margin-bottom:24px;
+    display:flex; align-items:center; gap:10px;
+    animation:shake .45s ease;
+}
+.alert-error  { background:rgba(239,68,68,.12);  border:1px solid rgba(239,68,68,.25);  color:#f87171; }
+.alert-success{ background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.25); color:#34d399; }
+[data-theme="light"] .alert-error  { color:#dc2626; }
+[data-theme="light"] .alert-success{ color:#059669; }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-8px);} 75%{transform:translateX(8px);} }
+
+/* Profile upload */
+.avatar-section {
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    margin-bottom:28px;
+}
+.avatar-ring {
+    width:100px; height:100px;
+    border-radius:50%;
+    background:rgba(139,92,246,.15);
+    border:2.5px solid rgba(139,92,246,.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:40px; overflow:hidden;
+    box-shadow:0 10px 32px var(--accent-glow);
+    transition:all .3s ease; cursor:pointer;
+}
+.avatar-ring:hover { border-color:var(--accent); transform:scale(1.05); box-shadow:0 14px 40px var(--accent-glow); }
+.avatar-ring img { width:100%; height:100%; object-fit:cover; }
+
+.upload-label {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:700; letter-spacing:.4px; text-transform:uppercase;
+    color:var(--accent);
+    background:rgba(139,92,246,.1);
+    border:1.5px dashed rgba(139,92,246,.35);
+    padding:10px 20px; border-radius:999px;
+    cursor:pointer; transition:all .25s ease;
+}
+.upload-label:hover { background:rgba(139,92,246,.18); border-color:var(--accent); }
+
+/* Grid form */
+.form {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+.full { grid-column:1/-1; }
+
+.field { display:flex; flex-direction:column; gap:8px; }
+
+.field label {
+    font-size:11px; font-weight:800;
+    letter-spacing:.6px; text-transform:uppercase;
+    color:var(--text-2);
 }
 
-.alert::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    animation: shimmer 2s infinite;
+/* Input wrap — eye is relative to THIS */
+.input-wrap { position:relative; }
+
+.field input,
+.field textarea {
+    width:100%;
+    padding:13px 16px;
+    background:var(--input-bg);
+    border:1.5px solid var(--input-border);
+    border-radius:13px;
+    font-size:14px; font-weight:500;
+    color:var(--text-1);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    transition:all .25s ease;
+    outline:none;
+}
+.field textarea { height:88px; resize:vertical; padding:13px 16px; }
+.field input::placeholder,
+.field textarea::placeholder { color:var(--text-3); font-weight:400; }
+.field input:focus,
+.field textarea:focus {
+    border-color:var(--accent);
+    background:rgba(139,92,246,.06);
+    box-shadow:0 0 0 4px var(--accent-glow);
 }
 
-.alert-error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-left: 4px solid #ef4444; }
-[data-theme="light"] .alert-error { color: #dc2626; }
+/* ===== EYE ICON FIX =====
+   Eye is inside .input-wrap (NOT inside .field which also has the label).
+   top: 50% + translateY(-50%) = perfectly centered on the input height. */
+.eye-toggle {
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-3);
+    font-size:15px;
+    cursor:pointer;
+    padding:4px;
+    line-height:1;
+    transition:color .2s ease, transform .2s ease;
+}
+.eye-toggle:hover {
+    color:var(--accent);
+    transform:translateY(-50%) scale(1.15);
+}
+/* Push text left so it doesn't go under the icon */
+.input-wrap input { padding-right:44px; }
 
-.alert-success { background: rgba(16, 185, 129, 0.2); color: #10b981; border-left: 4px solid #10b981; }
-[data-theme="light"] .alert-success { color: #059669; }
-
-.profile-upload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
-    animation: scaleIn 0.6s ease-out 0.3s both;
+/* Password strength bar */
+.strength-track {
+    height:3px;
+    background:var(--input-border);
+    border-radius:2px;
+    margin-top:6px;
+    overflow:hidden;
+}
+.strength-fill {
+    height:100%; width:0;
+    border-radius:2px;
+    transition:width .3s ease, background .3s ease;
 }
 
-.profile-preview {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(167, 139, 250, 0.2));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 42px;
-    color: #a78bfa;
-    overflow: hidden;
-    margin-bottom: 16px;
-    border: 5px solid rgba(139, 92, 246, 0.3);
-    box-shadow: 0 15px 40px rgba(139, 92, 246, 0.2);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+/* Submit */
+.btn-submit {
+    grid-column:1/-1;
+    width:100%; padding:15px;
+    border:none; border-radius:13px;
+    background:var(--accent-grad);
+    color:#fff;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:15px; font-weight:800; letter-spacing:.3px;
+    cursor:pointer;
+    box-shadow:0 6px 24px var(--accent-glow);
+    transition:all .25s ease;
+    position:relative; overflow:hidden;
+    margin-top:4px;
 }
-
-.profile-preview:hover {
-    transform: scale(1.05) rotate(5deg);
-    box-shadow: 0 20px 50px rgba(139, 92, 246, 0.3);
+.btn-submit::after {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+    transform:translateX(-100%); transition:transform .5s ease;
 }
-
-.profile-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.btn-submit:hover { transform:translateY(-2px); box-shadow:0 10px 32px var(--accent-glow); }
+.btn-submit:hover::after { transform:translateX(100%); }
+.btn-submit.loading { pointer-events:none; opacity:.75; }
+.btn-submit.loading::before {
+    content:''; position:absolute;
+    top:50%; left:50%;
+    width:20px; height:20px; margin:-10px 0 0 -10px;
+    border:2.5px solid rgba(255,255,255,.3);
+    border-top-color:#fff; border-radius:50%;
+    animation:spin .7s linear infinite;
 }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-.profile-preview::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: linear-gradient(135deg, transparent, rgba(139, 92, 246, 0.2));
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.card-footer {
+    text-align:center; margin-top:26px;
+    font-size:14px; color:var(--text-2); font-weight:500;
+    grid-column:1/-1;
 }
+.card-footer a { font-weight:800; color:var(--accent); text-decoration:none; transition:opacity .2s ease; }
+.card-footer a:hover { opacity:.8; text-decoration:underline; }
 
-.profile-preview:hover::after {
-    opacity: 1;
-}
-
-.upload-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    background: rgba(139, 92, 246, 0.1);
-    border: 2px dashed rgba(139, 92, 246, 0.3);
-    padding: 12px 24px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #a78bfa;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.upload-btn:hover {
-    background: rgba(139, 92, 246, 0.2);
-    border-color: #8b5cf6;
-    color: #c4b5fd;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
-}
-
-.upload-btn i {
-    font-size: 16px;
-}
-
-.auth-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-}
-
-.form-group {
-    position: relative;
-    animation: slideIn 0.6s ease-out;
-    animation-fill-mode: both;
-}
-
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
-
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.15s; }
-.form-group:nth-child(3) { animation-delay: 0.2s; }
-.form-group:nth-child(4) { animation-delay: 0.25s; }
-.form-group:nth-child(5) { animation-delay: 0.3s; }
-.form-group:nth-child(6) { animation-delay: 0.35s; }
-.form-group:nth-child(7) { animation-delay: 0.4s; }
-
-.form-group label {
-    display: block;
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 16px 18px;
-    border-radius: 16px;
-    border: 2px solid var(--border-color);
-    font-size: 15px;
-    background: var(--bg-secondary);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 500;
-    color: var(--text-primary);
-    font-family: 'DM Sans', sans-serif;
-}
-
-.form-group textarea {
-    height: 90px;
-    resize: vertical;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: var(--text-tertiary);
-    font-weight: 400;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
-    transform: translateY(-2px);
-}
-
-.pass-wrap {
-    position: relative;
-}
-
-.pass-wrap .toggle-password {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    margin-top: 6px;
-    cursor: pointer;
-    color: var(--text-tertiary);
-    font-size: 18px;
-    transition: all 0.3s ease;
-    padding: 8px;
-}
-
-.pass-wrap .toggle-password:hover {
-    color: #8b5cf6;
-    transform: scale(1.15);
-}
-
-.btn-auth {
-    grid-column: 1 / -1;
-    width: 100%;
-    padding: 20px;
-    border: none;
-    border-radius: 50px;
-    background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-    color: #fff;
-    font-weight: 900;
-    font-size: 17px;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 12px 35px rgba(139, 92, 246, 0.35);
-    margin-top: 12px;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    animation: slideIn 0.6s ease-out 0.45s both;
-}
-
-.btn-auth::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s ease;
-}
-
-.btn-auth:hover::before {
-    left: 100%;
-}
-
-.btn-auth:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 45px rgba(139, 92, 246, 0.45);
-}
-
-.btn-auth:active {
-    transform: translateY(-2px);
-}
-
-.btn-auth.loading {
-    pointer-events: none;
-    opacity: 0.8;
-}
-
-.btn-auth.loading::after {
-    content: '';
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    top: 50%;
-    left: 50%;
-    margin-left: -11px;
-    margin-top: -11px;
-    border: 3px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    border-top-color: #fff;
-    animation: spin 0.7s linear infinite;
-}
-
-.auth-footer {
-    text-align: center;
-    margin-top: 32px;
-    font-size: 15px;
-    color: var(--text-tertiary);
-    font-weight: 500;
-    animation: fadeIn 0.8s ease-out 0.7s both;
-}
-
-.auth-footer a {
-    color: #8b5cf6;
-    font-weight: 800;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.auth-footer a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #8b5cf6;
-    transition: width 0.3s ease;
-}
-
-.auth-footer a:hover::after {
-    width: 100%;
-}
-
-.auth-footer a:hover {
-    color: #a78bfa;
-}
-
-.password-strength {
-    height: 4px;
-    background: var(--border-color);
-    border-radius: 2px;
-    margin-top: 8px;
-    overflow: hidden;
-    position: relative;
-}
-
-.password-strength-bar {
-    height: 100%;
-    width: 0;
-    transition: all 0.3s ease;
-    border-radius: 2px;
-}
-
-.strength-weak { width: 33%; background: #ef4444; }
-.strength-medium { width: 66%; background: #f59e0b; }
-.strength-strong { width: 100%; background: #10b981; }
-
-/* Image Cropper Modal */
+/* Crop modal */
 .crop-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    animation: fadeIn 0.3s ease;
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,.92); z-index:10000;
+    align-items:center; justify-content:center;
+    padding:20px;
 }
-
-.crop-modal.active {
-    display: flex;
+.crop-modal.active { display:flex; }
+.crop-box {
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:22px;
+    max-width:620px; width:100%;
+    overflow:hidden;
+    box-shadow:0 32px 80px rgba(0,0,0,.6);
+    animation:cardIn .3s ease both;
 }
-
-.crop-container {
-    background: var(--bg-card);
-    border-radius: 20px;
-    max-width: 650px;
-    width: 100%;
-    overflow: hidden;
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
-    animation: scaleIn 0.3s ease;
+.crop-head {
+    padding:22px 26px;
+    border-bottom:1px solid var(--card-border);
+    display:flex; justify-content:space-between; align-items:center;
 }
-
-.crop-header {
-    padding: 24px 28px;
-    border-bottom: 2px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.crop-head h3 {
+    font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:800;
+    background:var(--accent-grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
 }
-
-.crop-header h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--text-primary);
-    background: linear-gradient(135deg, var(--text-primary), #8b5cf6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.crop-close {
+    width:34px; height:34px; border-radius:9px;
+    background:rgba(239,68,68,.1); border:none;
+    color:#ef4444; font-size:20px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .25s ease;
 }
-
-.close-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.crop-close:hover { background:rgba(239,68,68,.2); transform:rotate(90deg); }
+.crop-canvas {
+    padding:20px;
+    background:var(--input-bg);
+    display:flex; align-items:center; justify-content:center;
+    max-height:420px;
 }
-
-.close-btn:hover {
-    background: rgba(239, 68, 68, 0.2);
-    transform: rotate(90deg);
+#cropImage { max-width:100%; max-height:380px; }
+.crop-tools {
+    padding:16px 24px;
+    display:flex; gap:10px; justify-content:center;
+    background:var(--input-bg);
+    border-top:1px solid var(--card-border);
+    border-bottom:1px solid var(--card-border);
 }
-
-.crop-body {
-    padding: 24px;
-    max-height: 450px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-secondary);
-}
-
-#cropImage {
-    max-width: 100%;
-    max-height: 400px;
-}
-
-.crop-controls {
-    padding: 20px 28px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    border-top: 2px solid var(--border-color);
-    border-bottom: 2px solid var(--border-color);
-    background: var(--bg-secondary);
-}
-
 .crop-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 2px solid var(--border-color);
-    background: var(--bg-card);
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
+    width:44px; height:44px; border-radius:10px;
+    border:1.5px solid var(--card-border);
+    background:transparent;
+    color:var(--text-2); font-size:16px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .25s ease;
 }
-
-.crop-btn:hover {
-    background: rgba(139, 92, 246, 0.2);
-    border-color: #8b5cf6;
-    color: #8b5cf6;
-    transform: scale(1.1);
+.crop-btn:hover { background:rgba(139,92,246,.15); border-color:var(--accent); color:var(--accent); }
+.crop-foot {
+    padding:20px 26px;
+    display:flex; gap:10px; justify-content:flex-end;
 }
-
-.crop-footer {
-    padding: 24px 28px;
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-}
-
-.btn-cancel, .btn-apply {
-    padding: 14px 32px;
-    border-radius: 50px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 14px;
-}
-
 .btn-cancel {
-    background: var(--bg-secondary);
-    border: 2px solid var(--border-color);
-    color: var(--text-secondary);
+    padding:11px 24px; border-radius:10px;
+    background:transparent; border:1.5px solid var(--card-border);
+    color:var(--text-2); font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13.5px; font-weight:700; cursor:pointer;
+    transition:all .25s ease;
 }
-
-.btn-cancel:hover {
-    background: var(--bg-card);
-    border-color: var(--text-tertiary);
-    transform: translateY(-2px);
-}
-
+.btn-cancel:hover { border-color:var(--text-2); color:var(--text-1); }
 .btn-apply {
-    background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-    border: none;
-    color: #fff;
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    padding:11px 24px; border-radius:10px;
+    background:var(--accent-grad); border:none;
+    color:#fff; font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13.5px; font-weight:700; cursor:pointer;
+    box-shadow:0 4px 16px var(--accent-glow);
+    transition:all .25s ease;
 }
+.btn-apply:hover { transform:translateY(-1px); box-shadow:0 8px 24px var(--accent-glow); }
 
-.btn-apply:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+@media (max-width:600px) {
+    .form { grid-template-columns:1fr; }
+    .full, .field { grid-column:1/-1 !important; }
+    .card { padding:36px 24px; border-radius:22px; }
+    .brand h1 { font-size:1.7rem; }
+    .crop-tools { flex-wrap:wrap; }
 }
+</style>
+</head>
+<body>
 
-@media (max-width: 768px) {
-    .auth-form {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-group {
-        grid-column: 1 / -1 !important;
-    }
-    
-    .auth-card {
-        padding: 40px 30px;
-    }
-    
-    .auth-card h2 {
-        font-size: 2rem;
-    }
-    
-    .brand-icon {
-        width: 65px;
-        height: 65px;
-        font-size: 34px;
-    }
-    
-    .crop-controls {
-        flex-wrap: wrap;
-    }
-    
-    .crop-btn {
-        width: 42px;
-        height: 42px;
-        font-size: 16px;
-    }
-}
+<div class="bg-scene">
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+</div>
 
-@media (max-width: 480px) {
-    .auth-page {
-        padding: 100px 20px 60px;
-    }
-    
-    .auth-card {
-        padding: 35px 25px;
-    }
-    
-    .profile-preview {
-        width: 95px;
-        height: 95px;
-        font-size: 36px;
-    }
-    
-    .crop-header {
-        padding: 20px;
-    }
-    
-    .crop-header h3 {
-        font-size: 1.2rem;
-    }
-    
-    .crop-footer {
-        flex-direction: column;
-    }
-    
-    .btn-cancel, .btn-apply {
-        width: 100%;
-    }
-}
-    </style>
-
-
-
-<!-- Theme Toggle Button -->
-<button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
-    <i class="fas fa-moon"></i>
+<button class="theme-btn" onclick="toggleTheme()">
+    <i class="fa-solid fa-moon"></i>
+    <i class="fa-solid fa-sun"></i>
 </button>
 
-<div class="bg-animation">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-</div>
+<div class="card">
 
-<div class="auth-page">
-    <div class="auth-container">
-        <div class="auth-card">
-            
-            <div class="auth-brand">
-                <div class="brand-icon">🚀</div>
-                <h2>Create Account</h2>
-                <p class="auth-sub">Join CrowdSpark and start funding amazing projects</p>
-            </div>
-
-            <?php if($msg): ?>
-            <div class="alert alert-error">
-                <i class="fa fa-exclamation-circle"></i> <?= $msg ?>
-            </div>
-            <?php endif; ?>
-
-            <?php if($success): ?>
-            <div class="alert alert-success">
-                <i class="fa fa-check-circle"></i> <?= $success ?>
-            </div>
-            <?php endif; ?>
-
-            <form method="POST" enctype="multipart/form-data" class="auth-form" id="registerForm">
-
-                <div class="profile-upload full-width">
-                    <div class="profile-preview" id="preview">👤</div>
-                    <label class="upload-btn">
-                        <i class="fa fa-camera"></i>
-                        Choose Profile Image
-                        <input type="file" name="profile" accept="image/*" hidden onchange="openCropper(event)" id="profileInput">
-                    </label>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Full Name</label>
-                    <input type="text" name="name" required placeholder="Enter your full name" autocomplete="name">
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
-                </div>
-
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="text" name="phone" placeholder="+1 (555) 000-0000" autocomplete="tel">
-                </div>
-
-                <div class="form-group">
-                    <label>City</label>
-                    <input type="text" name="city" placeholder="Your city" autocomplete="address-level2">
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Bio</label>
-                    <textarea name="bio" placeholder="Tell us a bit about yourself and your interests..."></textarea>
-                </div>
-
-                <div class="form-group pass-wrap">
-                    <label>Password</label>
-                    <input type="password" name="password" id="pass1" required placeholder="Minimum 6 characters" autocomplete="new-password" oninput="checkPasswordStrength(this.value)">
-                    <i class="fa fa-eye toggle-password" onclick="togglePass('pass1', this)" id="toggleIcon1"></i>
-                    <div class="password-strength">
-                        <div class="password-strength-bar" id="strengthBar"></div>
-                    </div>
-                </div>
-
-                <div class="form-group pass-wrap">
-                    <label>Confirm Password</label>
-                    <input type="password" name="confirm_password" id="pass2" required placeholder="Re-enter password" autocomplete="new-password">
-                    <i class="fa fa-eye toggle-password" onclick="togglePass('pass2', this)" id="toggleIcon2"></i>
-                </div>
-
-                <button type="submit" class="btn-auth">Create Account</button>
-
-            </form>
-
-            <div class="auth-footer">
-                Already have an account?
-                <a href="login.php">Login here</a>
-            </div>
-
-        </div>
+    <div class="brand">
+        <div class="brand-icon">🚀</div>
+        <h1>Create Account</h1>
+        <p>Join CrowdSpark and start funding amazing projects</p>
     </div>
+
+    <?php if($msg): ?>
+    <div class="alert alert-error full">
+        <i class="fa-solid fa-circle-exclamation"></i><?= htmlspecialchars($msg) ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if($success): ?>
+    <div class="alert alert-success full">
+        <i class="fa-solid fa-circle-check"></i><?= htmlspecialchars($success) ?>
+    </div>
+    <?php endif; ?>
+
+    <form method="POST" enctype="multipart/form-data" class="form" id="registerForm">
+
+        <!-- Profile upload -->
+        <div class="avatar-section full">
+            <div class="avatar-ring" id="avatarPreview">👤</div>
+            <label class="upload-label">
+                <i class="fa-solid fa-camera"></i> Choose Profile Image
+                <input type="file" name="profile" accept="image/*" hidden onchange="openCropper(event)" id="profileInput">
+            </label>
+        </div>
+
+        <div class="field full">
+            <label>Full Name</label>
+            <div class="input-wrap">
+                <input type="text" name="name" required placeholder="Enter your full name" autocomplete="name">
+            </div>
+        </div>
+
+        <div class="field full">
+            <label>Email Address</label>
+            <div class="input-wrap">
+                <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Phone Number</label>
+            <div class="input-wrap">
+                <input type="text" name="phone" placeholder="+91 98765 43210" autocomplete="tel">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>City</label>
+            <div class="input-wrap">
+                <input type="text" name="city" placeholder="Your city" autocomplete="address-level2">
+            </div>
+        </div>
+
+        <div class="field full">
+            <label>Bio</label>
+            <div class="input-wrap">
+                <textarea name="bio" placeholder="Tell us a bit about yourself..."></textarea>
+            </div>
+        </div>
+
+        <!-- Password — eye icon inside .input-wrap = perfectly centered -->
+        <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+                <input type="password" name="password" id="pass1" required placeholder="Min. 6 characters" autocomplete="new-password" oninput="checkStrength(this.value)">
+                <i class="fa-solid fa-eye eye-toggle" id="eye1" onclick="togglePass('pass1','eye1')"></i>
+            </div>
+            <div class="strength-track"><div class="strength-fill" id="strengthFill"></div></div>
+        </div>
+
+        <div class="field">
+            <label>Confirm Password</label>
+            <div class="input-wrap">
+                <input type="password" name="confirm_password" id="pass2" required placeholder="Re-enter password" autocomplete="new-password">
+                <i class="fa-solid fa-eye eye-toggle" id="eye2" onclick="togglePass('pass2','eye2')"></i>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">Create Account</button>
+
+    </form>
+
+    <div class="card-footer">
+        Already have an account? <a href="login.php">Sign in</a>
+    </div>
+
 </div>
 
-<!-- Image Cropper Modal -->
+<!-- Crop Modal -->
 <div class="crop-modal" id="cropModal">
-    <div class="crop-container">
-        <div class="crop-header">
-            <h3>✨ Adjust Your Profile Picture</h3>
-            <button onclick="closeCropModal()" class="close-btn" type="button">&times;</button>
+    <div class="crop-box">
+        <div class="crop-head">
+            <h3>✨ Crop Profile Picture</h3>
+            <button onclick="closeCropModal()" class="crop-close" type="button">×</button>
         </div>
-        <div class="crop-body">
+        <div class="crop-canvas">
             <img id="cropImage" src="">
         </div>
-        <div class="crop-controls">
-            <button onclick="cropper.zoom(0.1)" class="crop-btn" type="button" title="Zoom In"><i class="fas fa-search-plus"></i></button>
-            <button onclick="cropper.zoom(-0.1)" class="crop-btn" type="button" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
-            <button onclick="cropper.rotate(90)" class="crop-btn" type="button" title="Rotate Right"><i class="fas fa-redo"></i></button>
-            <button onclick="cropper.rotate(-90)" class="crop-btn" type="button" title="Rotate Left"><i class="fas fa-undo"></i></button>
-            <button onclick="cropper.scaleX(-cropper.getData().scaleX || -1)" class="crop-btn" type="button" title="Flip Horizontal"><i class="fas fa-arrows-alt-h"></i></button>
+        <div class="crop-tools">
+            <button onclick="cropper.zoom(.1)"          class="crop-btn" type="button" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+            <button onclick="cropper.zoom(-.1)"         class="crop-btn" type="button" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <button onclick="cropper.rotate(90)"        class="crop-btn" type="button" title="Rotate Right"><i class="fas fa-redo"></i></button>
+            <button onclick="cropper.rotate(-90)"       class="crop-btn" type="button" title="Rotate Left"><i class="fas fa-undo"></i></button>
+            <button onclick="cropper.scaleX(-cropper.getData().scaleX||(-1))" class="crop-btn" type="button" title="Flip"><i class="fas fa-arrows-alt-h"></i></button>
         </div>
-        <div class="crop-footer">
+        <div class="crop-foot">
             <button onclick="closeCropModal()" class="btn-cancel" type="button">Cancel</button>
-            <button onclick="applyCrop()" class="btn-apply" type="button">Apply & Save</button>
+            <button onclick="applyCrop()"      class="btn-apply"  type="button">Apply & Save</button>
         </div>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <script>
-// Theme Toggle
-function toggleTheme() {
-    const html = document.documentElement;
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    const icon = document.querySelector('#themeToggle i');
-    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+// Theme
+function toggleTheme(){
+    const html=document.documentElement;
+    const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    localStorage.setItem('theme',next);
+}
+(function(){
+    const t=localStorage.getItem('theme')||'dark';
+    document.documentElement.setAttribute('data-theme',t);
+})();
+
+// Eye toggle — works on any input+icon pair by ID
+function togglePass(inputId, iconId){
+    const inp=document.getElementById(inputId);
+    const ico=document.getElementById(iconId);
+    if(inp.type==='password'){
+        inp.type='text';
+        ico.classList.replace('fa-eye','fa-eye-slash');
+    }else{
+        inp.type='password';
+        ico.classList.replace('fa-eye-slash','fa-eye');
+    }
 }
 
-// Load saved theme
-document.addEventListener('DOMContentLoaded', function() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    const icon = document.querySelector('#themeToggle i');
-    icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+// Password strength
+function checkStrength(val){
+    const bar=document.getElementById('strengthFill');
+    if(!val){ bar.style.width='0'; return; }
+    if(val.length<6){ bar.style.cssText='width:33%;background:#ef4444'; }
+    else if(val.length<10){ bar.style.cssText='width:66%;background:#f59e0b'; }
+    else { bar.style.cssText='width:100%;background:#10b981'; }
+}
+
+// Confirm password live check
+document.getElementById('pass2').addEventListener('input',function(){
+    const match=this.value===document.getElementById('pass1').value;
+    this.style.borderColor=this.value?(match?'':'#ef4444'):'';
 });
 
-// Image Cropper
-let cropper = null;
-let croppedImageBlob = null;
+// Cropper
+let cropper=null, croppedBlob=null;
 
-function openCropper(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            document.getElementById('cropImage').src = ev.target.result;
-            document.getElementById('cropModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            if (cropper) {
-                cropper.destroy();
-            }
-            
-            cropper = new Cropper(document.getElementById('cropImage'), {
-                aspectRatio: 1,
-                viewMode: 2,
-                dragMode: 'move',
-                autoCropArea: 1,
-                restore: false,
-                guides: true,
-                center: true,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true,
-                toggleDragModeOnDblclick: false,
-                minCropBoxWidth: 100,
-                minCropBoxHeight: 100,
-            });
-        }
-        reader.readAsDataURL(file);
-    }
-}
-
-function closeCropModal() {
-    document.getElementById('cropModal').classList.remove('active');
-    document.body.style.overflow = 'auto';
-    if (cropper) {
-        cropper.destroy();
-        cropper = null;
-    }
-    document.getElementById('profileInput').value = '';
-}
-
-function applyCrop() {
-    cropper.getCroppedCanvas({
-        width: 400,
-        height: 400,
-        imageSmoothingEnabled: true,
-        imageSmoothingQuality: 'high',
-    }).toBlob((blob) => {
-        croppedImageBlob = blob;
-        
-        const url = URL.createObjectURL(blob);
-        const preview = document.getElementById("preview");
-        preview.innerHTML = `<img src="${url}">`;
-        preview.style.transform = "scale(1.1)";
-        setTimeout(() => {
-            preview.style.transform = "scale(1)";
-        }, 300);
-        
-        closeCropModal();
-    }, 'image/jpeg', 0.92);
-}
-
-// Form submission with cropped image
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-    if (croppedImageBlob) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        formData.delete('profile');
-        formData.append('profile', croppedImageBlob, 'profile.jpg');
-        
-        const btn = document.querySelector('.btn-auth');
-        btn.classList.add('loading');
-        btn.textContent = '';
-        
-        fetch(window.location.href, {
-            method: 'POST',
-            body: formData
-        }).then(response => response.text())
-        .then(html => {
-            document.open();
-            document.write(html);
-            document.close();
-        }).catch(error => {
-            console.error('Error:', error);
-            btn.classList.remove('loading');
-            btn.textContent = 'CREATE ACCOUNT';
+function openCropper(e){
+    const file=e.target.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+        document.getElementById('cropImage').src=ev.target.result;
+        document.getElementById('cropModal').classList.add('active');
+        document.body.style.overflow='hidden';
+        if(cropper){ cropper.destroy(); }
+        cropper=new Cropper(document.getElementById('cropImage'),{
+            aspectRatio:1, viewMode:2, dragMode:'move', autoCropArea:1,
+            restore:false, guides:true, center:true, highlight:false,
+            cropBoxMovable:true, cropBoxResizable:true, toggleDragModeOnDblclick:false,
         });
+    };
+    reader.readAsDataURL(file);
+}
+
+function closeCropModal(){
+    document.getElementById('cropModal').classList.remove('active');
+    document.body.style.overflow='';
+    if(cropper){ cropper.destroy(); cropper=null; }
+    document.getElementById('profileInput').value='';
+}
+
+function applyCrop(){
+    cropper.getCroppedCanvas({width:400,height:400,imageSmoothingQuality:'high'}).toBlob(blob=>{
+        croppedBlob=blob;
+        const url=URL.createObjectURL(blob);
+        const av=document.getElementById('avatarPreview');
+        av.innerHTML=`<img src="${url}">`;
+        closeCropModal();
+    },'image/jpeg',.92);
+}
+
+// Submit
+document.getElementById('registerForm').addEventListener('submit',function(e){
+    if(croppedBlob){
+        e.preventDefault();
+        const fd=new FormData(this);
+        fd.delete('profile');
+        fd.append('profile',croppedBlob,'profile.jpg');
+        const btn=document.getElementById('submitBtn');
+        btn.classList.add('loading'); btn.textContent='';
+        fetch(window.location.href,{method:'POST',body:fd})
+            .then(r=>r.text()).then(html=>{ document.open(); document.write(html); document.close(); })
+            .catch(()=>{ btn.classList.remove('loading'); btn.textContent='Create Account'; });
     } else {
-        const btn = document.querySelector('.btn-auth');
-        const pass1 = document.getElementById('pass1').value;
-        const pass2 = document.getElementById('pass2').value;
-        
-        if (pass1 === pass2 && pass1.length >= 6) {
-            btn.classList.add('loading');
-            btn.textContent = '';
-        }
+        const btn=document.getElementById('submitBtn');
+        btn.classList.add('loading'); btn.textContent='';
     }
 });
 
-// Toggle Password Visibility
-function togglePass(inputId, icon) {
-    const input = document.getElementById(inputId);
-    
-    if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-    } else {
-        input.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-    }
-}
-
-// Password Strength Checker
-function checkPasswordStrength(password) {
-    const strengthBar = document.getElementById("strengthBar");
-    const length = password.length;
-    
-    strengthBar.className = "password-strength-bar";
-    
-    if (length === 0) {
-        strengthBar.style.width = "0";
-    } else if (length < 6) {
-        strengthBar.classList.add("strength-weak");
-    } else if (length < 10) {
-        strengthBar.classList.add("strength-medium");
-    } else {
-        strengthBar.classList.add("strength-strong");
-    }
-}
-
-// Validate password match in real-time
-const pass1 = document.getElementById('pass1');
-const pass2 = document.getElementById('pass2');
-
-if (pass2) {
-    pass2.addEventListener('input', function() {
-        if (this.value && pass1.value && this.value !== pass1.value) {
-            this.style.borderColor = '#ef4444';
-        } else {
-            this.style.borderColor = '';
-        }
-    });
-}
-
-// Escape key to close modal
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && document.getElementById('cropModal').classList.contains('active')) {
-        closeCropModal();
-    }
+// Escape closes crop modal
+document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&document.getElementById('cropModal').classList.contains('active')) closeCropModal();
 });
 </script>
 
-
+</body>
+</html>
