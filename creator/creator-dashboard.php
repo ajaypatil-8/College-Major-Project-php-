@@ -399,10 +399,15 @@ body {
     letter-spacing: 0.05em;
 }
 
+/* =====================================================
+   FIX: use clamp() so long ₹ values shrink to fit
+   instead of being clipped by overflow:hidden on the card
+   ===================================================== */
 .stat-value {
-    font-size: 3rem;
+    font-size: clamp(1.1rem, 3.5cqw, 3rem);
     font-weight: 900;
-    line-height: 1;
+    line-height: 1.1;
+    white-space: nowrap;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -772,7 +777,7 @@ body {
     }
     
     .stat-value {
-        font-size: 2.2rem;
+        font-size: clamp(0.9rem, 6vw, 2.2rem);
     }
     
     .card {
